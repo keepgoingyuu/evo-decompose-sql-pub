@@ -1,0 +1,108 @@
+{
+  "phase": 3,
+  "model": "deepseek",
+  "description": "Adaptive Strategy Selector - DeepSeek on mod+chal (609 queries)",
+  "baselines": {
+    "always_s0": {
+      "accuracy": 40.1,
+      "correct": 244,
+      "total": 609
+    },
+    "oracle": {
+      "accuracy": 50.9,
+      "correct": 310,
+      "total": 609
+    },
+    "gap_pp": 10.8
+  },
+  "rule_based": {
+    "v1": {
+      "accuracy": 40.9,
+      "correct": 249
+    },
+    "v2": {
+      "accuracy": 40.2,
+      "correct": 245
+    }
+  },
+  "ml_multiclass": {
+    "decision_tree": {
+      "accuracy": 40.1
+    },
+    "random_forest_balanced": {
+      "accuracy": 40.4
+    },
+    "gradient_boosting": {
+      "accuracy": 40.1
+    }
+  },
+  "binary_gate": {
+    "dt_gate_fixed_s4": {
+      "accuracy": 37.8,
+      "switches": 426
+    },
+    "dt_gate_oracle_fb": {
+      "accuracy": 46.8,
+      "switches": 426
+    },
+    "rf_gate_fixed_s4": {
+      "accuracy": 38.9,
+      "switches": 389
+    },
+    "rf_gate_oracle_fb": {
+      "accuracy": 47.0,
+      "switches": 389
+    },
+    "gb_gate_fixed_s4": {
+      "accuracy": 38.9,
+      "switches": 443
+    },
+    "gb_gate_oracle_fb": {
+      "accuracy": 47.9,
+      "switches": 443
+    }
+  },
+  "cascade": {
+    "accuracy": 41.1,
+    "correct": 250,
+    "routing": {
+      "s0": 522,
+      "s4": 41,
+      "s3": 19,
+      "s2": 14,
+      "s1": 13
+    }
+  },
+  "rescue_analysis": {
+    "s0_wrong": 365,
+    "rescued": 66,
+    "rescue_rate": 18.1,
+    "unrescuable": 299,
+    "per_strategy": {
+      "s1": {
+        "rescues": 27,
+        "exclusive": 14
+      },
+      "s2": {
+        "rescues": 24,
+        "exclusive": 11
+      },
+      "s3": {
+        "rescues": 25,
+        "exclusive": 7
+      },
+      "s4": {
+        "rescues": 29,
+        "exclusive": 7
+      }
+    }
+  },
+  "feature_importance_top5": [
+    "q_words (0.101)",
+    "q_length (0.097)",
+    "schema_complexity (0.088)",
+    "evidence_length (0.086)",
+    "evidence_words (0.082)"
+  ],
+  "key_finding": "Cascade selector achieves 41.1% (+1.0pp over S0). Binary gate with oracle fallback reaches 47.9%, showing S0-failure prediction is somewhat learnable but choosing the right alternative strategy remains the bottleneck."
+}

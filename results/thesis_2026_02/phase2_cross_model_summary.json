@@ -1,0 +1,117 @@
+{
+  "models_available": {
+    "deepseek": [
+      "s0",
+      "s1",
+      "s2",
+      "s3",
+      "s4"
+    ],
+    "gemini": [
+      "INVALIDATED - was gemini-2.0-flash, re-running with gemini-3-flash-preview"
+    ],
+    "gpt41": [
+      "s0",
+      "s1",
+      "s2",
+      "s3",
+      "s4"
+    ],
+    "qwen": [
+      "s0",
+      "s1",
+      "s2",
+      "s3",
+      "s4"
+    ]
+  },
+  "total_queries": 609,
+  "model_accuracies": {
+    "deepseek": {
+      "s0": {
+        "correct": 244,
+        "total": 609,
+        "accuracy": 40.07
+      },
+      "s1": {
+        "correct": 240,
+        "total": 609,
+        "accuracy": 39.41
+      },
+      "s2": {
+        "correct": 213,
+        "total": 609,
+        "accuracy": 34.98
+      },
+      "s3": {
+        "correct": 229,
+        "total": 609,
+        "accuracy": 37.6
+      },
+      "s4": {
+        "correct": 227,
+        "total": 609,
+        "accuracy": 37.27
+      }
+    },
+    "gemini": {
+      "_note": "INVALIDATED: results below were from gemini-2.0-flash, not gemini-3-flash-preview. Re-running.",
+      "_old_model": "gemini-2.0-flash",
+      "_target_model": "gemini-3-flash-preview"
+    },
+    "gpt41": {
+      "s0": {
+        "correct": 235,
+        "total": 609,
+        "accuracy": 38.59
+      },
+      "s1": {
+        "correct": 250,
+        "total": 609,
+        "accuracy": 41.05
+      },
+      "s2": {
+        "correct": 207,
+        "total": 609,
+        "accuracy": 33.99
+      },
+      "s3": {
+        "correct": 236,
+        "total": 609,
+        "accuracy": 38.75
+      },
+      "s4": {
+        "correct": 241,
+        "total": 609,
+        "accuracy": 39.57
+      }
+    },
+    "qwen": {
+      "s0": {
+        "correct": 168,
+        "total": 609,
+        "accuracy": 27.59
+      },
+      "s1": {
+        "correct": 198,
+        "total": 609,
+        "accuracy": 32.51
+      },
+      "s2": {
+        "correct": 183,
+        "total": 609,
+        "accuracy": 30.05
+      },
+      "s3": {
+        "correct": 165,
+        "total": 609,
+        "accuracy": 27.09
+      },
+      "s4": {
+        "correct": 172,
+        "total": 609,
+        "accuracy": 28.24
+      }
+    }
+  }
+}

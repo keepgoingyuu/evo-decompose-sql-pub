@@ -1,0 +1,115 @@
+{
+  "phase": 3,
+  "model": "gpt41",
+  "description": "Adaptive Strategy Selector - GPT-4.1 on mod+chal (609 queries)",
+  "baselines": {
+    "always_s0": {
+      "accuracy": 38.6,
+      "correct": 235,
+      "total": 609
+    },
+    "oracle": {
+      "accuracy": 51.7,
+      "correct": 315,
+      "total": 609
+    },
+    "gap_pp": 13.1
+  },
+  "best_strategy_distribution": {
+    "s0": 529,
+    "s3": 31,
+    "s1": 30,
+    "s4": 10,
+    "s2": 9
+  },
+  "rule_based": {
+    "v1": {
+      "accuracy": 39.1,
+      "correct": 238
+    },
+    "v2": {
+      "accuracy": 39.2,
+      "correct": 239
+    }
+  },
+  "ml_multiclass": {
+    "decision_tree": {
+      "accuracy": 38.6
+    },
+    "random_forest": {
+      "accuracy": 38.6
+    },
+    "gradient_boosting": {
+      "accuracy": 38.4
+    }
+  },
+  "binary_gate": {
+    "best_single_fallback": "s3",
+    "dt_gate_fixed_s3": {
+      "accuracy": 39.2,
+      "switches": 446
+    },
+    "dt_gate_oracle_fb": {
+      "accuracy": 48.9,
+      "switches": 446
+    },
+    "rf_gate_fixed_s3": {
+      "accuracy": 40.1,
+      "switches": 397
+    },
+    "rf_gate_oracle_fb": {
+      "accuracy": 48.3,
+      "switches": 397
+    },
+    "gb_gate_fixed_s3": {
+      "accuracy": 39.6,
+      "switches": 478
+    },
+    "gb_gate_oracle_fb": {
+      "accuracy": 49.8,
+      "switches": 478
+    }
+  },
+  "cascade": {
+    "accuracy": 39.1,
+    "routing": {
+      "s0": 485,
+      "s3": 50,
+      "s1": 30,
+      "s4": 28,
+      "s2": 16
+    }
+  },
+  "rescue_analysis": {
+    "s0_wrong": 374,
+    "rescued": 80,
+    "rescue_rate": 21.4,
+    "unrescuable": 294,
+    "per_strategy": {
+      "s1": {
+        "rescues": 30,
+        "exclusive": 9
+      },
+      "s2": {
+        "rescues": 26,
+        "exclusive": 9
+      },
+      "s3": {
+        "rescues": 43,
+        "exclusive": 20
+      },
+      "s4": {
+        "rescues": 35,
+        "exclusive": 8
+      }
+    }
+  },
+  "feature_importance_top5": [
+    "evidence_length (0.133)",
+    "q_length (0.108)",
+    "q_words (0.107)",
+    "evidence_words (0.076)",
+    "schema_complexity (0.074)"
+  ],
+  "key_finding": "GPT-4.1 shows the lowest Oracle ceiling (51.7%) and rescue rate (21.4%). S0 is optimal for 86.9% of queries — GPT-4.1 is already strong at baseline, leaving limited room for improvement. S3 skeleton is the best single fallback. The 78.6% unrescuable rate indicates fundamental model limitations rather than routing problems."
+}

@@ -1,0 +1,156 @@
+======================================================================
+PHASE 3: Adaptive Strategy Selector (QWEN)
+======================================================================
+
+Loading data...
+  Loaded strategies: ['s1', 's2', 's3', 's4']
+  609 mod+chal queries
+
+Building dataset...
+  609 queries with features
+
+  Best strategy distribution:
+    s0: 471 (77.3%)
+    s1: 77 (12.6%)
+    s4: 28 (4.6%)
+    s3: 17 (2.8%)
+    s2: 16 (2.6%)
+
+======================================================================
+BASELINES
+======================================================================
+
+--- Always S0 ---
+  Always S0: 168/609 = 27.6%
+    s0: picked 609 times, 27.6% correct
+
+--- Oracle ---
+  Oracle: 306/609 = 50.2%
+  Gap (Oracle - S0): 22.7 percentage points
+
+======================================================================
+RULE-BASED SELECTORS
+======================================================================
+
+--- Rule-based v1 (original) ---
+  Rule-v1: 166/609 = 27.3%
+    s0: picked 417 times, 26.6% correct
+    s1: picked 144 times, 32.6% correct
+    s3: picked 22 times, 18.2% correct
+    s4: picked 26 times, 15.4% correct
+
+--- Rule-based v2 (enhanced) ---
+  Rule-v2: 159/609 = 26.1%
+    s0: picked 314 times, 22.3% correct
+    s1: picked 129 times, 33.3% correct
+    s3: picked 132 times, 28.0% correct
+    s4: picked 34 times, 26.5% correct
+
+======================================================================
+ML-BASED SELECTORS
+======================================================================
+
+--- A. Multi-class: Predict Best Strategy ---
+  Class distribution: {'s0': 471, 's1': 77, 's4': 28, 's3': 17, 's2': 16}
+  Decision Tree CV: 173/609 = 28.4%
+  Random Forest CV: 197/609 = 32.3%
+  Gradient Boosting CV: 170/609 = 27.9%
+
+--- B. Binary Gate: Predict S0 Failure ---
+  S0 fail rate: 441/609 = 72.4%
+  Among S0-fail: rescue by {'none': 303, 's1': 77, 's4': 28, 's3': 17, 's2': 16}
+  Fallback scores (on S0-fail): {'s1': 77, 's2': 70, 's3': 57, 's4': 70}
+  Best single fallback: s1
+  DT Gate → s1: 195/609 = 32.0% (switched 503)
+  DT Gate → oracle-fb: 283/609 = 46.5% (switched 503)
+  RF Gate → s1: 201/609 = 33.0% (switched 394)
+  RF Gate → oracle-fb: 267/609 = 43.8% (switched 394)
+  GB Gate → s1: 196/609 = 32.2% (switched 545)
+  GB Gate → oracle-fb: 293/609 = 48.1% (switched 545)
+
+--- C. Per-Strategy Rescue (S0 wrong → will Si fix it?) ---
+  s1 rescue: TP=30 FP=109 FN=47 | prec=0.22 rec=0.39
+  s2 rescue: TP=19 FP=72 FN=51 | prec=0.21 rec=0.27
+  s3 rescue: TP=8 FP=29 FN=49 | prec=0.22 rec=0.14
+  s4 rescue: TP=26 FP=103 FN=44 | prec=0.20 rec=0.37
+
+--- D. Cascade Selector (Gate + Rescue priority) ---
+  Cascade CV: 192/609 = 31.5%
+  Routing: {'s0': 408, 's1': 148, 's4': 32, 's2': 14, 's3': 7}
+
+--- Feature Importance (for S0-failure prediction) ---
+  Top features for predicting S0 failure:
+    q_length: 0.117
+    q_words: 0.109
+    num_fks: 0.095
+    evidence_length: 0.091
+    num_columns: 0.073
+    avg_cols_per_table: 0.064
+    evidence_words: 0.062
+    schema_complexity: 0.059
+    num_tables: 0.042
+    kw_temporal: 0.042
+    kw_aggregation: 0.036
+    num_question_marks: 0.028
+    kw_join_hint: 0.028
+    db_california_schools: 0.023
+    db_thrombosis_prediction: 0.022
+
+======================================================================
+RESCUE PATTERN ANALYSIS
+======================================================================
+
+  S0 wrong: 441 queries
+  Rescued by S1-S4: 138 (31.3%)
+  No strategy works: 303 (68.7%)
+
+  Rescue by strategy (among S0-wrong):
+    s1: 77 rescues (15 exclusive)
+    s2: 70 rescues (16 exclusive)
+    s3: 57 rescues (6 exclusive)
+    s4: 70 rescues (18 exclusive)
+
+  Feature comparison (rescued vs unrescuable):
+    has_multiple_conditions: rescued=0.01 vs unrescuable=0.05
+    kw_compare: rescued=0.13 vs unrescuable=0.18
+    kw_groupby: rescued=0.22 vs unrescuable=0.20
+    kw_negation: rescued=0.01 vs unrescuable=0.07
+    kw_ranking: rescued=0.06 vs unrescuable=0.14
+    kw_subquery_hint: rescued=0.05 vs unrescuable=0.04
+    kw_temporal: rescued=0.17 vs unrescuable=0.30
+    num_fks: rescued=7.67 vs unrescuable=9.27
+
+  By difficulty:
+    moderate: 464 total, 334 S0-wrong, 110 rescued (32.9% rescue rate)
+    challenging: 145 total, 107 S0-wrong, 28 rescued (26.2% rescue rate)
+
+  Top databases with rescuable queries:
+    thrombosis_prediction: 37 rescued / 96 S0-wrong / 113 total
+    card_games: 22 rescued / 55 S0-wrong / 66 total
+    toxicology: 14 rescued / 48 S0-wrong / 69 total
+    formula_1: 11 rescued / 43 S0-wrong / 57 total
+    student_club: 11 rescued / 31 S0-wrong / 57 total
+    superhero: 10 rescued / 18 S0-wrong / 48 total
+    european_football_2: 9 rescued / 41 S0-wrong / 64 total
+    california_schools: 8 rescued / 34 S0-wrong / 35 total
+    financial: 8 rescued / 37 S0-wrong / 44 total
+    codebase_community: 4 rescued / 22 S0-wrong / 35 total
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+  Always S0:     27.6%
+  R-v1: 166/609 = 27.3%
+    s0: picked 417 times, 26.6% correct
+    s1: picked 144 times, 32.6% correct
+    s3: picked 22 times, 18.2% correct
+    s4: picked 26 times, 15.4% correct
+  Rule-based v1: 27.3%
+  R-v2: 159/609 = 26.1%
+    s0: picked 314 times, 22.3% correct
+    s1: picked 129 times, 33.3% correct
+    s3: picked 132 times, 28.0% correct
+    s4: picked 34 times, 26.5% correct
+  Rule-based v2: 26.1%
+  Oracle:        50.2%
+  Gap to close:  22.7 pp

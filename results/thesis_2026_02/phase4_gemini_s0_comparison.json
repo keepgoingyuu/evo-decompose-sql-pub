@@ -1,0 +1,31 @@
+{
+  "zh-tw": {
+    "model": "gemini",
+    "strategy": "s0",
+    "self_correct": false,
+    "lang": "zh-tw",
+    "lang_label": "Traditional Chinese",
+    "total": 1034,
+    "correct": 660,
+    "accuracy": 0.6383,
+    "exec_errors": 97,
+    "timestamp": "2026-02-13 00:01:54",
+    "total_time_minutes": 65.68,
+    "api_cost_estimate": 0.2167
+  },
+  "zh-cn": {
+    "model": "gemini",
+    "strategy": "s0",
+    "self_correct": false,
+    "lang": "zh-cn",
+    "lang_label": "Simplified Chinese",
+    "total": 1034,
+    "correct": 659,
+    "accuracy": 0.6373,
+    "exec_errors": 105,
+    "timestamp": "2026-02-13 01:06:17",
+    "total_time_minutes": 64.37,
+    "api_cost_estimate": 0.2167
+  },
+  "delta_accuracy": 0.001
+}

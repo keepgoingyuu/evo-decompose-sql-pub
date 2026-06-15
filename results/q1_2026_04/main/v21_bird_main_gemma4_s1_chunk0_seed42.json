@@ -1,0 +1,3056 @@
+{
+  "metadata": {
+    "model": "gemma4",
+    "strategy": "s1",
+    "chunk_id": 0,
+    "port": 11434,
+    "seed": 42,
+    "n_queries": 304,
+    "accuracy": 0.1316,
+    "correct": 40,
+    "elapsed_min": 64.55,
+    "benchmark": "BIRD mod+chal"
+  },
+  "results": [
+    {
+      "query_idx": 0,
+      "db_id": "california_schools",
+      "question": "Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.",
+      "gold_sql": "SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm WHERE `Educational Option Type` = 'Continuation School' AND `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` IS NOT NU",
+      "pred_sql": "SELECT\n  sname\nFROM satscores\nWHERE\n  rtype = 'Continuation'\n  AND enroll12 BETWEEN 5 AND 17\nORDER BY\n  AvgScrRead\nLIMIT 3",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 1,
+      "db_id": "california_schools",
+      "question": "Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.",
+      "gold_sql": "SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01'",
+      "pred_sql": "SELECT\n  `School Name`\nFROM frpm\nWHERE\n  `Charter School (Y/N)` = 1\n  AND `Academic Year` > '2000-01-01'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 2,
+      "db_id": "california_schools",
+      "question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17",
+      "gold_sql": "SELECT MAX(CAST(T1.`Free Meal Count (Ages 5-17)` AS REAL) / T1.`Enrollment (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE CAST(T2.NumGE1500 AS REAL) / T2.NumTstT",
+      "pred_sql": "SELECT MAX(AvgScrWrite) FROM satscores WHERE (NumGE1500 / NumTstTakr) > 0.3",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 3,
+      "db_id": "california_schools",
+      "question": "List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the ",
+      "gold_sql": "SELECT T1.School, T1.Street FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Enrollment (K-12)` - T2.`Enrollment (Ages 5-17)` > 30",
+      "pred_sql": "SELECT T2.Street, T2.StreetAbr, T2.City, T2.Zip, T2.State FROM schoo ls AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE ABS(T2.Enrollment (K-12) - T2.Enrollment (Age 5-17)) > 30",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 4,
+      "db_id": "california_schools",
+      "question": "Give the names of the schools with the percent eligible for free meals in K-12 is more than 0.1 and test takers whose te",
+      "gold_sql": "SELECT T2.`School Name` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE CAST(T2.`Free Meal Count (K-12)` AS REAL) / T2.`Enrollment (K-12)` > 0.1 AND T1.NumGE1500 > 0",
+      "pred_sql": "SELECT DISTINCT T1.School Name FROM schooools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.Percent (% ) Eligible FRPM (K-12) > 0.1 AND T2.NumGE1500 >= 1500",
+      "correct": false,
+      "error": "near \"(\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 5,
+      "db_id": "california_schools",
+      "question": "Name schools in Riverside which the average of average math score for SAT is grater than 400, what is the funding type o",
+      "gold_sql": "SELECT T1.sname, T2.`Charter Funding Type` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T2.`District Name` LIKE 'Riverside%' GROUP BY T1.sname, T2.`Charter Funding Type` HAV",
+      "pred_sql": "SELECT DISTINCT T1.Cname FROM satscores AS T1 INNER JOIN schooels AS T2 ON T1.cds = T2.CDSCode WHERE T2.City = 'Riverside' AND T1.AvgScrMath > 400",
+      "correct": false,
+      "error": "no such table: schooels",
+      "call_count": 2
+    },
+    {
+      "query_idx": 6,
+      "db_id": "california_schools",
+      "question": "State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price",
+      "gold_sql": "SELECT T1.`School Name`, T2.Street, T2.City, T2.State, T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Monterey' AND T1.`Free Meal Count (Ages 5-17)` > 80",
+      "pred_sql": "SELECT\n  sname,\n  cname\nFROM satscores\nWHERE\n  cname LIKE '%Monterey%'\n  AND NumGE1500 > 800",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 7,
+      "db_id": "california_schools",
+      "question": "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school ",
+      "gold_sql": "SELECT T2.School, T1.AvgScrWrite, T2.Phone FROM schools AS T2 LEFT JOIN satscores AS T1 ON T2.CDSCode = T1.cds WHERE strftime('%Y', T2.OpenDate) > '1991' OR strftime('%Y', T2.ClosedDate) < '2000'",
+      "pred_sql": "SELECT\n  s.Sname,\n  COALESCE(s.AvgScrWrite, 0) AS AvgScrWrite,\n  sh.Phone\nFROM satscores AS s\nJOIN schoo ls AS sh\n  ON s.cds = sh.CDSCode\nWHERE\n  sh.OpeNDate > '1991-01-01'\n  OR sh.ClosedDate < '2000-",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 8,
+      "db_id": "california_schools",
+      "question": "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list th",
+      "gold_sql": "SELECT T2.School, T2.DOC FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.FundingType = 'Locally funded' AND (T1.`Enrollment (K-12)` - T1.`Enrollment (Ages 5-17)`) > (SELEC",
+      "pred_sql": "SELECT DISTINCT\n  f.School Name,\n  f.School Type\nFROM frpm AS f\nWHERE\n  f.District Type = 'Local'\n  AND (\n    (\n      f.Enrollment (K-12) - f.Enrollment (Ages 5-17)\n    ) > (\n      SELECT\n        AVG(",
+      "correct": false,
+      "error": "near \"Type\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 9,
+      "db_id": "california_schools",
+      "question": "What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through ",
+      "gold_sql": "SELECT CAST(`Free Meal Count (K-12)` AS REAL) / `Enrollment (K-12)` FROM frpm ORDER BY `Enrollment (K-12)` DESC LIMIT 9, 2",
+      "pred_sql": "SELECT T2.\"Percent (%) Eligible Free (K-12)\" FROM frpm AS T1 JOIN satscores AS T2 ON T1.CDSCode = T2.cds ORDER BY T1.\"Enrollment (K-12)\" DESC LIMIT 10",
+      "correct": false,
+      "error": "no such column: T2.Percent (%) Eligible Free (K-12)",
+      "call_count": 2
+    },
+    {
+      "query_idx": 10,
+      "db_id": "california_schools",
+      "question": "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduc",
+      "gold_sql": "SELECT CAST(T1.`FRPM Count (K-12)` AS REAL) / T1.`Enrollment (K-12)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOC = 66 ORDER BY T1.`FRPM Count (K-12)` DESC LIMIT 5",
+      "pred_sql": "SELECT DISTINCT T1.\"Percent (%) Eligible FRPM (K-12)\" FROM frpm AS T1 JOIN schoo ls AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.Charter = 66 ORDER BY T1.\"FRPM Count (K-12)\" DESC LIMIT 5",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 11,
+      "db_id": "california_schools",
+      "question": "If there are any, what are the websites address of the schools with a free meal count of 1,900-2,000 to students aged 5-",
+      "gold_sql": "SELECT T2.Website, T1.`School Name` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Free Meal Count (Ages 5-17)` BETWEEN 1900 AND 2000 AND T2.Website IS NOT NULL",
+      "pred_sql": "SELECT s.School Name FROM frpm AS s JOIN satscores AS sa ON s.CDSCode = sa.cds WHERE s.FRPM Count (Age 5-17) BETWEEN 1900 AND 2000",
+      "correct": false,
+      "error": "near \"Count\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 12,
+      "db_id": "california_schools",
+      "question": "What is the free rate for students between the ages of 5 and 17 at the school run by Kacey Gibson?",
+      "gold_sql": "SELECT CAST(T2.`Free Meal Count (Ages 5-17)` AS REAL) / T2.`Enrollment (Ages 5-17)` FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.AdmFName1 = 'Kacey' AND T1.AdmLName1 = ",
+      "pred_sql": "SELECT F.Percent ('%') Eligible FRPM (Age 5-17) FROM frpm F JOIN satscores S ON F.CDSCode = S.cds WHERE F.School Name = 'Kacey Gibson'",
+      "correct": false,
+      "error": "near \"(\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 13,
+      "db_id": "california_schools",
+      "question": "What is the administrator's email address of the chartered school with the fewest students enrolled in grades 1 through ",
+      "gold_sql": "SELECT T2.AdmEmail1 FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 ORDER BY T1.`Enrollment (K-12)` ASC LIMIT 1",
+      "pred_sql": "SELECT T1.\"District Name\" FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.\"Charter School (Y/N)\" = 1 ORDER BY T1.\"Enrollment (K-12)\" ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 14,
+      "db_id": "california_schools",
+      "question": "Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate t",
+      "gold_sql": "SELECT T2.AdmFName1, T2.AdmLName1, T2.AdmFName2, T2.AdmLName2, T2.AdmFName3, T2.AdmLName3 FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.NumGE1500 DESC LIMIT 1",
+      "pred_sql": "SELECT DISTINCT\n  T1.dname\nFROM satscores AS T1\nINNER JOIN schooels AS T2\n  ON T1.cds = T2.CDSCode\nWHERE\n  T1.NumGE1500 >= 1500\nORDER BY\n  T1.NumGE1500 DESC\nLIMIT 1",
+      "correct": false,
+      "error": "no such table: schooels",
+      "call_count": 2
+    },
+    {
+      "query_idx": 15,
+      "db_id": "california_schools",
+      "question": "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.",
+      "gold_sql": "SELECT T2.Street, T2.City, T2.State, T2.Zip FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr ASC LIMIT 1",
+      "pred_sql": "SELECT\n  sname,\n  cname,\n  CASE\n    WHEN substr(dname, 1, 1) = 'A'\n    THEN substr(dname, 2, 1)\n    ELSE dname\n  END AS street,\n  CASE\n    WHEN substr(dname, 1, 1) = 'A'\n    THEN substr(dname, 2, 1)\n ",
+      "correct": false,
+      "error": "no such column: NuMstTakr",
+      "call_count": 2
+    },
+    {
+      "query_idx": 16,
+      "db_id": "california_schools",
+      "question": "What is the telephone number for the school with the lowest average score in reading in Fresno Unified?",
+      "gold_sql": "SELECT T2.Phone FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.District = 'Fresno Unified' AND T1.AvgScrRead IS NOT NULL ORDER BY T1.AvgScrRead ASC LIMIT 1",
+      "pred_sql": "SELECT cname FROM satscores WHERE rtype = 'Reading' ORDER BY AvgScrRead ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 17,
+      "db_id": "california_schools",
+      "question": "What is the average math score of the school with the lowest average score for all subjects, and in which county is it l",
+      "gold_sql": "SELECT T1.AvgScrMath, T2.County FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath IS NOT NULL ORDER BY T1.AvgScrMath + T1.AvgScrRead + T1.AvgScrWrite ASC LIMIT 1",
+      "pred_sql": "SELECT T2.cname FROM satscores AS T1 INNER JOIN schooels AS T2 ON T1.cds = T2.CDSCode GROUP BY T2.cname ORDER BY AVG(T1.AvgScrMath + T1.AvgScrRead + T1.AvgScrWrite) ASC LIMIT 1",
+      "correct": false,
+      "error": "no such table: schooels",
+      "call_count": 2
+    },
+    {
+      "query_idx": 18,
+      "db_id": "california_schools",
+      "question": "What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding",
+      "gold_sql": "SELECT T2.School, T1.AvgScrWrite FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.AdmFName1 = 'Ricci' AND T2.AdmLName1 = 'Ulrich'",
+      "pred_sql": "SELECT\n  sname,\n  AVG(AvgScrWrite)\nFROM satscores\nWHERE\n  cname = 'Ricci Ulrich'\nGROUP BY\n  sname",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 19,
+      "db_id": "california_schools",
+      "question": "What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary Sch",
+      "gold_sql": "SELECT CAST(COUNT(School) AS REAL) / 12 FROM schools WHERE DOC = 52 AND County = 'Alameda' AND strftime('%Y', OpenDate) = '1980'",
+      "pred_sql": "SELECT CAST(COUNT(T1.CDSCode) AS REAL) / 12 FROM schoo ls AS T1 WHERE T1.County = 'Alameda' AND T1.DOC = 52 AND STRFTIME('%Y', T1.OpeNDate) = '1980'",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 20,
+      "db_id": "california_schools",
+      "question": "What is the ratio of merged Unified School District schools in Orange County to merged Elementary School District school",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN DOC = 54 THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN DOC = 52 THEN 1 ELSE 0 END) FROM schools WHERE StatusType = 'Merged' AND County = 'Orange'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN rtype = 'DOC = 52' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN rtype = 'DOC = 54' THEN 1 ELSE 0 END)\nFROM satscores",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 21,
+      "db_id": "california_schools",
+      "question": "Which different county has the most number of closed schools? Please provide the name of each school as well as the clos",
+      "gold_sql": "SELECT DISTINCT County, School, ClosedDate FROM schools WHERE County = ( SELECT County FROM schools WHERE StatusType = 'Closed' GROUP BY County ORDER BY COUNT(School) DESC LIMIT 1 ) AND StatusType = '",
+      "pred_sql": "SELECT County, School, ClosedDate FROM schooools WHERE StatusType = 'Closed' GROUP BY County ORDER BY COUNT(School) DESC LIMIT 1",
+      "correct": false,
+      "error": "no such table: schooools",
+      "call_count": 2
+    },
+    {
+      "query_idx": 22,
+      "db_id": "california_schools",
+      "question": "Of the schools with a mailing state address in California, what is the ratio of the schools located in the county of Col",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN County = 'Colusa' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN County = 'Humboldt' THEN 1 ELSE 0 END) FROM schools WHERE MailState = 'CA'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN County = 'Colusa' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN County = 'Humbolt' THEN 1 ELSE 0 END) FROM schooools WHERE State = 'CA'",
+      "correct": false,
+      "error": "no such table: schooools",
+      "call_count": 2
+    },
+    {
+      "query_idx": 23,
+      "db_id": "california_schools",
+      "question": "What is the total number of non-chartered schools in the county of Los Angeles with a percent (%) of eligible free meals",
+      "gold_sql": "SELECT COUNT(T2.School) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Los Angeles' AND T2.Charter = 0 AND CAST(T1.`Free Meal Count (K-12)` AS REAL) * 100 / T1.",
+      "pred_sql": "SELECT sum(FRPM_Count_K-12) FROM frpm WHERE Charter_SchooL = 0 AND County_Name = 'Los Angeles' AND Percent_Eligible_Free_(K-12) < 0.18",
+      "correct": false,
+      "error": "no such column: FRPM_Count_K",
+      "call_count": 2
+    },
+    {
+      "query_idx": 24,
+      "db_id": "california_schools",
+      "question": "What is the ratio in percentage of Santa Clara County schools that are locally funded compared to all other types of cha",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN FundingType = 'Locally funded' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN FundingType != 'Locally funded' THEN 1 ELSE 0 END) FROM schools WHERE County = 'Santa Clara' ",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN sname = 'Santa Clara' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*)\nFROM satscores\nWHERE rtpe = 'Charter'",
+      "correct": false,
+      "error": "no such column: rtpe",
+      "call_count": 2
+    },
+    {
+      "query_idx": 25,
+      "db_id": "california_schools",
+      "question": "Which county reported the most number of school closure in the 1980s with school wonership code belonging to Youth Autho",
+      "gold_sql": "SELECT County FROM schools WHERE strftime('%Y', ClosedDate) BETWEEN '1980' AND '1989' AND StatusType = 'Closed' AND SOC = 11 GROUP BY County ORDER BY COUNT(School) DESC LIMIT 1",
+      "pred_sql": "SELECT CountyName FROM frpm WHERE AcademicYear BETWEEN 1980 AND 1989 AND DistrictName = 'Youth Authority Facilities (CEA)' GROUP BY CountyName ORDER BY SUM(FRPMCount) DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: CountyName",
+      "call_count": 2
+    },
+    {
+      "query_idx": 26,
+      "db_id": "california_schools",
+      "question": "How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 ",
+      "gold_sql": "SELECT T1.`Enrollment (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsCode = 'SSS' AND T2.City = 'Fremont' AND T1.`Academic Year` BETWEEN 2014 AND 2015",
+      "pred_sql": "SELECT T2.\"Enrollment (Age 5-17)\" FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.\"Academic Year\" = '2014-2015' AND T1.\"Educational Option Type\" = 'SSS' AND T1.\"School Name\"",
+      "correct": false,
+      "error": "no such column: T2.Enrollment (Age 5-17)",
+      "call_count": 2
+    },
+    {
+      "query_idx": 27,
+      "db_id": "california_schools",
+      "question": "What is the lowest grade for the District Special Education Consortia School with National Center for Educational Statis",
+      "gold_sql": "SELECT MIN(T1.`Low Grade`) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.NCESDist = '0613360' AND T2.EdOpsCode = 'SPECON'",
+      "pred_sql": "SELECT L.Lg FROM frpm AS F INNER JOIN schoo ls AS S ON F.CDSCode = S.CDSCode INNER JOIN schoo ls AS L ON S.CDSCode = L.CDSCode WHERE L.EdOpsCode = 'SPECON' AND S.NCESSchoo l = '0613360'",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 28,
+      "db_id": "california_schools",
+      "question": "What is the city location of the high school level school with Lunch Provision 2 whose lowest grade is 9 and the highest",
+      "gold_sql": "SELECT T2.City FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`NSLP Provision Status` = 'Lunch Provision 2' AND T2.County = 'Merced' AND T1.`Low Grade` = 9 AND T1.`High G",
+      "pred_sql": "SELECT\n  SchoolName\nFROM frpm\nWHERE\n  SchoolType = 'High School'\n  AND `NSLP Provision Status` = 2\n  AND Low Grade = '9'\n  AND High Grade = '12'\n  AND `County Name` = 'Merced'",
+      "correct": false,
+      "error": "near \"Grade\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 29,
+      "db_id": "california_schools",
+      "question": "Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) ",
+      "gold_sql": "SELECT T2.School, T1.`FRPM Count (Ages 5-17)` * 100 / T1.`Enrollment (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Los Angeles' AND T2.GSserved = ",
+      "pred_sql": "SELECT DISTINCT\n  f.School Name,\n  f.Percent ('%') Eligible FRPM ('Age 5-17')\nFROM frpm AS f\nWHERE\n  f.County Name = 'Los Angeles'\n  AND f.District Type = 'High School'\n  AND f.District Name = 'Los An",
+      "correct": false,
+      "error": "near \"(\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 30,
+      "db_id": "california_schools",
+      "question": "Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical buildin",
+      "gold_sql": "SELECT County, COUNT(Virtual) FROM schools WHERE (County = 'San Diego' OR County = 'Santa Barbara') AND Virtual = 'F' GROUP BY County ORDER BY COUNT(Virtual) DESC LIMIT 1",
+      "pred_sql": "SELECT T1.\"County Name\", COUNT(T1.\"School Code\") FROM schoo ls AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE T1.Virtual = 'F' GROUP BY T1.\"County Name\" ORDER BY COUNT(T1.\"School Code\")",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 31,
+      "db_id": "california_schools",
+      "question": "In which city can you find the school in the state of California with the lowest latitude coordinates and what is its lo",
+      "gold_sql": "SELECT T2.City, T1.`Low Grade`, T1.`School Name` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.State = 'CA' ORDER BY T2.Latitude ASC LIMIT 1",
+      "pred_sql": "SELECT\n  sname,\n  enroll12\nFROM satscores\nWHERE\n  cname IN (\n    SELECT\n      cname\n    FROM schooels\n    WHERE\n      state = 'CA'\n  )\nORDER BY\n  latitude ASC\nLIMIT 1",
+      "correct": false,
+      "error": "no such table: schooels",
+      "call_count": 2
+    },
+    {
+      "query_idx": 32,
+      "db_id": "california_schools",
+      "question": "Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple ",
+      "gold_sql": "SELECT T2.City, COUNT(T2.CDSCode) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.Magnet = 1 AND T2.GSoffered = 'K-8' AND T1.`NSLP Provision Status` = 'Multiple Provision ",
+      "pred_sql": "SELECT\n  COUNT(DISTINCT T1.City),\n  T1.City,\n  COUNT(T2.CDSCode) AS SchoolCount\nFROM schoo ls AS T1\nINNER JOIN frpm AS T2\n  ON T1.CDSCode = T2.CDSCode\nWHERE\n  T1.Magnet = 1\n  AND T2.NSLP_Provision_Sta",
+      "correct": false,
+      "error": "near \"AS\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 33,
+      "db_id": "california_schools",
+      "question": "What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine.",
+      "gold_sql": "SELECT T1.`Free Meal Count (K-12)` * 100 / T1.`Enrollment (K-12)`, T1.`District Code` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.AdmFName1 = 'Alusine'",
+      "pred_sql": "SELECT DISTINCT F.DistrictCode FROM frpm F JOIN schooLs S ON F.CDSCode = S.CDSCode WHERE F.Percent(%) Eligible Free (K-12) = (F.Free Meal Count (K-12) / F.Enrollment (K-12)) * 100 AND F.2013-14 CALPAD",
+      "correct": false,
+      "error": "near \"(\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 34,
+      "db_id": "california_schools",
+      "question": "What are the valid e-mail addresses of the administrator of the school located in the San Bernardino county, City of San",
+      "gold_sql": "SELECT T2.AdmEmail1, T2.AdmEmail2 FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'San Bernardino' AND T2.City = 'San Bernardino' AND T2.DOC = 54 AND strftime('%Y",
+      "pred_sql": "SELECT DISTINCT AdmEmail1 FROM schooools WHERE County = 'San Bernaardino' AND City = 'San Bernaardino City' AND OpDate BETWEEN '2009-01-01' AND '2010-12-31' AND (DOC = '54' OR DOC = '62')",
+      "correct": false,
+      "error": "no such table: schooools",
+      "call_count": 2
+    },
+    {
+      "query_idx": 35,
+      "db_id": "financial",
+      "question": "How many accounts who choose issuance after transaction are staying in East Bohemia region?",
+      "gold_sql": "SELECT COUNT(T2.account_id) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id WHERE T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'",
+      "pred_sql": "SELECT\n  COUNT(DISTINCT T1.account_id)\nFROM account AS T1\nINNER JOIN district AS T2\n  ON T1.district_id = T2.district_id\nWHERE\n  T2.A3 = 'East Bohemia' AND T1.frequency = 'POPLATEK PO OBRATU'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 36,
+      "db_id": "financial",
+      "question": "How many male customers who are living in North Bohemia have average salary greater than 8000?",
+      "gold_sql": "SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000",
+      "pred_sql": "SELECT COUNT(DISTINCT c.client_id) FROM client c JOIN district d ON c.district_id = d.district_id WHERE c.gender = 'M' AND d.A3 = 'North Bohemia' AND d.A11 > 8000",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 37,
+      "db_id": "financial",
+      "question": "List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between t",
+      "gold_sql": "SELECT T1.account_id , ( SELECT MAX(A11) - MIN(A11) FROM district ) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T1.account_id = T3.account_",
+      "pred_sql": "SELECT DISTINCT T1.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' ORDER BY T1.birth_date DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: T1.account_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 38,
+      "db_id": "financial",
+      "question": "List out the account numbers of clients who are youngest and have highest average salary?",
+      "gold_sql": "SELECT T1.account_id  FROM account AS T1 INNER JOIN disp AS T2 ON T1.account_id = T2.account_id INNER JOIN client AS T3 ON T2.client_id = T3.client_id INNER JOIN district AS T4 on T4.district_id = T1.",
+      "pred_sql": "SELECT T1.account_id FROM account AS T1 JOIN client AS T2 ON T1.district_id = T2.district_id GROUP BY T1.account_id ORDER BY T2.birth_date ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 39,
+      "db_id": "financial",
+      "question": "Among the accounts who have approved loan date in 1997, list out the accounts that have the lowest approved amount and c",
+      "gold_sql": "SELECT T2.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T1.date) = '1997' AND T2.frequency = 'POPLATEK TYDNE' ORDER BY T1.amount LIMIT 1",
+      "pred_sql": "SELECT DISTINCT A.account_id FROM account A JOIN loan L ON A.account_id = L.account_id WHERE L.date BETWEEN '1997-01-01' AND '1997-12-31' ORDER BY L.amount ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 40,
+      "db_id": "financial",
+      "question": "Among the accounts who have loan validity more than 12 months, list out the accounts that have the highest approved amou",
+      "gold_sql": "SELECT T1.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T2.date) = '1993' AND T1.duration > 12 ORDER BY T1.amount DESC LIMIT 1",
+      "pred_sql": "SELECT DISTINCT a.account_id FROM account a JOIN loan l ON a.account_id = l.account_id WHERE l.duration > 12 AND a.date BETWEEN '1993-01-01' AND '1993-12-31' ORDER BY l.amount DESC LIMIT 1",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 41,
+      "db_id": "financial",
+      "question": "Among the account opened, how many female customers who were born before 1950 and stayed in Sokolov?",
+      "gold_sql": "SELECT COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND STRFTIME('%Y', T2.birth_date) < '1950' AND T1.A2 = 'Sokolov'",
+      "pred_sql": "SELECT\n  COUNT(DISTINCT c.client_id)\nFROM client AS c\nJOIN account AS a\n  ON c.district_id = a.district_id\nWHERE\n  c.gender = 'F'\n  AND strftime('%Y', c.birth_date) < '1950'\n  AND a.district_id = (\n  ",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 42,
+      "db_id": "financial",
+      "question": "For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male",
+      "gold_sql": "SELECT CAST(SUM(T1.gender = 'M') AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'south Bohemia' GROUP BY T2.A4 ORDER ",
+      "pred_sql": "SELECT CAST(COUNT(CASE WHEN T1.gender = 'M' THEN 1 END) AS REAL) * 100 / COUNT(T1.client_id)\nFROM client AS T1\nINNER JOIN district AS T2 ON T1.district_id = T2.district_id\nWHERE T2.A3 = 'South Bohemia",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 43,
+      "db_id": "financial",
+      "question": "For the client whose loan was approved first in 1993/7/5, what is the increase rate of his/her account balance from 1993",
+      "gold_sql": "SELECT CAST((SUM(IIF(T3.date = '1998-12-27', T3.balance, 0)) - SUM(IIF(T3.date = '1993-03-22', T3.balance, 0))) AS REAL) * 100 / SUM(IIF(T3.date = '1993-03-22', T3.balance, 0)) FROM loan AS T1 INNER J",
+      "pred_sql": "SELECT CAST((SUM(CASE WHEN date BETWEEN '1993-03-22' AND '1998-12-27' THEN balance ELSE 0 END) - SUM(CASE WHEN date BETWEEN '1993-07-05' AND '1993-03-22' THEN balance ELSE 0 END)) / SUM(CASE WHEN date",
+      "correct": false,
+      "error": "near \")\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 44,
+      "db_id": "financial",
+      "question": "What is the percentage of loan amount that has been fully paid with no issue.",
+      "gold_sql": "SELECT (CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS REAL) * 100) / SUM(amount) FROM loan",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS REAL) * 100 / SUM(amount) FROM loan WHERE status = 'A'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 45,
+      "db_id": "financial",
+      "question": "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.",
+      "gold_sql": "SELECT CAST(SUM(status = 'C') AS REAL) * 100 / COUNT(account_id) FROM loan WHERE amount < 100000",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.status = 'C' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.account_id) FROM loan AS T1 WHERE T1.amount < 100000",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 46,
+      "db_id": "financial",
+      "question": "For accounts in 1993 with statement issued after transaction, list the account ID, district name and district region.",
+      "gold_sql": "SELECT T1.account_id, T2.A2, T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.frequency = 'POPLATEK PO OBRATU' AND STRFTIME('%Y', T1.date)= '1993'",
+      "pred_sql": "SELECT\n  a.account_id,\n  d.A2,\n  d.A3\nFROM account AS a\nJOIN trans AS t\n  ON a.account_id = t.account_id\nJOIN district AS d\n  ON a.district_id = d.district_id\nWHERE\n  STRFTIME('%Y', t.date) = '1993'\n ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 47,
+      "db_id": "financial",
+      "question": "From Year 1995 to 2000, who are the accounts holders from 'east Bohemia'. State the account ID the frequency of statemen",
+      "gold_sql": "SELECT T1.account_id, T1.frequency FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'east Bohemia' AND STRFTIME('%Y', T1.date) BETWEEN '1995' AND '2000'",
+      "pred_sql": "SELECT\n  a.account_id,\n  a.frequency\nFROM account AS a\nJOIN district AS d\n  ON a.district_id = d.district_id\nWHERE\n  d.A2 = 'east Bohemia'\n  AND a.date BETWEEN '1995-01-01' AND '2000-12-31'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 48,
+      "db_id": "financial",
+      "question": "For loans contracts which are still running where client are in debt, list the district of the and the state the percent",
+      "gold_sql": "SELECT CAST((T3.A13 - T3.A12) AS REAL) * 100 / T3.A12 FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN district AS T3 ON T2.district_id = T3.district_id WHERE T1.st",
+      "pred_sql": "SELECT DISTINCT\n  D.A2,\n  D.A3\nFROM district AS D\nJOIN loan AS L\n  ON D.A8 = L.account_id\nWHERE\n  L.status = 'D'\n  AND L.date = '1996-01-01'\n  AND D.A12 IS NOT NULL\n  AND D.A13 IS NOT NULL\n  AND (\n   ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 49,
+      "db_id": "financial",
+      "question": "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.",
+      "gold_sql": "SELECT T2.A2, COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' GROUP BY T2.district_id, T2.A2 ORDER BY COUNT(T1.client_id) DESC ",
+      "pred_sql": "SELECT\n  d.A2,\n  COUNT(c.client_id)\nFROM district AS d\nJOIN client AS c\n  ON d.district_id = c.district_id\nJOIN account AS a\n  ON d.district_id = a.district_id\nWHERE\n  c.gender = 'F'\nGROUP BY\n  d.A2\nO",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 50,
+      "db_id": "financial",
+      "question": "Which are the top ten withdrawals (non-credit card) by district names for the month of January 1996?",
+      "gold_sql": "SELECT DISTINCT T1.A2 FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN trans AS T3 ON T2.account_id = T3.account_id WHERE T3.type = 'VYDAJ' AND T3.date LIKE '",
+      "pred_sql": "SELECT DISTINCT A2 FROM district WHERE A8 IN (SELECT account_id FROM trans WHERE type = 'VYDAJ' AND date LIKE '1996-01%') LIMIT 10",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 51,
+      "db_id": "financial",
+      "question": "How many of the account holders in South Bohemia still do not own credit cards?",
+      "gold_sql": "SELECT COUNT(T3.account_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T2.client_id = T3.client_id WHERE T1.A3 = 'south Bohemia' AND T3.typ",
+      "pred_sql": "SELECT COUNT(DISTINCT a.account_id)\nFROM account AS a\nWHERE a.district_id = (SELECT district_id FROM district WHERE A3 = 'South Bohemia')\nAND a.account_id NOT IN (SELECT c.card_id FROM card)",
+      "correct": false,
+      "error": "no such column: c.card_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 52,
+      "db_id": "financial",
+      "question": "Which district has highest active loan?",
+      "gold_sql": "SELECT T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T3.status IN ('C', 'D') GROUP BY T2.A3 ORDER B",
+      "pred_sql": "SELECT A2 FROM district WHERE A2 IN (SELECT A3 FROM loan WHERE status = 'C') ORDER BY A16 DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 53,
+      "db_id": "financial",
+      "question": "After making a credit card withdrawal, how many account/s with monthly issuance has a negative balance?",
+      "gold_sql": "SELECT COUNT(T1.account_id) FROM trans AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE T1.balance < 0 AND T1.operation = 'VYBER KARTOU' AND T2.frequency = 'POPLATEK MESICNE'",
+      "pred_sql": "SELECT COUNT(DISTINCT a.account_id) FROM account a JOIN trans t ON a.account_id = t.account_id WHERE t.operation = 'VYBER KARTOU' AND a.frequency = 'POPLATEK MESICNE' AND a.balance < 0",
+      "correct": false,
+      "error": "no such column: a.balance",
+      "call_count": 2
+    },
+    {
+      "query_idx": 54,
+      "db_id": "financial",
+      "question": "Between 1/1/1995 and 12/31/1997, how many loans in the amount of at least 250,000 per account that chose monthly stateme",
+      "gold_sql": "SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN loan AS T2 ON T1.account_id = T2.account_id WHERE T2.date BETWEEN '1995-01-01' AND '1997-12-31' AND T1.frequency = 'POPLATEK MESICNE' AND T2.a",
+      "pred_sql": "SELECT\n  COUNT(DISTINCT T1.loan_id)\nFROM loan AS T1\nINNER JOIN account AS T2\n  ON T1.account_id = T2.account_id\nWHERE\n  T2.date BETWEEN '1995-01-01' AND '1997-12-31'\n  AND T2.frequency = 'POPLATEK MES",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 55,
+      "db_id": "financial",
+      "question": "How many accounts have running contracts in Branch location 1?",
+      "gold_sql": "SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T1.account_id = T3.account_id WHERE T1.district_id = 1 AND (T3.stat",
+      "pred_sql": "SELECT count(DISTINCT a.account_id) FROM account a JOIN district d ON a.district_id = d.district_id WHERE d.A2 = 'Branch' AND a.frequency = 'C'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 56,
+      "db_id": "financial",
+      "question": "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there",
+      "gold_sql": "SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A15 = (SELECT T3.A15 FROM district AS T3 ORDER BY T3.A15 DESC LIM",
+      "pred_sql": "SELECT COUNT(c.client_id) FROM client c JOIN district d ON c.district_id = d.district_id WHERE d.A15 = (SELECT (SELECT A15 FROM district ORDER BY A15 DESC LIMIT 2 OFFSET 1) FROM district) AND c.gender",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 57,
+      "db_id": "financial",
+      "question": "How much is the average amount in credit card made by account holders in a month, in year 2021?",
+      "gold_sql": "SELECT AVG(T4.amount) FROM card AS T1 INNER JOIN disp AS T2 ON T1.disp_id = T2.disp_id INNER JOIN account AS T3 ON T2.account_id = T3.account_id INNER JOIN trans AS T4 ON T3.account_id = T4.account_id",
+      "pred_sql": "SELECT AVG(T1.amount) FROM trans AS T1 INNER JOIN card AS T2 ON T1.account_id = T2.disp_id WHERE T2.type = 'credit' AND strftime('%Y', T1.date) = '2021' AND T1.operation = 'VYBER KARTOU'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 58,
+      "db_id": "financial",
+      "question": "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less",
+      "gold_sql": "SELECT T1.account_id FROM trans AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T1.date) = '1998' AND T1.operation = 'VYBER KARTOU' AND T1.amount < (SELECT AVG(amo",
+      "pred_sql": "SELECT DISTINCT T1.account_id FROM trans AS T1 INNER JOIN card AS T2 ON T1.account_id = T2.disp_id WHERE T1.date BETWEEN '1998-01-01' AND '1998-12-31' AND T1.operation = 'VYBER KARTOU' AND T1.amount <",
+      "correct": false,
+      "error": "execution_timeout",
+      "call_count": 2
+    },
+    {
+      "query_idx": 59,
+      "db_id": "financial",
+      "question": "Please list the accounts whose district is Tabor that are eligible for loans.",
+      "gold_sql": "SELECT T2.account_id FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T2.account_id = T3.account_id WHERE T3.type = 'OWNER' AND T1.A2 = 'Tabor'",
+      "pred_sql": "SELECT account_id\nFROM account\nWHERE district_id = (SELECT district_id FROM district WHERE A2 = 'Tabor')\n  AND frequency = 'OWNER'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 60,
+      "db_id": "financial",
+      "question": "Please list the account types that are not eligible for loans, and the average income of residents in the district where",
+      "gold_sql": "SELECT T3.type FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T2.account_id = T3.account_id WHERE T3.type != 'OWNER' AND T1.A11 BETWEEN 8000 A",
+      "pred_sql": "SELECT DISTINCT\n  T1.frequency\nFROM account AS T1\nINNER JOIN district AS T2\n  ON T1.district_id = T2.district_id\nWHERE\n  T2.A11 BETWEEN 8000 AND 9000\n  AND T1.frequency <> 'OWNER'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 61,
+      "db_id": "financial",
+      "question": "How many accounts in North Bohemia has made a transaction with the partner's bank being AB?",
+      "gold_sql": "SELECT COUNT(T2.account_id) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN trans AS T3 ON T2.account_id = T3.account_id WHERE T3.bank = 'AB' AND T1.A3 = 'no",
+      "pred_sql": "SELECT COUNT(DISTINCT a.account_id) FROM account a JOIN trans t ON a.account_id = t.account_id JOIN district d ON a.district_id = d.district_id WHERE d.A3 = 'North Bohemia' AND t.bank = 'AB'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 62,
+      "db_id": "financial",
+      "question": "Please list the name of the districts with accounts that made withdrawal transactions.",
+      "gold_sql": "SELECT DISTINCT T1.A2 FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN trans AS T3 ON T2.account_id = T3.account_id WHERE T3.type = 'VYDAJ'",
+      "pred_sql": "SELECT DISTINCT A2 FROM district WHERE district_id IN (SELECT district_id FROM account WHERE account_id IN (SELECT account_id FROM trans WHERE type = 'VYDAJ'))",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 63,
+      "db_id": "financial",
+      "question": "What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accou",
+      "gold_sql": "SELECT AVG(T1.A15) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id WHERE STRFTIME('%Y', T2.date) >= '1997' AND T1.A15 > 4000",
+      "pred_sql": "SELECT AVG(A15) FROM district WHERE A15 > 4000 AND A14 >= 1997",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 64,
+      "db_id": "financial",
+      "question": "Which district has the most accounts with loan contracts finished with no problems?",
+      "gold_sql": "SELECT T1.A2 FROM District AS T1 INNER JOIN Account AS T2 ON T1.District_id = T2.District_id INNER JOIN Loan AS T3 ON T2.Account_id = T3.Account_id WHERE T3.status = 'A' GROUP BY T1.District_id ORDER ",
+      "pred_sql": "SELECT T1.A2 FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id INNER JOIN loan AS T3 ON T2.account_id = T3.account_id WHERE T3.status = 'A' GROUP BY T1.A2 ORDER BY COUNT(",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 65,
+      "db_id": "financial",
+      "question": "What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?",
+      "gold_sql": "SELECT CAST(SUM(T2.gender = 'F') AS REAL) * 100 / COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T1.A11 > 10000",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.gender = 'F' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 JOIN account AS T2 ON T1.district_id = T2.district_id WHERE T2.A11 > 10000",
+      "correct": false,
+      "error": "no such column: T2.A11",
+      "call_count": 2
+    },
+    {
+      "query_idx": 66,
+      "db_id": "financial",
+      "question": "What was the growth rate of the total amount of loans across all accounts for a male client between 1996 and 1997?",
+      "gold_sql": "SELECT CAST((SUM(CASE WHEN STRFTIME('%Y', T1.date) = '1997' THEN T1.amount ELSE 0 END) - SUM(CASE WHEN STRFTIME('%Y', T1.date) = '1996' THEN T1.amount ELSE 0 END)) AS REAL) * 100 / SUM(CASE WHEN STRFT",
+      "pred_sql": "SELECT\n  CAST((SUM(CASE WHEN strftime('%Y', date) = '1997' THEN amount ELSE 0 END) - SUM(CASE WHEN strftime('%Y', date) = '1996' THEN amount ELSE 0 END)) * 100 AS REAL) / SUM(CASE WHEN strftime('%Y', ",
+      "correct": false,
+      "error": "no such column: gender",
+      "call_count": 2
+    },
+    {
+      "query_idx": 67,
+      "db_id": "financial",
+      "question": "What was the difference in the number of crimes committed in East and North Bohemia in 1996?",
+      "gold_sql": "SELECT SUM(IIF(A3 = 'east Bohemia', A16, 0)) - SUM(IIF(A3 = 'north Bohemia', A16, 0)) FROM district",
+      "pred_sql": "SELECT\n  SUM(CASE WHEN A3 = 'East Bohemia' THEN A16 ELSE 0 END) - SUM(CASE WHEN A3 = 'North Bohemia' THEN A16 ELSE 0 END)\nFROM district\nWHERE\n  A16 = 1996",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 68,
+      "db_id": "financial",
+      "question": "How often does account number 3 request an account statement to be released? What was the aim of debiting 3539 in total?",
+      "gold_sql": "SELECT T1.frequency, T2.k_symbol FROM account AS T1 INNER JOIN (SELECT account_id, k_symbol, SUM(amount) AS total_amount FROM `order` GROUP BY account_id, k_symbol) AS T2 ON T1.account_id = T2.account",
+      "pred_sql": "SELECT COUNT(DISTINCT date) FROM trans WHERE account_id = 3 AND k_symbol = 'statement'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 69,
+      "db_id": "financial",
+      "question": "How many accounts have an owner disposition and request for a statement to be generated upon a transaction?",
+      "gold_sql": "SELECT COUNT(T1.account_id) FROM account AS T1 INNER JOIN disp AS T2 ON T1.account_id = T2.account_id WHERE T2.type = 'OWNER' AND T1.frequency = 'POPLATEK PO OBRATU'",
+      "pred_sql": "SELECT count(DISTINCT account_id)\nFROM trans\nWHERE type = 'REQUEST FOR STATEMENT'\n  AND operation = 'OWNER DISPOSITION'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 70,
+      "db_id": "financial",
+      "question": "Please provide a list of clients who were born between 1983 and 1987 and whose account branch is in East Bohemia, along ",
+      "gold_sql": "SELECT T1.client_id, T3.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T4 ON T1.client_id = T4.client_id INNER JOIN account AS T3 ON T2.di",
+      "pred_sql": "SELECT\n  c.client_id\nFROM client AS c\nJOIN account AS a\n  ON c.district_id = a.district_id\nJOIN district AS d\n  ON a.district_id = d.district_id\nWHERE\n  STRFTIME('%Y', c.birth_date) BETWEEN '1983' AND",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 71,
+      "db_id": "financial",
+      "question": "How many male customers who were born between 1974 and 1976 have made a payment on their home in excess of $4000?",
+      "gold_sql": "SELECT COUNT(T1.account_id) FROM trans AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN disp AS T4 ON T2.account_id = T4.account_id INNER JOIN client AS T3 ON T4.client_id = ",
+      "pred_sql": "SELECT COUNT(DISTINCT c.client_id) FROM client c INNER JOIN disp d ON c.client_id = d.client_id INNER JOIN trans t ON d.account_id = t.account_id WHERE c.gender = 'M' AND STRFTIME('%Y', c.birth_date) ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 72,
+      "db_id": "financial",
+      "question": "What proportion of customers who have accounts at the Prague branch are female?",
+      "gold_sql": "SELECT CAST(SUM(T2.gender = 'F') AS REAL) / COUNT(T2.client_id) * 100 FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T1.A3 = 'Prague'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.gender = 'F' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 JOIN account AS T2 ON T1.client_id = T2.account_id WHERE T2.district_id = (SELECT di",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 73,
+      "db_id": "financial",
+      "question": "What percentage of male clients request for weekly statements to be issued?",
+      "gold_sql": "SELECT CAST(SUM(T1.gender = 'M') AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T3 ON T1.district_id = T3.district_id INNER JOIN account AS T2 ON T2.district_id = T3.dis",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.gender = 'M' AND T1.frequency = 'POPLATEK TYDNE' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.frequency) FROM client AS T1",
+      "correct": false,
+      "error": "no such column: T1.frequency",
+      "call_count": 2
+    },
+    {
+      "query_idx": 74,
+      "db_id": "financial",
+      "question": "Among the accounts who have loan validity more than 24 months, list out the accounts that have the lowest approved amoun",
+      "gold_sql": "SELECT T1.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE T1.duration > 24 AND STRFTIME('%Y', T2.date) < '1997' ORDER BY T1.amount ASC LIMIT 1",
+      "pred_sql": "SELECT\n  a.account_id\nFROM account AS a\nJOIN loan AS l\n  ON a.account_id = l.account_id\nWHERE\n  l.duration > 24\n  AND a.date < '1997-01-01'\nORDER BY\n  a.frequency\nLIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 75,
+      "db_id": "financial",
+      "question": "Name the account numbers of female clients who are oldest and have lowest average salary?",
+      "gold_sql": "SELECT T3.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN account AS T3 ON T2.district_id = T3.district_id INNER JOIN disp AS T4 ON T1.client_id = ",
+      "pred_sql": "SELECT DISTINCT T1.account_id FROM account AS T1 JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND T1.date = (SELECT MAX(date) FROM account) AND T1.amount = (SELECT MIN(am",
+      "correct": false,
+      "error": "no such column: T1.amount",
+      "call_count": 2
+    },
+    {
+      "query_idx": 76,
+      "db_id": "financial",
+      "question": "What is the average amount of loan which are still on running contract with statement issuance after each transaction?",
+      "gold_sql": "SELECT AVG(T2.amount) FROM account AS T1 INNER JOIN loan AS T2 ON T1.account_id = T2.account_id WHERE T2.status IN ('C', 'D') AND T1.frequency = 'POPLATEK PO OBRATU'",
+      "pred_sql": "SELECT AVG(T1.amount) FROM loan AS T1 INNER JOIN trans AS T2 ON T1.account_id = T2.account_id WHERE T1.status IN ('C', 'D') AND T2.operation = 'POPLATEK PO OBRATU'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 77,
+      "db_id": "financial",
+      "question": "List all ID and district for clients that can only have the right to issue permanent orders or apply for loans.",
+      "gold_sql": "SELECT T3.client_id, T2.district_id, T2.A2 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T1.account_id = T3.account_id WHERE T3.type = 'OWNER",
+      "pred_sql": "SELECT DISTINCT\n  c.client_id,\n  d.A1\nFROM client AS c\nJOIN disp AS d\n  ON c.client_id = d.client_id\nWHERE\n  d.type IN ('permanent orders', 'loans')\n  AND d.account_id IN (\n    SELECT\n      account_id",
+      "correct": false,
+      "error": "no such column: d.A1",
+      "call_count": 2
+    },
+    {
+      "query_idx": 78,
+      "db_id": "financial",
+      "question": "Provide the IDs and age of the client with high level credit card, which is eligible for loans.",
+      "gold_sql": "SELECT T1.client_id, STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T3.birth_date) FROM disp AS T1 INNER JOIN card AS T2 ON T2.disp_id = T1.disp_id INNER JOIN client AS T3 ON T1.client_id = T3.cli",
+      "pred_sql": "SELECT\n  c.client_id,\n  CAST((date('now') - c.birth_date) AS INTEGER) AS age\nFROM client AS c\nJOIN disp AS d\n  ON c.client_id = d.client_id\nJOIN card AS ca\n  ON d.disp_id = ca.disp_id\nWHERE\n  ca.type ",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 79,
+      "db_id": "toxicology",
+      "question": "Calculate the average number of oxygen atoms in single-bonded molecules.",
+      "gold_sql": "SELECT AVG(oxygen_count) FROM (SELECT T1.molecule_id, COUNT(T1.element) AS oxygen_count FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id  WHERE T2.bond_type = '-' AND T1.elemen",
+      "pred_sql": "SELECT AVG(SUM(CASE WHEN T1.element = 'o' THEN 1 ELSE 0 END)) FROM atom AS T1 JOIN connected AS T2 ON T1.atom_id = T2.atom_id JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '-'",
+      "correct": false,
+      "error": "misuse of aggregate function SUM()",
+      "call_count": 2
+    },
+    {
+      "query_idx": 80,
+      "db_id": "toxicology",
+      "question": "On average how many carcinogenic molecules are single bonded?",
+      "gold_sql": "SELECT AVG(single_bond_count) FROM (SELECT T3.molecule_id, COUNT(T1.bond_type) AS single_bond_count FROM bond AS T1  INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN molecule AS T3 ",
+      "pred_sql": "SELECT CAST(COUNT(DISTINCT c.atom_id) AS REAL) / COUNT(DISTINCT m.molecule_id) FROM c INNER JOIN bond b ON c.bond_id = b.bond_id INNER JOIN molecule m ON c.molecule_id = m.molecule_id WHERE m.label = ",
+      "correct": false,
+      "error": "no such table: c",
+      "call_count": 2
+    },
+    {
+      "query_idx": 81,
+      "db_id": "toxicology",
+      "question": "What is the percentage of carbon in double-bond molecules?",
+      "gold_sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN T1.element = 'c' THEN T1.atom_id ELSE NULL END) AS REAL) * 100 / COUNT(DISTINCT T1.atom_id) FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_i",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.element = 'c' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN bon AS T2 ON T1.bond_id = T2.bond_id WHERE T2.bond_type = '='",
+      "correct": false,
+      "error": "no such table: bon",
+      "call_count": 2
+    },
+    {
+      "query_idx": 82,
+      "db_id": "toxicology",
+      "question": "What elements are in the TR004_8_9 bond atoms?",
+      "gold_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR004_8_9'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_id = 'TR004_8_9'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 83,
+      "db_id": "toxicology",
+      "question": "What elements are in a double type bond?",
+      "gold_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN connected AS T3 ON T1.atom_id = T3.atom_id WHERE T2.bond_type = '='",
+      "pred_sql": "SELECT DISTINCT molecule_id FROM bond WHERE bond_type = '='",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 84,
+      "db_id": "toxicology",
+      "question": "Which type of label is the most numerous in atoms with hydrogen?",
+      "gold_sql": "SELECT T.label FROM ( SELECT T2.label, COUNT(T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'h' GROUP BY T2.label ORDER BY COUNT(T2.mol",
+      "pred_sql": "SELECT T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'h' GROUP BY T2.label ORDER BY COUNT(T2.label) DESC LIMIT 1",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 85,
+      "db_id": "toxicology",
+      "question": "Which element is the least numerous in non-carcinogenic molecules?",
+      "gold_sql": "SELECT T.element FROM (SELECT T1.element, COUNT(DISTINCT T1.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '-' GROUP BY T1.element ORDER BY ",
+      "pred_sql": "SELECT T2.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.molecule_id IN (SELECT molecule_id FROM molecule WHERE label = '-') GROUP BY T2.element ORDER BY COUNT(",
+      "correct": false,
+      "error": "no such column: T2.element",
+      "call_count": 2
+    },
+    {
+      "query_idx": 86,
+      "db_id": "toxicology",
+      "question": "What type of bond is there between the atoms TR004_8 and TR004_20?",
+      "gold_sql": "SELECT T1.bond_type FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.atom_id = 'TR004_8' AND T2.atom_id2 = 'TR004_20' OR T2.atom_id2 = 'TR004_8' AND T2.atom_id = 'TR004_2",
+      "pred_sql": "SELECT b.bond_type FROM bond AS b INNER JOIN connected AS c ON b.bond_id = c.bond_id WHERE c.atom_id = 'TR004_8' AND c.atom_id2 = 'TR004_20' OR c.atom_id = 'TR004_20' AND c.atom_id2 = 'TR004_8'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 87,
+      "db_id": "toxicology",
+      "question": "How many atoms with iodine and with sulfur type elements are there in single bond molecules?",
+      "gold_sql": "SELECT COUNT(DISTINCT CASE WHEN T1.element = 'i' THEN T1.atom_id ELSE NULL END) AS iodine_nums , COUNT(DISTINCT CASE WHEN T1.element = 's' THEN T1.atom_id ELSE NULL END) AS sulfur_nums FROM atom AS T1",
+      "pred_sql": "SELECT COUNT(DISTINCT c1.atom_id) FROM connected c1 INNER JOIN atom a ON c1.atom_id = a.atom_id INNER JOIN bond b ON c1.bond_id = b.bond_id WHERE a.element = 'i' AND b.bond_type = '-' AND EXISTS (SELE",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 88,
+      "db_id": "toxicology",
+      "question": "What percentage of carcinogenic-type molecules does not contain fluorine?",
+      "gold_sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN T1.element <> 'f' THEN T2.molecule_id ELSE NULL END) AS REAL) * 100 / COUNT(DISTINCT T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = ",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN element = 'f' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(DISTINCT molecule_id) FROM molecule WHERE label = '+'",
+      "correct": false,
+      "error": "no such column: element",
+      "call_count": 2
+    },
+    {
+      "query_idx": 89,
+      "db_id": "toxicology",
+      "question": "What is the percentage of carcinogenic molecules in triple type bonds?",
+      "gold_sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN T2.label = '+' THEN T2.molecule_id ELSE NULL END) AS REAL) * 100 / COUNT(DISTINCT T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T2.bond_type = '#' THEN 1 ELSE 0 END) * 100.0 / COUNT(T2.bond_id) AS REAL) FROM molecule AS T1 INNER JOIN connected AS T3 ON T1.molecule_id = T3.molecule_id INNER JOIN bond A",
+      "correct": false,
+      "error": "no such column: T3.molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 90,
+      "db_id": "toxicology",
+      "question": "Please list top three elements of the toxicology of the molecule TR000 in alphabetical order.",
+      "gold_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR000' ORDER BY T.element LIMIT 3",
+      "pred_sql": "SELECT DISTINCT element FROM atom WHERE molecule_id = 'TR000' ORDER BY element ASC LIMIT 3",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 91,
+      "db_id": "toxicology",
+      "question": "What is the difference between the number of molecules that are carcinogenic and those that are not?",
+      "gold_sql": "SELECT COUNT(CASE WHEN T.label = '+' THEN T.molecule_id ELSE NULL END) - COUNT(CASE WHEN T.label = '-' THEN T.molecule_id ELSE NULL END) AS diff_car_notcar FROM molecule t",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS INTEGER) - CAST(SUM(CASE WHEN label = '-' THEN 1 ELSE 0 END) AS INTEGER) FROM molecule",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 92,
+      "db_id": "toxicology",
+      "question": "What is the percentage of double bonds in the molecule TR008? Please provide your answer as a percentage with five decim",
+      "gold_sql": "SELECT ROUND(CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS REAL) * 100 / COUNT(T.bond_id),5) FROM bond AS T WHERE T.molecule_id = 'TR008'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN b.bond_type = '=' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(b.bond_id)\nFROM bond AS b\nJOIN molecule AS m ON b.molecule_id = m.molecule_id\nWHERE m.label = 'TR008'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 93,
+      "db_id": "toxicology",
+      "question": "How much of the hydrogen in molecule TR206 is accounted for? Please provide your answer as a percentage with four decima",
+      "gold_sql": "SELECT ROUND(CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / COUNT(T.atom_id),4) FROM atom AS T WHERE T.molecule_id = 'TR206'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.element = 'h' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 WHERE T1.molecule_id = 'TR206'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 94,
+      "db_id": "toxicology",
+      "question": "What are the elements of the toxicology and label of molecule TR060?",
+      "gold_sql": "SELECT DISTINCT T1.element, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR060'",
+      "pred_sql": "SELECT T1.element, T2.label FROM atom AS T1 JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR060'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 95,
+      "db_id": "toxicology",
+      "question": "Which bond type accounted for the majority of the bonds found in molecule TR010 and state whether or not this molecule i",
+      "gold_sql": "SELECT T.bond_type FROM ( SELECT T1.bond_type, COUNT(T1.molecule_id) FROM bond AS T1  WHERE T1.molecule_id = 'TR010' GROUP BY T1.bond_type ORDER BY COUNT(T1.molecule_id) DESC LIMIT 1 ) AS T",
+      "pred_sql": "SELECT T1.bond_type, T2.carcinogenic\nFROM bond AS T1\nJOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE T2.molecule_id = 'TR010'\nGROUP BY T1.bond_type\nORDER BY COUNT(T1.bond_id) DESC\nLIMIT 1",
+      "correct": false,
+      "error": "no such column: T2.carcinogenic",
+      "call_count": 2
+    },
+    {
+      "query_idx": 96,
+      "db_id": "toxicology",
+      "question": "Please list top three molecules that have single bonds between two atoms and are not carcinogenic in alphabetical order.",
+      "gold_sql": "SELECT DISTINCT T2.molecule_id FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '-' AND T2.label = '-' ORDER BY T2.molecule_id LIMIT 3",
+      "pred_sql": "SELECT DISTINCT\n  m.molecule_id\nFROM molecule AS m\nJOIN atom AS a\n  ON m.molecule_id = a.molecule_id\nJOIN connected AS c\n  ON a.atom_id = c.atom_id\nJOIN bond AS b\n  ON c.bond_id = b.bond_id\nWHERE\n  b.",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 97,
+      "db_id": "toxicology",
+      "question": "How many bonds which involved atom 12 does molecule TR009 have?",
+      "gold_sql": "SELECT COUNT(T2.bond_id) FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T1.molecule_id = 'TR009' AND T2.atom_id = T1.molecule_id || '_1' AND T2.atom_id2 = T1.molecule_id |",
+      "pred_sql": "SELECT COUNT(T1.bond_id) FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.atom_id = 'TR009_12' OR T2.atom_id2 = 'TR009_12' AND T2.molecule_id = 'TR009'",
+      "correct": false,
+      "error": "no such column: T2.molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 98,
+      "db_id": "toxicology",
+      "question": "What are the bond type and the atoms of the bond ID of TR001_6_9?",
+      "gold_sql": "SELECT T1.bond_type, T2.atom_id, T2.atom_id2 FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.bond_id = 'TR001_6_9'",
+      "pred_sql": "SELECT T2.bond_type, T1.atom_id AS atom1, T2.atom_id2 AS atom2 FROM connected AS T1 INNER JOIN bond AS T2 ON T1.bond_id = T2.bond_id WHERE T1.atom_id2 = 'TR001_6_9'",
+      "correct": false,
+      "error": "no such column: T2.atom_id2",
+      "call_count": 2
+    },
+    {
+      "query_idx": 99,
+      "db_id": "toxicology",
+      "question": "Which molecule does the atom TR001_10 belong to? Please state whether this molecule is carcinogenic or not.",
+      "gold_sql": "SELECT T2.molecule_id , IIF(T2.label = '+', 'YES', 'NO') AS flag_carcinogenic FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.atom_id = 'TR001_10'",
+      "pred_sql": "SELECT T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.atom_id = 'TR001_10' AND T2.label = '+'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 100,
+      "db_id": "toxicology",
+      "question": "List all the elements of the toxicology of the molecule \"TR004\".",
+      "gold_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR004'",
+      "pred_sql": "SELECT\n  a.element\nFROM atom AS a\nJOIN molecule AS m\n  ON a.molecule_id = m.molecule_id\nWHERE\n  m.molecule_id = 'TR004'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 101,
+      "db_id": "toxicology",
+      "question": "Among all the atoms from 21 to 25, list all the molecules that are carcinogenic.",
+      "gold_sql": "SELECT DISTINCT T2.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE SUBSTR(T1.atom_id, -2) BETWEEN '21' AND '25' AND T2.label = '+'",
+      "pred_sql": "SELECT DISTINCT T1.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE substr(T1.atom_id, 7, 2) BETWEEN '21' AND '25' AND T2.label = '+'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 102,
+      "db_id": "toxicology",
+      "question": "What are the bonds that have phosphorus and nitrogen as their atom elements?",
+      "gold_sql": "SELECT T2.bond_id FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id IN ( SELECT T3.bond_id FROM connected AS T3 INNER JOIN atom AS T4 ON T3.atom_id = T4.atom_id WH",
+      "pred_sql": "SELECT DISTINCT b.bond_id FROM bond AS b JOIN connected AS c ON b.bond_id = c.bond_id JOIN atom AS a ON c.atom_id = a.atom_id WHERE a.element = 'p' AND a.element = 'n'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 103,
+      "db_id": "toxicology",
+      "question": "Is the molecule with the most double bonds carcinogenic?",
+      "gold_sql": "SELECT T1.label FROM molecule AS T1 INNER JOIN ( SELECT T.molecule_id, COUNT(T.bond_type) FROM bond AS T WHERE T.bond_type = '=' GROUP BY T.molecule_id ORDER BY COUNT(T.bond_type) DESC LIMIT 1 ) AS T2",
+      "pred_sql": "SELECT GROUP_CONCAT(DISTINCT m.label) FROM molecule m INNER JOIN (SELECT molecule_id, COUNT(*) AS double_bonds FROM bond WHERE bond_type = ' = ' GROUP BY molecule_id) AS bd ON m.molecule_id = bd.molec",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 104,
+      "db_id": "toxicology",
+      "question": "What is the average number of bonds the atoms with the element iodine have?",
+      "gold_sql": "SELECT CAST(COUNT(T2.bond_id) AS REAL) / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.element = 'i'",
+      "pred_sql": "SELECT CAST(COUNT(T1.bond_id) AS REAL) / COUNT(DISTINCT T1.atom_id) FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T2.element = 'i'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 105,
+      "db_id": "toxicology",
+      "question": "List the bond type and the bond ID of the atom 45.",
+      "gold_sql": "SELECT T1.bond_type, T1.bond_id FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE SUBSTR(T2.atom_id, 7, 2) = '45'",
+      "pred_sql": "SELECT bond_type, bond_id FROM bond WHERE molecule_id IN (SELECT molecule_id FROM atom WHERE atom_id = '45')",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 106,
+      "db_id": "toxicology",
+      "question": "List all the elements of atoms that can not bond with any other atoms.",
+      "gold_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE T.element NOT IN ( SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id )",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 WHERE T1.atom_id NOT IN (SELECT atom_id FROM connected)",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 107,
+      "db_id": "toxicology",
+      "question": "What are the elements of the atoms of TR144_8_19?",
+      "gold_sql": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR144_8_19'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id\nWHERE T2.bond_id = 'TR144_8_19'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 108,
+      "db_id": "toxicology",
+      "question": "Of all the carcinogenic molecules, which one has the most double bonds?",
+      "gold_sql": "SELECT T.molecule_id FROM ( SELECT T3.molecule_id, COUNT(T1.bond_type) FROM bond AS T1 INNER JOIN molecule AS T3 ON T1.molecule_id = T3.molecule_id WHERE T3.label = '+' AND T1.bond_type = '=' GROUP BY",
+      "pred_sql": "SELECT m.label, COUNT(b.bond_id)\nFROM molecule AS m\nJOIN atom AS a ON m.molecule_id = a.molecule_id\nJOIN connected AS c ON a.atom_id = c.atom_id\nJOIN bond AS b ON c.bond_id = b.bond_id\nWHERE m.label =",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 109,
+      "db_id": "toxicology",
+      "question": "What is the least common element of all carcinogenic molecules?",
+      "gold_sql": "SELECT T.element FROM ( SELECT T2.element, COUNT(DISTINCT T2.molecule_id) FROM molecule AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.label = '+' GROUP BY T2.element ORDER BY",
+      "pred_sql": "SELECT T2.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN molecule AS T3 ON T1.molecule_id = T3.molecule_id WHERE T3.label = '+' GROUP BY T2.element HAVING COU",
+      "correct": false,
+      "error": "no such column: T2.element",
+      "call_count": 2
+    },
+    {
+      "query_idx": 110,
+      "db_id": "toxicology",
+      "question": "List the elements of all the triple bonds.",
+      "gold_sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T2.atom_id = T3.atom_id WHERE T1.bond_type = '#'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 JOIN connected AS T2 ON T1.atom_id = T2.atom_id JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 111,
+      "db_id": "toxicology",
+      "question": "What percentage of bonds have the most common combination of atoms' elements?",
+      "gold_sql": "SELECT CAST((SELECT COUNT(T1.atom_id) FROM connected AS T1 INNER JOIN bond AS T2 ON T1.bond_id = T2.bond_id GROUP BY T2.bond_type ORDER BY COUNT(T2.bond_id) DESC LIMIT 1 ) AS REAL) * 100 / ( SELECT CO",
+      "pred_sql": "SELECT CAST(CAST(COUNT(b.bond_id) AS REAL) * 100 / (SELECT COUNT(a.atom_id) FROM atom GROUP BY a.element ORDER BY COUNT(a.atom_id) DESC LIMIT 1)) AS percentage FROM bond b",
+      "correct": false,
+      "error": "near \")\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 112,
+      "db_id": "toxicology",
+      "question": "What proportion of single bonds are carcinogenic? Please provide your answer as a percentage with five decimal places.",
+      "gold_sql": "SELECT ROUND(CAST(COUNT(CASE WHEN T2.label = '+' THEN T1.bond_id ELSE NULL END) AS REAL) * 100 / COUNT(T1.bond_id),5) FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN b.bond_type = '-' AND m.label = '+' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(b.bond_id) FROM bond AS b JOIN molecule AS m ON b.molecule_id = m.molecule_id",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 113,
+      "db_id": "toxicology",
+      "question": "What are the bond type for atoms with element Tin?",
+      "gold_sql": "SELECT DISTINCT T3.bond_type FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T3.bond_id = T2.bond_id WHERE T1.element = 'sn'",
+      "pred_sql": "SELECT DISTINCT T1.bond_type FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T2.atom_id = T3.atom_id WHERE T3.element = 'sn'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 114,
+      "db_id": "toxicology",
+      "question": "Calculate the total atoms with triple-bond molecules containing the element phosphorus or bromine.",
+      "gold_sql": "SELECT COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T3.bond_type = '#' AND T1.element I",
+      "pred_sql": "SELECT COUNT(DISTINCT c.atom_id) FROM connected c JOIN bond b ON c.bond_id = b.bond_id JOIN atom a ON c.atom_id = a.atom_id WHERE b.bond_type = '#' AND (a.element = 'p' OR a.element = 'br') AND c.mole",
+      "correct": false,
+      "error": "no such column: c.molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 115,
+      "db_id": "toxicology",
+      "question": "What is the composition of element chlorine in percentage among the single bond molecules?",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T.element = 'cl' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / COUNT(T.atom_id) FROM ( SELECT T1.atom_id, T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecu",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(DISTINCT c.atom_id) FROM atom AS a JOIN connected AS c ON a.atom_id = c.atom_id WHERE c.bond_type = '-'",
+      "correct": false,
+      "error": "no such column: c.bond_type",
+      "call_count": 2
+    },
+    {
+      "query_idx": 116,
+      "db_id": "toxicology",
+      "question": "List down the bond type for molecules from molecule id TR000 to TR050.",
+      "gold_sql": "SELECT T2.molecule_id, T2.bond_type FROM molecule AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.molecule_id BETWEEN 'TR000' AND 'TR050'",
+      "pred_sql": "SELECT DISTINCT bond_type FROM bond WHERE molecule_id IN (SELECT molecule_id FROM molecule WHERE label BETWEEN 'TR000' AND 'TR050')",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 117,
+      "db_id": "toxicology",
+      "question": "What are the elements for bond id TR001_10_11?",
+      "gold_sql": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR001_10_11'",
+      "pred_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.atom_id = T2.bond_id WHERE T2.bond_id = 'TR001_10_11'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 118,
+      "db_id": "toxicology",
+      "question": "Among the molecules with element Calcium, are they mostly carcinogenic or non carcinogenic?",
+      "gold_sql": "SELECT T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'ca' GROUP BY T2.label ORDER BY COUNT(T2.label) DESC LIMIT 1",
+      "pred_sql": "SELECT\n  SUM(CASE WHEN T1.label = '+' THEN 1 ELSE 0 END) AS carcinogenic,\n  SUM(CASE WHEN T1.label = '-' THEN 1 ELSE 0 END) AS non_carcinogenic\nFROM molecule AS T1\nINNER JOIN atom AS T2 ON T1.molecule",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 119,
+      "db_id": "toxicology",
+      "question": "List down two molecule id of triple bond non carcinogenic molecules with element carbon.",
+      "gold_sql": "SELECT DISTINCT T2.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T3.bond_type = '#' AND T1.ele",
+      "pred_sql": "SELECT DISTINCT molecule_id FROM molecule JOIN atom ON molecule.molecule_id = atom.molecule_id JOIN bond ON atom.bond_id = bond.bond_id WHERE atom.element = 'c' AND bond.bond_type = '#' AND molecule.l",
+      "correct": false,
+      "error": "ambiguous column name: molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 120,
+      "db_id": "toxicology",
+      "question": "What is the percentage of element chlorine in carcinogenic molecules?",
+      "gold_sql": "SELECT CAST(COUNT( CASE WHEN T1.element = 'cl' THEN T1.element ELSE NULL END) AS REAL) * 100 / COUNT(T1.element) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.l",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN t1.element = 'cl' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(t1.molecule_id) FROM atom AS t1 JOIN molecule AS t2 ON t1.molecule_id = t2.molecule_id WHERE t2.label = '+'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 121,
+      "db_id": "toxicology",
+      "question": "What are the toxicology elements associated with bond ID TR000_1_2?",
+      "gold_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR000_1_2'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id AND T2.bond_id = 'TR000_1_2'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 122,
+      "db_id": "toxicology",
+      "question": "Enumerate the bond ID of triple bond type molecules and tell me if they are carcinogenic or not.",
+      "gold_sql": "SELECT DISTINCT T1.bond_id, T2.label FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '#'",
+      "pred_sql": "SELECT DISTINCT bond_id FROM bond WHERE bond_type '#'",
+      "correct": false,
+      "error": "near \"'#'\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 123,
+      "db_id": "toxicology",
+      "question": "Tally the toxicology element of the 4th atom of each molecule that was carcinogenic.",
+      "gold_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' AND SUBSTR(T1.atom_id, -1) = '4' AND LENGTH(T1.atom_id) = 7",
+      "pred_sql": "SELECT DISTINCT substr(a.atom_id, 7, 1) FROM atom AS a JOIN molecule AS m ON a.molecule_id = m.molecule_id WHERE m.label = '+' AND substr(a.atom_id, 7, 1) = '4'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 124,
+      "db_id": "toxicology",
+      "question": "What is the ratio of Hydrogen elements in molecule ID TR006? List the ratio with its label.",
+      "gold_sql": "WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT C",
+      "pred_sql": "SELECT label, CAST(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) FROM atom WHERE molecule_id = 'TR006'",
+      "correct": false,
+      "error": "no such column: label",
+      "call_count": 2
+    },
+    {
+      "query_idx": 125,
+      "db_id": "toxicology",
+      "question": "Identify whether the chemical compound that contains Calcium is carcinogenic.",
+      "gold_sql": "SELECT T2.label AS flag_carcinogenic FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'ca'",
+      "pred_sql": "SELECT T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'ca' AND T2.label = '+'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 126,
+      "db_id": "toxicology",
+      "question": "Determine the bond type that is formed in the chemical compound containing element Carbon.",
+      "gold_sql": "SELECT DISTINCT T2.bond_type FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'c'",
+      "pred_sql": "SELECT DISTINCT T2.bond_type FROM connected AS T1 INNER JOIN bond AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T1.atom_id = T3.atom_id WHERE T3.element = 'c'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 127,
+      "db_id": "toxicology",
+      "question": "Name chemical elements that form a bond TR001_10_11.",
+      "gold_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_id = 'TR001_10_11'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_id = 'TR001_10_11'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 128,
+      "db_id": "toxicology",
+      "question": "Among all chemical compounds that contain molecule TR047, identify the percent that form a double-bond.",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS REAL) * 100 / COUNT(T.bond_id) FROM bond AS T WHERE T.molecule_id = 'TR047'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.bond_type = ' = ' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.bond_id) FROM bond AS T1 JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.molecule_id = 'TR047'",
+      "correct": false,
+      "error": "no such column: T2.molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 129,
+      "db_id": "toxicology",
+      "question": "Which toxic element can be found in the molecule TR151?",
+      "gold_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR151'",
+      "pred_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = 'TR151' AND T1.element IN ('pb', 'sn', 'te', 'ca', 'br', 'i', 'as')",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 130,
+      "db_id": "toxicology",
+      "question": "Calculate the percentage of molecules containing carcinogenic compounds that element is hydrogen.",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T1.element = 'h' AND T2.label = '+' THEN T2.molecule_id ELSE NULL END) AS REAL) * 100 / COUNT(T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = ",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN label = '+' AND element = 'h' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(molecule_id) FROM molecule",
+      "correct": false,
+      "error": "no such column: element",
+      "call_count": 2
+    },
+    {
+      "query_idx": 131,
+      "db_id": "toxicology",
+      "question": "Name the elements that comprise the atoms of bond TR001_2_4.",
+      "gold_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR001_2_4'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR001_2_4'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 132,
+      "db_id": "toxicology",
+      "question": "How many double bonds does TR006 have and is it carcinogenic?",
+      "gold_sql": "SELECT COUNT(T1.bond_id), T2.label FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '=' AND T2.molecule_id = 'TR006' GROUP BY T2.label",
+      "pred_sql": "SELECT COUNT(T1.bond_type) FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' AND T1.bond_type = ' = '",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 133,
+      "db_id": "toxicology",
+      "question": "List all carcinogenic molecules and their elements.",
+      "gold_sql": "SELECT DISTINCT T2.molecule_id, T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+'",
+      "pred_sql": "SELECT DISTINCT T1.label, T1.element FROM molecule AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.label = '+'",
+      "correct": false,
+      "error": "no such column: T1.element",
+      "call_count": 2
+    },
+    {
+      "query_idx": 134,
+      "db_id": "toxicology",
+      "question": "Which molecules have triple bonds and list all the elements they contain.",
+      "gold_sql": "SELECT DISTINCT T1.molecule_id, T2.element FROM bond AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '#'",
+      "pred_sql": "SELECT DISTINCT T2.label, T1.element FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '#'",
+      "correct": false,
+      "error": "no such column: T1.element",
+      "call_count": 2
+    },
+    {
+      "query_idx": 135,
+      "db_id": "toxicology",
+      "question": "Name the atoms' elements that form bond TR000_2_3.",
+      "gold_sql": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR000_2_3'",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR000_2_3'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 136,
+      "db_id": "toxicology",
+      "question": "How many molecules have a double bond type and among these molecule, how many are labeled as carcinogenic compound?",
+      "gold_sql": "SELECT COUNT(DISTINCT T2.molecule_id), SUM(CASE WHEN T2.label = '+' THEN 1 ELSE 0 END) FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '='",
+      "pred_sql": "SELECT COUNT(DISTINCT m.molecule_id) FROM molecule AS m INNER JOIN bond AS b ON m.molecule_id = b.molecule_id WHERE b.bond_type = ' = ' AND m.label = '+'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 137,
+      "db_id": "toxicology",
+      "question": "Calculate the percentage of carcinogenic molecules which contain the Chlorine element.",
+      "gold_sql": "SELECT COUNT(CASE WHEN T2.label = '+' AND T1.element = 'cl' THEN T2.molecule_id ELSE NULL END) * 100 / COUNT(T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_i",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN m.label = '+' AND a.element = 'Cl' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(m.molecule_id) FROM molecule AS m INNER JOIN atom AS a ON m.molecule_id = a.molecule_id",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 138,
+      "db_id": "toxicology",
+      "question": "How many elements are contained in bond_id TR001_3_4?",
+      "gold_sql": "SELECT COUNT(DISTINCT T1.element) FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR001_3_4'",
+      "pred_sql": "SELECT COUNT(DISTINCT element) FROM atom WHERE atom_id IN (SELECT atom_id FROM connected WHERE bond_id = 'TR001_3_4')",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 139,
+      "db_id": "toxicology",
+      "question": "What is the type of the bond which is presenting the connection between two atoms TR000_1 and TR000_2?",
+      "gold_sql": "SELECT T1.bond_type FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.atom_id = 'TR000_1' AND T2.atom_id2 = 'TR000_2'",
+      "pred_sql": "SELECT b.bond_type FROM bond AS b INNER JOIN connected AS c ON b.bond_id = c.bond_id WHERE c.atom_id = 'TR000_1' AND c.atom_id2 = 'TR000_2'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 140,
+      "db_id": "toxicology",
+      "question": "What is the element of toxicology for the atom with the ID of TR000_1?",
+      "gold_sql": "SELECT T.element FROM atom AS T WHERE T.atom_id = 'TR000_1'",
+      "pred_sql": "SELECT element FROM atom WHERE atom_id = 'TR000_1'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 141,
+      "db_id": "toxicology",
+      "question": "Which non-carcinogenic molecules consisted more than 5 atoms?",
+      "gold_sql": "SELECT T.molecule_id FROM ( SELECT T1.molecule_id, COUNT(T2.atom_id) FROM molecule AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.label = '-' GROUP BY T1.molecule_id HAVING CO",
+      "pred_sql": "SELECT DISTINCT T1.label FROM molecule AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.label = '-' GROUP BY T1.molecule_id HAVING COUNT(T2.atom_id) > 5",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 142,
+      "db_id": "toxicology",
+      "question": "List all the elements with double bond, consisted in molecule TR024.",
+      "gold_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.molecule_id = 'TR024' AND T2.bond_type = '='",
+      "pred_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '=' AND T2.molecule_id = 'TR024'",
+      "correct": false,
+      "error": "no such column: T2.molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 143,
+      "db_id": "toxicology",
+      "question": "Which carcinogenic molecule have the highest number of atoms consisted in it?",
+      "gold_sql": "SELECT T.molecule_id FROM ( SELECT T2.molecule_id, COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' GROUP BY T2.molecule_id ORDER BY ",
+      "pred_sql": "SELECT T1.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id GROUP BY T1.molecule_id ORDER BY COUNT(T1.atom_id) DESC LIMIT 1 WHERE T2.label = '+'",
+      "correct": false,
+      "error": "near \"WHERE\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 144,
+      "db_id": "toxicology",
+      "question": "Calculate the percentage of carcinogenic molecules with triple bonded Hidrogen atoms.",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T1.label = '+' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(DISTINCT T1.molecule_id) FROM molecule AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.element = 'h' AND T1.bond_type = '#' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(DISTINCT T1.molecule_id) FROM atom AS T1 JOIN connected AS T2 ON T1.atom_id = T2.atom_id",
+      "correct": false,
+      "error": "no such column: T1.bond_type",
+      "call_count": 2
+    },
+    {
+      "query_idx": 145,
+      "db_id": "toxicology",
+      "question": "What is the element with the atom ID of TR004_7 in molecule that is not carcinogenic?",
+      "gold_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.atom_id = 'TR004_7' AND T2.label = '-'",
+      "pred_sql": "SELECT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.atom_id = 'TR004_7' AND T2.label = '-'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 146,
+      "db_id": "toxicology",
+      "question": "List the element and bond type included in the molecule with molecule ID of TR002.",
+      "gold_sql": "SELECT DISTINCT T1.element, T2.bond_type FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.molecule_id = 'TR002'",
+      "pred_sql": "SELECT a.element, b.bond_type FROM atom a JOIN bond b ON a.molecule_id = b.molecule_id WHERE a.molecule_id = 'TR002'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 147,
+      "db_id": "toxicology",
+      "question": "What is the atom ID of double bonded carbon in TR012 molecule?",
+      "gold_sql": "SELECT T1.atom_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T2.molecule_id = 'TR012' AND T3.bond_type ",
+      "pred_sql": "SELECT c.atom_id FROM connected AS c JOIN atom AS a ON c.atom_id = a.atom_id JOIN bond AS b ON c.bond_id = b.bond_id WHERE a.element = 'c' AND b.bond_type = ' = ' AND c.molecule_id = 'TR012'",
+      "correct": false,
+      "error": "no such column: c.molecule_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 148,
+      "db_id": "card_games",
+      "question": "List all the mythic rarity print cards banned in gladiator format.",
+      "gold_sql": "SELECT DISTINCT T1.id FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T2.format = 'gladiator' AND T2.status = 'Banned' AND T1.rarity = 'mythic'",
+      "pred_sql": "SELECT DISTINCT T1.name FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.rarity = 'mythic' AND T2.format = 'gladiator' AND T2.status = 'Banned' AND T1.type = 'card'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 149,
+      "db_id": "card_games",
+      "question": "For artifact type of cards that do not have multiple faces on the same card, state its legalities status for vintage pla",
+      "gold_sql": "SELECT DISTINCT T2.status FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.type = 'Artifact' AND T2.format = 'vintage' AND T1.side IS NULL",
+      "pred_sql": "SELECT L.status FROM legalities AS L JOIN cards AS C ON L.uuid = C.uuid WHERE C.type = 'Artifact' AND L.format = 'vintage' AND C.subtypes = 'Artifact' AND C.side = 'NULL'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 150,
+      "db_id": "card_games",
+      "question": "List all the card id and artist with unknown power which are legal for commander play format.",
+      "gold_sql": "SELECT T1.id, T1.artist FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T2.status = 'Legal' AND T2.format = 'commander' AND (T1.power IS NULL OR T1.power = '*')",
+      "pred_sql": "SELECT cards.id, cards.artist FROM cards INNER JOIN legalities ON cards.uuid = legalities.uuid WHERE cards.power = '*' OR cards.power IS NULL AND legalities.format = 'commander' AND legalities.status ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 151,
+      "db_id": "card_games",
+      "question": "Find all cards illustrated by Stephen Daniel and describe the text of the ruling of these cards. State if these cards ha",
+      "gold_sql": "SELECT T1.id, T2.text, T1.hasContentWarning FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE T1.artist = 'Stephen Daniele'",
+      "pred_sql": "SELECT DISTINCT\n  c.id\nFROM cards AS c\nWHERE\n  c.artist = 'Stephen Daniel' AND c.hasContentWarning = 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 152,
+      "db_id": "card_games",
+      "question": "Name the card and artist with the most ruling information. Also state if the card is a promotional printing.",
+      "gold_sql": "SELECT T1.name, T1.artist, T1.isPromo FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE T1.isPromo = 1 AND T1.artist = (SELECT artist FROM cards WHERE isPromo = 1 GROUP BY artist HA",
+      "pred_sql": "SELECT cards.name, cards.artist, cards.isPromo FROM cards LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 153,
+      "db_id": "card_games",
+      "question": "Calculate the percentage of the cards availabe in Chinese Simplified.",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'Chinese Simplified' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN t.language = 'Chinese Simplified' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM foreign_data t",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 154,
+      "db_id": "card_games",
+      "question": "cards are not directly linked to language but through table 'set'. you need to add set in covered table & rephrase your ",
+      "gold_sql": "SELECT language FROM set_translations WHERE id IN ( SELECT id FROM cards WHERE name = 'Angel of Mercy' )",
+      "pred_sql": "SELECT DISTINCT T2.language FROM cards AS T1 INNER JOIN sets AS T2 ON T1.setCode = T2.code WHERE T1.name = 'Angel of Mercy'",
+      "correct": false,
+      "error": "no such column: T2.language",
+      "call_count": 2
+    },
+    {
+      "query_idx": 155,
+      "db_id": "card_games",
+      "question": "What is the percentage of cards whose language is French among the Story Spotlight cards?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.isStorySpotlight = 1",
+      "pred_sql": "SELECT CAST(COUNT(T1.id) * 100.0 / COUNT(T2.id) AS REAL) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.isStorySpotlight = 1 AND T2.language = 'Frencch'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 156,
+      "db_id": "card_games",
+      "question": "Among the Artifact cards, which are black color and comes with foreign languague translation?",
+      "gold_sql": "SELECT DISTINCT T1.name FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.originalType = 'Artifact' AND T1.colors = 'B'",
+      "pred_sql": "SELECT DISTINCT\n  c.name\nFROM cards AS c\nJOIN foreign_data AS fd\n  ON c.uuid = fd.multiverseid\nWHERE\n  c.originalType = 'Artifact' AND c.colors = 'B'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 157,
+      "db_id": "card_games",
+      "question": "What is the mana cost of cards with a normal layout, a 2003 frame version, with a black border color, and available in p",
+      "gold_sql": "SELECT manaCost FROM cards WHERE availability = 'mtgo,paper' AND borderColor = 'black' AND frameVersion = 2003 AND layout = 'normal'",
+      "pred_sql": "SELECT\n  text\nFROM cards\nWHERE\n  layout = 'Normal'\n  AND frameVersion = 2003\n  AND borderColor = 'black'\n  AND availability = 'mtgo,paper'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 158,
+      "db_id": "card_games",
+      "question": "What percentage of legendary frame effect cards that are only available in online game variations?",
+      "gold_sql": "SELECT SUM(CASE WHEN isOnlineOnly = 1 THEN 1.0 ELSE 0 END) / COUNT(id) * 100 FROM cards WHERE frameEffects = 'legendary'",
+      "pred_sql": "SELECT CAST(COUNT(CASE WHEN isOnlineOnly = 1 AND frameEffects = 'legendary' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(id) FROM cards WHERE frameEffects = 'legendary'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 159,
+      "db_id": "card_games",
+      "question": "What is the percentage of Story Spotlight cards that do not have a text box? List them by their ID.",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN isTextless = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(id) FROM cards WHERE isStorySpotlight = 1",
+      "pred_sql": "SELECT\n  id,\n  (\n    SUM(CASE WHEN isStorySpotlight = 1 AND isTextless = 0 THEN 1 ELSE 0 END) * 100 / COUNT(*)\n  ) AS percentage\nFROM cards\nWHERE\n  isStorySpotlight = 1\n  AND isTextless = 0\nGROUP BY\n ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 160,
+      "db_id": "card_games",
+      "question": "How many Brazilian Portuguese translated sets are inside the Commander block?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T2.language = 'Portuguese (Brazil)' AND T1.block = 'Commander'",
+      "pred_sql": "SELECT COUNT(DISTINCT s.code) FROM sets s JOIN set_translations st ON s.code = st.setCode WHERE s.block = 'Commander' AND st.language = 'Portuguese (Brasil)'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 161,
+      "db_id": "card_games",
+      "question": "Lists all types of cards in German.",
+      "gold_sql": "SELECT T1.subtypes, T1.supertypes FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T2.language = 'German' AND T1.subtypes IS NOT NULL AND T1.supertypes IS NOT NULL",
+      "pred_sql": "SELECT DISTINCT T1.type FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.multiverseid WHERE T2.language = 'German' AND T1.subtypes IS NOT NULL AND T1.supertypes IS NOT NULL",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 162,
+      "db_id": "card_games",
+      "question": "How many unknown power cards contain info about the triggered ability",
+      "gold_sql": "SELECT T2.text FROM cards AS T1 INNER JOIN rulings AS T2 ON T1.uuid = T2.uuid WHERE (T1.power IS NULL OR T1.power = '*') AND T2.text LIKE '%triggered ability%'",
+      "pred_sql": "SELECT COUNT(*) FROM cards WHERE power IS NULL OR power = '*' AND text LIKE '%triggered ability%'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 163,
+      "db_id": "card_games",
+      "question": "Indicates the number of cards with pre-modern format, ruling text \"This is a triggered mana ability.\" that do not have m",
+      "gold_sql": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid INNER JOIN rulings AS T3 ON T1.uuid = T3.uuid WHERE T2.format = 'premodern' AND T3.text = 'This is a triggered man",
+      "pred_sql": "SELECT COUNT(DISTINCT c.id) FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE l.format = 'premodern' AND l.status = 'legal' AND c.side IS NULL",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 164,
+      "db_id": "card_games",
+      "question": "What is the foreign name of the card in French of type Creature, normal layout and black border color, by artist Matthew",
+      "gold_sql": "SELECT name FROM foreign_data WHERE uuid IN ( SELECT uuid FROM cards WHERE types = 'Creature' AND layout = 'normal' AND borderColor = 'black' AND artist = 'Matthew D. Wilson' ) AND language = 'French'",
+      "pred_sql": "SELECT DISTINCT\n  fd.name\nFROM foreign_data AS fd\nJOIN cards AS c\n  ON fd.multiverseid = c.uuid\nWHERE\n  fd.language = 'French'\n  AND c.type = 'Creature'\n  AND c.borderColor = 'black'\n  AND c.artist = ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 165,
+      "db_id": "card_games",
+      "question": "What percentage of cards with format commander and legal status do not have a content warning?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T1.hasContentWarning = 0 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T2.format = 'commander' AND ",
+      "pred_sql": "SELECT CAST(COUNT(T1.id) * 100.0 / COUNT(T1.id) AS REAL) FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T2.format = 'commander' AND T2.status = 'legal' AND T1.hasContentWarnin",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 166,
+      "db_id": "card_games",
+      "question": "What percentage of cards without power are in French?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power",
+      "pred_sql": "SELECT CAST(COUNT(CASE WHEN foreign_data.language = 'French' AND cards.power IS NULL OR cards.power = '*' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(CASE WHEN cards.power IS NULL OR cards.power = '*' T",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 167,
+      "db_id": "card_games",
+      "question": "What percentage of Japanese translated sets are expansion sets?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'Japanese' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T1.type = 'expansion",
+      "pred_sql": "SELECT CAST(COUNT(CASE WHEN t.language = 'Japanese' AND s.type = 'expansion' THEN 1 END) AS REAL) * 100 / COUNT(CASE WHEN s.type = 'expansion' THEN 1 END) FROM set_translations t, sets s WHERE t.setCo",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 168,
+      "db_id": "card_games",
+      "question": "What languages are available in the set known as Archenemy on the magic card market and having the code ARC?",
+      "gold_sql": "SELECT T2.language FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T1.mcmName = 'Archenemy' AND T2.setCode = 'ARC'",
+      "pred_sql": "SELECT DISTINCT json_group_array(translation) FROM set_translations WHERE setCode = 'ARC' AND lannguage IN (SELECT DISTINCT lannguage FROM sets WHERE mcmName = 'Archenemy')",
+      "correct": false,
+      "error": "no such column: lannguage",
+      "call_count": 2
+    },
+    {
+      "query_idx": 169,
+      "db_id": "card_games",
+      "question": "Which set is not available outside of the United States and has foil cards with Japanese writing on them? Please include",
+      "gold_sql": "SELECT T1.name, T1.id FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T2.language = 'Japanese' AND T1.isFoilOnly = 1 AND T1.isForeignOnly = 0",
+      "pred_sql": "SELECT T2.id FROM sets AS T1 INNER JOIN set_translations AS T3 ON T1.code = T3.setCode INNER JOIN cards AS T4 ON T1.code = T4.setCode WHERE T1.isForeignOnly = 1 AND T4.hasFoil = 1 AND T3.language = 'J",
+      "correct": false,
+      "error": "no such column: T2.id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 170,
+      "db_id": "card_games",
+      "question": "Which Russian set of cards contains the most cards overall?",
+      "gold_sql": "SELECT T1.id FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setCode WHERE T2.language = 'Russian' GROUP BY T1.baseSetSize ORDER BY T1.baseSetSize DESC LIMIT 1",
+      "pred_sql": "SELECT s.name FROM sets AS s JOIN cards AS c ON s.code = c.setCode WHERE s.language = 'Russian' ORDER BY c.id DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: s.language",
+      "call_count": 2
+    },
+    {
+      "query_idx": 171,
+      "db_id": "card_games",
+      "question": "What is the percentage of the set of cards that have Chinese Simplified as the language and are only available for onlin",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'Chinese Simplified' AND T1.isOnlineOnly = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.code = T2.setC",
+      "pred_sql": "SELECT CAST(COUNT(T1.isOnlineOnly) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 JOIN set_translations AS T2 ON T1.setCode = T2.setCode WHERE T2.language = 'zh-Hans'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 172,
+      "db_id": "card_games",
+      "question": "How many sets are available just in Japanese and not in Magic: The Gathering Online?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T2.language = 'Japanese'  AND (T1.mtgoCode IS NULL OR T1.mtgoCode = '')",
+      "pred_sql": "SELECT COUNT(DISTINCT s.code) FROM sets s JOIN set_translations st ON s.code = st.setCode WHERE st.language = 'Japanese' AND s.mtgoCode = ''",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 173,
+      "db_id": "card_games",
+      "question": "What is percentage of the cards with a converted Mana Cost of 10 in set of Abyssal Horror?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T1.convertedManaCost = 10 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id), T1.name FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T1.name = 'Abyssal Ho",
+      "pred_sql": "SELECT CAST(COUNT(CASE WHEN cards.convertedManaCost = 10 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards INNER JOIN sets ON cards.setCode = sets.code WHERE sets.name = 'Abyssal Horror'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 174,
+      "db_id": "card_games",
+      "question": "Of all the cards that are designed by Aaron Miller, how many of them are incredibly powerful?",
+      "gold_sql": "SELECT SUM(CASE WHEN artist = 'Aaron Miller' AND cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL THEN 1 ELSE 0 END) FROM cards",
+      "pred_sql": "SELECT COUNT(*) FROM cards WHERE artist = 'Aaron Miller' AND cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 175,
+      "db_id": "card_games",
+      "question": "Which card costs more converted mana, \"Serra Angel\" or \"Shrine Keeper\"?",
+      "gold_sql": "SELECT name FROM cards WHERE name IN ('Serra Angel', 'Shrine Keeper') ORDER BY convertedManaCost DESC LIMIT 1",
+      "pred_sql": "SELECT\n  cardName\nFROM cards\nWHERE\n  name = 'Serra Angel'\n  OR name = 'Shrine Keeper'\nORDER BY\n  convertedManaCost DESC",
+      "correct": false,
+      "error": "no such column: cardName",
+      "call_count": 2
+    },
+    {
+      "query_idx": 176,
+      "db_id": "card_games",
+      "question": "What's the Italian name of the set of cards with \"Ancestor's Chosen\" is in?",
+      "gold_sql": "SELECT translation FROM set_translations WHERE setCode IN ( SELECT setCode FROM cards WHERE name = 'Ancestor''s Chosen' ) AND language = 'Italian'",
+      "pred_sql": "SELECT T2.translation FROM set_translations AS T2 INNER JOIN sets AS T1 ON T2.setCode = T1.code WHERE T1.name = 'Ancestor''s Chosen' AND T2.language = 'Italian'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 177,
+      "db_id": "card_games",
+      "question": "For the set of cards with \"Ancestor's Chosen\" in it, is there a Korean version of it?",
+      "gold_sql": "SELECT IIF(SUM(CASE WHEN T2.language = 'Korean' AND T2.translation IS NOT NULL THEN 1 ELSE 0 END) > 0, 'YES', 'NO') FROM cards AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.setCode WHERE ",
+      "pred_sql": "SELECT GROUP_CONCAT(DISTINCT translation) FROM set_translations WHERE card_uuid IN (SELECT uuid FROM cards WHERE name = 'Ancestor''s Chosen') AND language = 'Korean'",
+      "correct": false,
+      "error": "no such column: card_uuid",
+      "call_count": 2
+    },
+    {
+      "query_idx": 178,
+      "db_id": "card_games",
+      "question": "Among the cards in the set \"Hauptset Zehnte Edition\", how many of them are designed by Adam Rex?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.setCode WHERE T2.translation = 'Hauptset Zehnte Edition' AND T1.artist = 'Adam Rex'",
+      "pred_sql": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN sets AS T2 ON T1.setCode = T2.code WHERE T2.name = 'Hauptset Zehnte Edition' AND T1.artist = 'Adam Rex'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 179,
+      "db_id": "card_games",
+      "question": "What is the Simplified Chinese translation of the name of the set \"Eighth Edition\"?",
+      "gold_sql": "SELECT T2.translation FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T1.name = 'Eighth Edition' AND T2.language = 'Chinese Simplified'",
+      "pred_sql": "SELECT translation FROM set_translations WHERE setCode = (SELECT code FROM sets WHERE name = 'Eighth Edition') AND language = 'Chinese Simplified'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 180,
+      "db_id": "card_games",
+      "question": "Did the set of cards with \"Angel of Mercy\" appear on Magic: The Gathering Online?",
+      "gold_sql": "SELECT IIF(T2.mtgoCode IS NOT NULL, 'YES', 'NO') FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T1.name = 'Angel of Mercy'",
+      "pred_sql": "SELECT s.name FROM sets s JOIN cards c ON s.code = c.setCode WHERE c.name = 'Angel of Mercy' AND s.mtgoCode IS NOT NULL",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 181,
+      "db_id": "card_games",
+      "question": "Among the sets in the block \"Ice Age\", how many of them have an Italian translation?",
+      "gold_sql": "SELECT COUNT(DISTINCT T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T1.block = 'Ice Age' AND T2.language = 'Italian' AND T2.translation IS NOT NULL",
+      "pred_sql": "SELECT COUNT(DISTINCT s.id) FROM sets s JOIN set_translaations st ON s.code = st.setCode WHERE s.block = 'Ice Age' AND st.language = 'Italian' AND st.translation IS NOT NULL",
+      "correct": false,
+      "error": "no such table: set_translaations",
+      "call_count": 2
+    },
+    {
+      "query_idx": 182,
+      "db_id": "card_games",
+      "question": "Is the set of cards with Adarkar Valkyrie only available outside the United States?",
+      "gold_sql": "SELECT IIF(isForeignOnly = 1, 'YES', 'NO') FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T1.name = 'Adarkar Valkyrie'",
+      "pred_sql": "SELECT\n  SUM(CASE WHEN T1.isForeignOnly = 1 THEN 1 ELSE 0 END)\nFROM sets AS T1\nINNER JOIN cards AS T2\n  ON T1.code = T2.setCode\nWHERE\n  T2.name = 'Adarkar Valkyrie'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 183,
+      "db_id": "card_games",
+      "question": "Among the sets of cards that have an Italian translation, how many of them have a base set number of under 100?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T2.translation IS NOT NULL AND T1.baseSetSize < 100 AND T2.language = 'Italian'",
+      "pred_sql": "SELECT COUNT(DISTINCT s.id) FROM sets s JOIN set_translaations st ON s.code = st.setCode WHERE st.language = 'Italian' AND s.baseSetSize < 10",
+      "correct": false,
+      "error": "no such table: set_translaations",
+      "call_count": 2
+    },
+    {
+      "query_idx": 184,
+      "db_id": "card_games",
+      "question": "Which of these artists have designed a card in the set Coldsnap, Jeremy Jarvis, Aaron Miller or Chippy?",
+      "gold_sql": "SELECT T1.artist FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE (T2.name = 'Coldsnap' AND T1.artist = 'Chippy') OR (T2.name = 'Coldsnap' AND T1.artist = 'Aaron Miller') OR (T2.na",
+      "pred_sql": "SELECT DISTINCT T1.artist FROM cards AS T1 INNER JOIN sets AS T2 ON T1.setCode = T2.code WHERE T2.name = 'Coldsnap' AND T1.artist IN ('Jeremy Jarvis', 'Aaron Miller', 'Chippy')",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 185,
+      "db_id": "card_games",
+      "question": "Among the cards with converted mana cost higher than 5 in the set Coldsnap, how many of them have unknown power?",
+      "gold_sql": "SELECT SUM(CASE WHEN T1.power LIKE '*' OR T1.power IS NULL THEN 1 ELSE 0 END) FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T2.name = 'Coldsnap' AND T1.convertedManaCost > 5",
+      "pred_sql": "SELECT COUNT(*) FROM cards WHERE cardKingdomId IN (SELECT id FROM sets WHERE name = 'Coldsnap') AND convertedManaCost > 5 AND (power = '*' OR power IS NULL)",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 186,
+      "db_id": "card_games",
+      "question": "What is the Italian flavor text of the card \"Ancestor's Chosen\"?",
+      "gold_sql": "SELECT T2.flavorText FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T2.uuid = T1.uuid WHERE T1.name = 'Ancestor''s Chosen' AND T2.language = 'Italian'",
+      "pred_sql": "SELECT f.text FROM foreign_data f JOIN cards c ON f.multiverseid = c.uuid WHERE c.name = 'Ancestor''s Chosen' AND f.language = 'Italian'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 187,
+      "db_id": "card_games",
+      "question": "Please list the Italian text ruling of all the cards in the set Coldsnap.",
+      "gold_sql": "SELECT DISTINCT T1.text FROM foreign_data AS T1 INNER JOIN cards AS T2 ON T2.uuid = T1.uuid INNER JOIN sets AS T3 ON T3.code = T2.setCode WHERE T3.name = 'Coldsnap' AND T1.language = 'Italian'",
+      "pred_sql": "SELECT json_group_array(text) FROM foreign_data WHERE name = 'Coldsnap' AND language = 'Italian'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 188,
+      "db_id": "card_games",
+      "question": "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.",
+      "gold_sql": "SELECT T2.name FROM foreign_data AS T1 INNER JOIN cards AS T2 ON T2.uuid = T1.uuid INNER JOIN sets AS T3 ON T3.code = T2.setCode WHERE T3.name = 'Coldsnap' AND T1.language = 'Italian' ORDER BY T2.conv",
+      "pred_sql": "SELECT T1.name FROM cards AS T1 INNER JOIN set_translations AS T2 ON T1.setCode = T2.setCode WHERE T2.language = 'Italian' AND T1.name = 'Coldsnap' ORDER BY T1.convertedManaCost DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 189,
+      "db_id": "card_games",
+      "question": "What is the percentage of the cards with a converted mana cost of 7 in the set Coldsnap?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T1.convertedManaCost = 7 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T2.name = 'Coldsnap'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN cards.convertedManaCost = 7 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards INNER JOIN sets ON cards.setCode = sets.code WHERE sets.name = 'Coldsnap'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 190,
+      "db_id": "card_games",
+      "question": "What is the percentage of incredibly powerful cards in the set Coldsnap?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T1.cardKingdomFoilId IS NOT NULL AND T1.cardKingdomId IS NOT NULL THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setC",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(CASE WHEN name = 'Coldsnap' THEN 1 END) FROM cards WHERE cardKingdomId I",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 191,
+      "db_id": "card_games",
+      "question": "For all cards illustrated by Jim Pavelec. and describe the text of the ruling of these cards. Do these cards have missin",
+      "gold_sql": "SELECT T2.text , CASE WHEN T1.hasContentWarning = 1 THEN 'YES' ELSE 'NO' END FROM cards AS T1 INNER JOIN rulings AS T2 ON T2.uuid = T1.uuid WHERE T1.artist = 'Jim Pavelec'",
+      "pred_sql": "SELECT t1.text FROM cards AS t1 JOIN (SELECT artist FROM cards WHERE artist = 'Jim Pavelec') AS t2 ON t1.artist = t2.artist WHERE t1.hasContentWarning = 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 192,
+      "db_id": "card_games",
+      "question": "What's the French name of the set of cards with \"Tendo Ice Bridge\" is in?",
+      "gold_sql": "SELECT T2.translation FROM cards AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.setCode WHERE T1.name = 'Tendo Ice Bridge' AND T2.language = 'French' AND T2.translation IS NOT NULL",
+      "pred_sql": "SELECT\n  T2.name\nFROM sets AS T1\nINNER JOIN set_translations AS T2\n  ON T1.code = T2.setCode\nWHERE\n  T2.language = 'French'\n  AND T1.name = 'Tenddo Ice Bridge'",
+      "correct": false,
+      "error": "no such column: T2.name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 193,
+      "db_id": "card_games",
+      "question": "How many translations of the name of the set \"Tenth Edition\"?",
+      "gold_sql": "SELECT COUNT(DISTINCT T2.translation) FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T1.name = 'Tenth Edition' AND T2.translation IS NOT NULL",
+      "pred_sql": "SELECT count(*) FROM set_translations WHERE setCode = (SELECT code FROM sets WHERE name = 'Tenth Edition')",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 194,
+      "db_id": "card_games",
+      "question": "Tell the Japanese name of the set which card \"Fellwar Stone\" is in it.",
+      "gold_sql": "SELECT T2.translation FROM cards AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.setCode WHERE T1.name = 'Fellwar Stone' AND T2.language = 'Japanese' AND T2.translation IS NOT NULL",
+      "pred_sql": "SELECT s.name FROM sets s JOIN set_translaations st ON s.code = st.setCode WHERE st.language = 'Japanese' AND s.name = 'Fellwar Stone'",
+      "correct": false,
+      "error": "no such table: set_translaations",
+      "call_count": 2
+    },
+    {
+      "query_idx": 195,
+      "db_id": "card_games",
+      "question": "Which card name in the set 'Journey into Nyx Hero's Path' has the highest converted mana cost.",
+      "gold_sql": "SELECT T1.name FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T2.name = 'Journey into Nyx Hero''s Path' ORDER BY T1.convertedManaCost DESC LIMIT 1",
+      "pred_sql": "SELECT T1.name FROM cards AS T1 INNER JOIN sets AS T2 ON T1.setCode = T2.code WHERE T2.name = 'Journey into Nyx Hero''s Path' ORDER BY T1.convertedManaCost DESC LIMIT 1",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 196,
+      "db_id": "card_games",
+      "question": "Show the Simplified Chinese translation of the name of the set \"Mirrodin\"?",
+      "gold_sql": "SELECT translation FROM set_translations WHERE setCode IN ( SELECT code FROM sets WHERE name = 'Mirrodin' ) AND language = 'Chinese Simplified'",
+      "pred_sql": "SELECT translation FROM set_translations WHERE language = 'Chinese Simplified' AND setCode = (SELECT code FROM sets WHERE name = 'Mirrodin')",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 197,
+      "db_id": "card_games",
+      "question": "For all the set of cards that has Japanese translation, what is the percentage of them are only available in non-foil?",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN isNonFoilOnly = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(id) FROM sets WHERE code IN ( SELECT setCode FROM set_translations WHERE language = 'Japanese' )",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN s.isNonFoilOnly = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(DISTINCT s.id) FROM sets s JOIN set_translations st ON s.code = st.setCode WHERE st.language = 'Japanese'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 198,
+      "db_id": "card_games",
+      "question": "For all the set of cards that has Brazil Portuguese translation, what is the percentage of them are only available onlin",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN isOnlineOnly = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(id) FROM sets WHERE code IN ( SELECT setCode FROM set_translations WHERE language = 'Portuguese (Brazil)' )",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN s.isOnlineOnly = 1 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(DISTINCT s.id) FROM sets s JOIN set_translations st ON s.code = st.setCode WHERE st.language = 'Portuguese (Brazi",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 199,
+      "db_id": "card_games",
+      "question": "What are the available printing types of the cards that doesn't have a text box created by Aleksi Briclot?",
+      "gold_sql": "SELECT DISTINCT availability FROM cards WHERE artist = 'Aleksi Briclot' AND isTextless = 1",
+      "pred_sql": "SELECT DISTINCT printiinngs FROM cards WHERE artist = 'Aleksi Briclot' AND isTextless = 0",
+      "correct": false,
+      "error": "no such column: printiinngs",
+      "call_count": 2
+    },
+    {
+      "query_idx": 200,
+      "db_id": "card_games",
+      "question": "What is the most common visual frame effects among the incredibly powerful foils?",
+      "gold_sql": "SELECT frameEffects FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL GROUP BY frameEffects ORDER BY COUNT(frameEffects) DESC LIMIT 1",
+      "pred_sql": "SELECT frameEffects FROM cards WHERE hasFoil = 1 AND cardKingdomFoilId IS NOT NULL GROUP BY frameEffects ORDER BY COUNT(*) DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 201,
+      "db_id": "card_games",
+      "question": "Among the sets whose expansion type is Commander, which set has the highest total number of cards including promotional ",
+      "gold_sql": "SELECT id FROM sets WHERE type = 'commander' ORDER BY totalSetSize DESC LIMIT 1",
+      "pred_sql": "SELECT\n  id\nFROM sets\nWHERE\n  type = 'commander'\nORDER BY\n  totalSetSize DESC\nLIMIT 1",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 202,
+      "db_id": "card_games",
+      "question": "When was the oldest mythic card released and what are its legal play formats?",
+      "gold_sql": "SELECT T1.originalReleaseDate, T2.format FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.rarity = 'mythic' AND T1.originalReleaseDate IS NOT NULL AND T2.status = 'Legal' ORD",
+      "pred_sql": "SELECT\n  T1.originalReleaseDate,\n  GROUP_CONCAT(T2.status)\nFROM cards AS T1\nINNER JOIN legalities AS T2\n  ON T1.uuid = T2.uuid\nWHERE\n  T1.rarity = 'mythic'\nGROUP BY\n  T1.originalReleaseDate\nORDER BY\n ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 203,
+      "db_id": "card_games",
+      "question": "How many cards did Volkan BaÇµa illustrated whose foreign language is in French?",
+      "gold_sql": "SELECT COUNT(T3.id) FROM ( SELECT T1.id FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T2.uuid = T1.uuid WHERE T1.artist = 'Volkan Baǵa' AND T2.language = 'French' GROUP BY T1.id ) AS T3",
+      "pred_sql": "SELECT count(c.id) FROM cards c JOIN foreign_data f ON c.uuid = f.multiverseid WHERE c.artist = 'Volkan Baǵa' AND f.language = 'French'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 204,
+      "db_id": "card_games",
+      "question": "How many rare enchantment Abundance cards are there whose play format status are all legal?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM cards AS T1 INNER JOIN legalities AS T2 ON T2.uuid = T1.uuid WHERE T1.rarity = 'rare' AND T1.types = 'Enchantment' AND T1.name = 'Abundance' AND T2.status = 'Legal'",
+      "pred_sql": "SELECT COUNT(DISTINCT c.uuid) FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.rarity = 'rare' AND c.types = 'Enchantment' AND c.name = 'Abundance' AND l.status = 'Legal'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 205,
+      "db_id": "card_games",
+      "question": "Which of the play format has the highest number of banned status? Indicate the play format and the names of all the card",
+      "gold_sql": "WITH MaxBanned AS (SELECT format, COUNT(*) AS count_banned FROM legalities WHERE status = 'Banned' GROUP BY format ORDER BY COUNT(*) DESC LIMIT 1) SELECT T2.format, T1.name FROM cards AS T1 INNER JOIN",
+      "pred_sql": "SELECT T2.format, GROUP_CONCAT(T1.name) FROM legalities AS T1 INNER JOIN sets AS T2 ON T1.uuid = T2.uuid WHERE T1.status = 'Banned' GROUP BY T2.format ORDER BY COUNT(T1.status) DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: T2.format",
+      "call_count": 2
+    },
+    {
+      "query_idx": 206,
+      "db_id": "card_games",
+      "question": "Who is the illustrator that illustrated the least amount of cards? List the format of play of the cards that he/she illu",
+      "gold_sql": "SELECT T1.artist, T2.format FROM cards AS T1 INNER JOIN legalities AS T2 ON T2.uuid = T1.uuid GROUP BY T1.artist ORDER BY COUNT(T1.id) ASC LIMIT 1",
+      "pred_sql": "SELECT sub.types, sub.artist FROM (SELECT artist FROM cards GROUP BY artist HAVING COUNT(*) = (SELECT MIN(card_count) FROM (SELECT COUNT(*) AS card_count FROM cards GROUP BY artist) as sub)) as sub",
+      "correct": false,
+      "error": "no such column: sub.types",
+      "call_count": 2
+    },
+    {
+      "query_idx": 207,
+      "db_id": "card_games",
+      "question": "Among the cards whose version of frame style is 1997, what is the status of the card illustrated by D. Alexander Gregory",
+      "gold_sql": "SELECT DISTINCT T2.status FROM cards AS T1 INNER JOIN legalities AS T2 ON T2.uuid = T1.uuid WHERE T1.frameVersion = 1997 AND T1.hasContentWarning = 1 AND T1.artist = 'D. Alexander Gregory' AND T2.form",
+      "pred_sql": "SELECT L.status FROM legalities L JOIN cards C ON L.uuid = C.uuid WHERE C.frameVersion = '1997' AND C.artist = 'D. Alexander Gregory' AND C.hasContentWarning = 1 AND L.format = 'legacy'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 208,
+      "db_id": "card_games",
+      "question": "Which cards are ranked 1st on EDHRec? List all of the cards name and its banned play format.",
+      "gold_sql": "SELECT T1.name, T2.format FROM cards AS T1 INNER JOIN legalities AS T2 ON T2.uuid = T1.uuid WHERE T1.edhrecRank = 1 AND T2.status = 'Banned' GROUP BY T1.name, T2.format",
+      "pred_sql": "SELECT name, cardKingdomId FROM cards WHERE edhrecRank = 1 AND legality.status = 'Ban'.",
+      "correct": false,
+      "error": "incomplete input",
+      "call_count": 2
+    },
+    {
+      "query_idx": 209,
+      "db_id": "card_games",
+      "question": "What is the annual average number of sets that were released between 1/1/2012 to 12/31/2015? Indicate the common languga",
+      "gold_sql": "SELECT (CAST(SUM(T1.id) AS REAL) / COUNT(T1.id)) / 4, T2.language FROM sets AS T1 INNER JOIN set_translations AS T2 ON T1.id = T2.id WHERE T1.releaseDate BETWEEN '2012-01-01' AND '2015-12-31' GROUP BY",
+      "pred_sql": "SELECT AVG(T1.id), MAX(COUNT(T2.language)) FROM sets AS T1 INNER JOIN card_languages AS T2 ON T1.id = T2.set_id WHERE T1.releaseDate BETWEEN '2012-01-01' AND '2015-12-31' GROUP BY T1.type",
+      "correct": false,
+      "error": "no such table: card_languages",
+      "call_count": 2
+    },
+    {
+      "query_idx": 210,
+      "db_id": "card_games",
+      "question": "What are the rulings for the card named and designed by Kev Walker? List them in descending order of dates.",
+      "gold_sql": "SELECT T2.text FROM cards AS T1 INNER JOIN rulings AS T2 ON T2.uuid = T1.uuid WHERE T1.artist = 'Kev Walker' ORDER BY T2.date DESC",
+      "pred_sql": "SELECT\n  text\nFROM cards\nWHERE\n  artist = 'Kev Walker'\nORDER BY\n  originalReleaseDate DESC",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 211,
+      "db_id": "card_games",
+      "question": "List the names of all the cards in the set Hour of Devastation and find the formats in which these cards are legal.",
+      "gold_sql": "SELECT DISTINCT T2.name , CASE WHEN T1.status = 'Legal' THEN T1.format ELSE NULL END FROM legalities AS T1 INNER JOIN cards AS T2 ON T2.uuid = T1.uuid WHERE T2.setCode IN ( SELECT code FROM sets WHERE",
+      "pred_sql": "SELECT DISTINCT\n  c.name,\n  l.format\nFROM cards AS c\nJOIN legalities AS l\n  ON c.uuid = l.uuid\nJOIN sets AS s\n  ON s.code = c.setCode\nWHERE\n  s.name = 'Hour of Devastation' AND l.status = 'Legal'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 212,
+      "db_id": "card_games",
+      "question": "Find and list the names of sets which doesn't have Japanese translation but have Korean translation.",
+      "gold_sql": "SELECT name FROM sets WHERE code IN ( SELECT setCode FROM set_translations WHERE language = 'Korean' AND language NOT LIKE '%Japanese%' )",
+      "pred_sql": "SELECT name FROM sets WHERE code IN (SELECT code FROM set_translaations WHERE language = 'Korean') AND code NOT IN (SELECT code FROM set_translaations WHERE language LIKE '%Japanese%')",
+      "correct": false,
+      "error": "no such table: set_translaations",
+      "call_count": 2
+    },
+    {
+      "query_idx": 213,
+      "db_id": "card_games",
+      "question": "List all the frame styles and cards Allen Williams worked on and find any banned cards if there are any.",
+      "gold_sql": "SELECT DISTINCT T1.frameVersion, T1.name , IIF(T2.status = 'Banned', T1.name, 'NO') FROM cards AS T1 INNER JOIN legalities AS T2 ON T1.uuid = T2.uuid WHERE T1.artist = 'Allen Williams'",
+      "pred_sql": "SELECT DISTINCT T1.frameEffects FROM cards AS T1 JOIN (SELECT * FROM cards WHERE artist = 'Allen Williams') AS T2 ON T1.uuid = T2.uuid",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 214,
+      "db_id": "codebase_community",
+      "question": "What is the display name of the user who last edited the post \"Examples for teaching: Correlation does not mean causatio",
+      "gold_sql": "SELECT T2.DisplayName FROM posts AS T1 INNER JOIN users AS T2 ON T1.LastEditorUserId = T2.Id WHERE T1.Title = 'Examples for teaching: Correlation does not mean causation'",
+      "pred_sql": "SELECT T1.LastEditorDisplayName FROM posts AS T1 INNER JOIN users AS T2 ON T1.LastEditorUserId = T2.Id WHERE T1.Title = \"Examples for teaching: Correlation does not mean causation\"",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 215,
+      "db_id": "codebase_community",
+      "question": "Among the posts with a score of over 5, what is the percentage of them being owned by an elder user?",
+      "gold_sql": "SELECT CAST(SUM(IIF(T2.Age > 65, 1, 0)) AS REAL) * 100 / COUNT(T1.Id) FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Score > 5",
+      "pred_sql": "SELECT CAST(COUNT(DISTINCT T1.Id) * 100.0 / COUNT(DISTINCT T1.Id) AS REAL) FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Score > 5 AND T2.Age > 65",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 216,
+      "db_id": "codebase_community",
+      "question": "User No.3025 gave a comment at 20:29:39 on 2014/4/23 to a post, how many favorite counts did that post get?",
+      "gold_sql": "SELECT T1.FavoriteCount FROM posts AS T1 INNER JOIN comments AS T2 ON T1.Id = T2.PostId WHERE T2.CreationDate = '2014-04-23 20:29:39.0' AND T2.UserId = 3025",
+      "pred_sql": "SELECT p.FavoriteCount FROM posts p INNER JOIN comments c ON p.Id = c.PostId WHERE c.UserId = 3025 AND c.CreationDate = '2014/4/23 20:29:39'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 217,
+      "db_id": "codebase_community",
+      "question": "User No.23853 gave a comment to a post at 9:08:18 on 2013/7/12, was that post well-finished?",
+      "gold_sql": "SELECT IIF(T2.ClosedDate IS NULL, 'NOT well-finished', 'well-finished') AS resylt FROM comments AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T1.UserId = 23853 AND T1.CreationDate = '2013-07",
+      "pred_sql": "SELECT (SELECT CASE WHEN T1.ClosedDate IS NULL THEN 1 ELSE 0 END FROM posts AS T1 WHERE T1.Id = T2.PostId) FROM comments AS T2 WHERE T2.UserId = 23853 AND T2.CreationDate = '2013-07-12 09:08:18.0'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 218,
+      "db_id": "codebase_community",
+      "question": "For the user No.24, how many times is the number of his/her posts compared to his/her votes?",
+      "gold_sql": "SELECT CAST(COUNT(T2.Id) AS REAL) / COUNT(DISTINCT T1.Id) FROM votes AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.OwnerUserId WHERE T1.UserId = 24",
+      "pred_sql": "SELECT CAST(COUNT(p.Id) AS REAL) / COUNT(v.Id) FROM posts p INNER JOIN votes v ON p.OwnerUserId = v.UserId WHERE p.OwnerUserId = 24",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 219,
+      "db_id": "codebase_community",
+      "question": "How many views did the post titled 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer' get?",
+      "gold_sql": "SELECT ViewCount FROM posts WHERE Title = 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer'",
+      "pred_sql": "SELECT ViewCount FROM posts WHERE Title = 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 220,
+      "db_id": "codebase_community",
+      "question": "Which user made a post titled 'Understanding what Dassault iSight is doing?' and how much is the reputation of the user?",
+      "gold_sql": "SELECT T1.DisplayName, T1.Reputation FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T2.Title = 'Understanding what Dassault iSight is doing?'",
+      "pred_sql": "SELECT T1.DisplayName, T2.Reputation FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T2.Title = 'Understanding what Dassault iSight is doing?'",
+      "correct": false,
+      "error": "no such column: T2.Reputation",
+      "call_count": 2
+    },
+    {
+      "query_idx": 221,
+      "db_id": "codebase_community",
+      "question": "Who is the editor of the post titled 'Open source tools for visualizing multi-dimensional data?'",
+      "gold_sql": "SELECT T2.DisplayName FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Open source tools for visualizing multi-dimensional data?'",
+      "pred_sql": "SELECT T1.LastEditorDisplayName FROM posts AS T1 INNER JOIN users AS T2 ON T1.LastEditorUserId = T2.Id WHERE T1.Title = 'Open source tools for visualizing multi-dimensional data'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 222,
+      "db_id": "codebase_community",
+      "question": "Write all the comments left by users who edited the post titled 'Why square the difference instead of taking the absolut",
+      "gold_sql": "SELECT T2.Comment FROM posts AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.PostId WHERE T1.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'",
+      "pred_sql": "SELECT c.Text FROM comments AS c INNER JOIN posts AS p ON c.PostId = p.Id WHERE p.Title = 'Why square the difference insteaad of taking the absolute value in standard deviation?' AND c.UserId IN (SELE",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 223,
+      "db_id": "codebase_community",
+      "question": "Which user added a bounty amount of 50 to the post title mentioning variance?",
+      "gold_sql": "SELECT T3.DisplayName, T1.Title FROM posts AS T1 INNER JOIN votes AS T2 ON T1.Id = T2.PostId INNER JOIN users AS T3 ON T3.Id = T2.UserId WHERE T2.BountyAmount = 50 AND T1.Title LIKE '%variance%'",
+      "pred_sql": "SELECT DISTINCT T1.DisplayName FROM users AS T1 INNER JOIN votes AS T2 ON T1.Id = T2.UserId WHERE T2.BountyAmount = 50 AND T2.PostId IN (SELECT Id FROM posts WHERE Title LIKE '%variance%')",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 224,
+      "db_id": "codebase_community",
+      "question": "Calculate the average view count of each post tagged as 'humor' and list the title and the comment of each post.",
+      "gold_sql": "SELECT AVG(T2.ViewCount), T2.Title, T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T2.Id = T1.PostId  WHERE T2.Tags = '<humor>' GROUP BY T2.Title, T1.Text ",
+      "pred_sql": "SELECT p.Title, p.Body, AVG(ph.ViewCount)\nFROM posts p\nJOIN postHistory ph ON p.Id = ph.PostId\nJOIN tags t ON p.Id = t.ExcerptPostId\nWHERE t.TagName = 'humor'\nGROUP BY p.Id, p.Title, p.Body",
+      "correct": false,
+      "error": "no such column: ph.ViewCount",
+      "call_count": 2
+    },
+    {
+      "query_idx": 225,
+      "db_id": "codebase_community",
+      "question": "Which user have only one post history per post and having at least 1000 views?",
+      "gold_sql": "SELECT T2.UserId FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T2.PostId = T3.Id WHERE T3.ViewCount >= 1000 GROUP BY T2.UserId HAVING COUNT(DISTINCT T2.P",
+      "pred_sql": "SELECT DISTINCT T1.UserId FROM postHistory AS T1 JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T2.Views >= 1000",
+      "correct": false,
+      "error": "no such column: T2.Views",
+      "call_count": 2
+    },
+    {
+      "query_idx": 226,
+      "db_id": "codebase_community",
+      "question": "What is the percentage difference of student badges given during 2010 and 2011?",
+      "gold_sql": "SELECT CAST(SUM(IIF(STRFTIME('%Y', Date) = '2010', 1, 0)) AS REAL) * 100 / COUNT(Id) - CAST(SUM(IIF(STRFTIME('%Y', Date) = '2011', 1, 0)) AS REAL) * 100 / COUNT(Id) FROM badges WHERE Name = 'Student'",
+      "pred_sql": "SELECT CAST( (SUM(CASE WHEN substr(CAST(Date AS TEXT), 1, 4) = '2010' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) - SUM(CASE WHEN substr(CAST(Date AS TEXT), 1, 4) = '2011' THEN 1 ELSE 0 END) * 100.0) AS REA",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 227,
+      "db_id": "codebase_community",
+      "question": "What is the average of the up votes and the average user age for users creating more than 10 posts?",
+      "gold_sql": "SELECT AVG(T1.UpVotes), AVG(T1.Age) FROM users AS T1 INNER JOIN ( SELECT OwnerUserId, COUNT(*) AS post_count FROM posts GROUP BY OwnerUserId HAVING post_count > 10) AS T2 ON T1.Id = T2.OwnerUserId",
+      "pred_sql": "SELECT (SELECT AVG(u.UpVotes) FROM users u WHERE u.Id IN (SELECT OwnerUserId FROM posts GROUP BY OwnerUserId HAVING COUNT(*) > 10)) / (SELECT COUNT(DISTINCT u.Id) FROM users WHERE u.Id IN (SELECT Owne",
+      "correct": false,
+      "error": "no such column: u.Id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 228,
+      "db_id": "codebase_community",
+      "question": "Among the users who obtained the \"Organizer\" badges, calculate the percentage of users who are teenagers.",
+      "gold_sql": "SELECT CAST(SUM(IIF(T2.Age BETWEEN 13 AND 18, 1, 0)) AS REAL) * 100 / COUNT(T1.Id) FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T1.`Name` = 'Organizer'",
+      "pred_sql": "SELECT CAST(COUNT(DISTINCT T1.UserId) * 100.0 / COUNT(DISTINCT T1.UserId) AS REAL)\nFROM badges AS T1\nINNER JOIN users AS T2 ON T1.UserId = T2.Id\nWHERE T1.Name = 'Organizer' AND T2.Age BETWEEN 13 AND 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 229,
+      "db_id": "codebase_community",
+      "question": "Which post by slashnick has the most answers count? State the post ID.",
+      "gold_sql": "SELECT T2.PostId FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T2.PostId = T3.Id WHERE T1.DisplayName = 'slashnick' ORDER BY T3.AnswerCount DESC LIMIT 1",
+      "pred_sql": "SELECT\n  Id\nFROM posts\nWHERE\n  OwnerDisplayName = 'slaashnick'\nORDER BY\n  AnswerCount DESC\nLIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 230,
+      "db_id": "codebase_community",
+      "question": "Among posts by Harvey Motulsky and Noah Snyder, which one has higher popularity?",
+      "gold_sql": "SELECT T1.DisplayName FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T2.PostId = T3.Id WHERE T1.DisplayName = 'Harvey Motulsky' OR T1.DisplayName = 'Noah ",
+      "pred_sql": "SELECT T1.Title FROM posts AS T1 JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T2.DisplayName = 'Harvey Motulsky' OR T2.DisplayName = 'Noah Snyder' ORDER BY T1.ViewsCount DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: T1.ViewsCount",
+      "call_count": 2
+    },
+    {
+      "query_idx": 231,
+      "db_id": "codebase_community",
+      "question": "How many posts by Matt Parker have more than 4 votes?",
+      "gold_sql": "SELECT COUNT(T1.Id) FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T2.PostId = T3.Id INNER JOIN votes AS T4 ON T4.PostId = T3.Id WHERE T1.DisplayName = 'M",
+      "pred_sql": "SELECT COUNT(DISTINCT p.Id) FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Matt Parker' AND p.Id IN (SELECT PostId FROM votes WHERE VoteTypeId = 1) GROUP BY p.Id HAVING COUNT",
+      "correct": false,
+      "error": "no such column: v.Id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 232,
+      "db_id": "codebase_community",
+      "question": "State all the tags used by Mark Meckes in his posts that doesn't have comments.",
+      "gold_sql": "SELECT T3.Tags FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T3.Id = T2.PostId WHERE T1.DisplayName = 'Mark Meckes' AND T3.CommentCount = 0",
+      "pred_sql": "SELECT DISTINCT T.TagName FROM tags AS T JOIN posts AS P ON T.ExcerptPostId = P.Id WHERE P.OwnerDisplayName = 'Mark Meckes' AND P.CommentCount = 0",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 233,
+      "db_id": "codebase_community",
+      "question": "Based on posts posted by Community, calculate the percentage of posts that use the R language.",
+      "gold_sql": "SELECT CAST(SUM(IIF(T3.TagName = 'r', 1, 0)) AS REAL) * 100 / COUNT(T1.Id) FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN tags AS T3 ON T3.ExcerptPostId = T2.PostId WHER",
+      "pred_sql": "SELECT CAST(COUNT(T1.Id) * 100.0 / COUNT(T2.Id) AS REAL) FROM posts AS T1 INNER JOIN tags AS T2 ON T1.Id = T2.ExcecerptPostId WHERE T2.TagName = 'r' AND T2.ExcecerptPostId IN (SELECT OwnerUserId FROM ",
+      "correct": false,
+      "error": "no such column: T2.ExcecerptPostId",
+      "call_count": 2
+    },
+    {
+      "query_idx": 234,
+      "db_id": "codebase_community",
+      "question": "Calculate the difference in view count from post posted by Mornington and view count from posts posted by Amos.",
+      "gold_sql": "SELECT SUM(IIF(T1.DisplayName = 'Mornington', T3.ViewCount, 0)) - SUM(IIF(T1.DisplayName = 'Amos', T3.ViewCount, 0)) AS diff FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JO",
+      "pred_sql": "SELECT\n  SUM(CASE WHEN OwnerDisplayName = 'Mornington' THEN ViewCount ELSE 0 END) - SUM(CASE WHEN OwnerDisplayName = 'Amos' THEN ViewCount ELSE 0 END)\nFROM posts",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 235,
+      "db_id": "codebase_community",
+      "question": "List the post IDs and badge names of the user Samuel in 2013.",
+      "gold_sql": "SELECT T1.PostId, T2.Name FROM postHistory AS T1 INNER JOIN badges AS T2 ON T1.UserId = T2.UserId WHERE T1.UserDisplayName = 'Samuel' AND STRFTIME('%Y', T1.CreationDate) = '2013' AND STRFTIME('%Y', T2",
+      "pred_sql": "SELECT DISTINCT\n  p.Id,\n  b.Name\nFROM posts AS p\nJOIN users AS u\n  ON p.OwnerUserId = u.Id\nJOIN badges AS b\n  ON u.Id = b.UserId\nWHERE\n  u.DisplayName = 'Samuel' AND STRFTIME('%Y', b.Date) = '2013'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 236,
+      "db_id": "codebase_community",
+      "question": "Mention the display name and location of the user who owned the excerpt post with hypothesis-testing tag.",
+      "gold_sql": "SELECT T3.DisplayName, T3.Location FROM tags AS T1 INNER JOIN posts AS T2 ON T1.ExcerptPostId = T2.Id INNER JOIN users AS T3 ON T3.Id = T2.OwnerUserId WHERE T1.TagName = 'hypothesis-testing'",
+      "pred_sql": "SELECT DISTINCT\n  u.DisplayName,\n  u.Location\nFROM users AS u\nJOIN posts AS p\n  ON u.Id = p.OwnerUserId\nJOIN tags AS t\n  ON p.Id = t.ExcerptPostId\nWHERE\n  t.TagName = 'hypothesis-testing'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 237,
+      "db_id": "codebase_community",
+      "question": "Under the vote type of 8, provide the display names and websites URLs of the user who got the highest bounty amount.",
+      "gold_sql": "SELECT DisplayName, WebsiteUrl FROM users WHERE Id = ( SELECT UserId FROM votes WHERE VoteTypeId = 8 ORDER BY BountyAmount DESC LIMIT 1 )",
+      "pred_sql": "SELECT DISTINCT u.DisplayName, u.WebsiteUrl FROM users u JOIN votes v ON u.Id = v.UserId WHERE v.VoteTypeId = 8 ORDER BY v.BountyAmount DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 238,
+      "db_id": "codebase_community",
+      "question": "What is the average monthly number of links created in 2010 for posts that have no more than 2 answers?",
+      "gold_sql": "SELECT CAST(COUNT(T1.Id) AS REAL) / 12 FROM postLinks AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T2.AnswerCount <= 2 AND STRFTIME('%Y', T1.CreationDate) = '2010'",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN STRFTIME('%Y', CreationDate) = '2010' AND AnswerCount <= 2 THEN 1 ELSE 0 END) AS REAL) / 12 FROM postLinks",
+      "correct": false,
+      "error": "no such column: AnswerCount",
+      "call_count": 2
+    },
+    {
+      "query_idx": 239,
+      "db_id": "codebase_community",
+      "question": "Among the users located in United Kingdom, how many users whose post have a total favorite amount of 4 or more?",
+      "gold_sql": "SELECT COUNT(T1.Id) FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE T1.Location = 'United Kingdom' AND T2.FavoriteCount >= 4",
+      "pred_sql": "SELECT COUNT(DISTINCT u.Id) FROM users u INNER JOIN posts p ON u.Id = p.OwnerUserId WHERE u.Location = 'United Kingdom' AND p.FavoriteCount >= 4",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 240,
+      "db_id": "codebase_community",
+      "question": "Which is the most valuable post in 2010? Please give its id and the owner's display name.",
+      "gold_sql": "SELECT T2.OwnerUserId, T1.DisplayName FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId WHERE STRFTIME('%Y', T1.CreationDate) = '2010' ORDER BY T2.FavoriteCount DESC LIMIT 1",
+      "pred_sql": "SELECT p.Id, p.OwnerDisplayName FROM posts p WHERE STRFTIME('%Y', p.CreaioNDate) = '2010' ORDER BY p.Score DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 241,
+      "db_id": "codebase_community",
+      "question": "What is the percentage of posts whose owners had a reputation of over 1000 in 2011?",
+      "gold_sql": "SELECT CAST(SUM(IIF(STRFTIME('%Y', T2.CreaionDate) = '2011' AND T1.Reputation > 1000, 1, 0)) AS REAL) * 100 / COUNT(T1.Id) FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN CAST(strftime('%Y', CreaioNDate) AS INTEGER) = 2011 AND Reputaion > 1000 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(Id) FROM posts JOIN users ON posts.OwnerUserId = users.Id",
+      "correct": false,
+      "error": "no such column: Reputaion",
+      "call_count": 2
+    },
+    {
+      "query_idx": 242,
+      "db_id": "codebase_community",
+      "question": "Identify the total views on the post 'Computer Game Datasets'. Name the user who posted it last time.",
+      "gold_sql": "SELECT T2.ViewCount, T3.DisplayName FROM postHistory AS T1 INNER JOIN posts AS T2 ON T1.PostId = T2.Id INNER JOIN users AS T3 ON T2.LastEditorUserId = T3.Id WHERE T1.Text = 'Computer Game Datasets'",
+      "pred_sql": "SELECT OwnerDisplayName FROM posts WHERE Title = 'Computer Game Datasets' ORDER BY LastActivityDate DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: LastActivityDate",
+      "call_count": 2
+    },
+    {
+      "query_idx": 243,
+      "db_id": "codebase_community",
+      "question": "How long did it take the user, known by his or her display name 'Zolomon' to get the badge? Count from the date the user",
+      "gold_sql": "SELECT T1.Date - T2.CreationDate FROM badges AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T2.DisplayName = 'Zolomon'",
+      "pred_sql": "SELECT\n  JULIANDAY(Date) - JULIANDAY(CreatioNDate) AS time_difference\nFROM badges\nWHERE\n  UserId = (\n    SELECT\n      Id\n    FROM users\n    WHERE\n      DisplayName = 'Zolomon'\n  )",
+      "correct": false,
+      "error": "no such column: CreatioNDate",
+      "call_count": 2
+    },
+    {
+      "query_idx": 244,
+      "db_id": "codebase_community",
+      "question": "Provide the text of the latest 10 comments to the post with the title 'Analysing wind data with R' and the display name ",
+      "gold_sql": "SELECT T3.Text, T1.DisplayName FROM users AS T1 INNER JOIN posts AS T2 ON T1.Id = T2.OwnerUserId INNER JOIN comments AS T3 ON T2.Id = T3.PostId WHERE T2.Title = 'Analysing wind data with R' ORDER BY T",
+      "pred_sql": "SELECT T1.Text, T2.UserDisplayName FROM comments AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id ORDER BY T1.CreationDate DESC LIMIT 10 WHERE T1.PostId IN (SELECT Id FROM posts WHERE Title = 'Analys",
+      "correct": false,
+      "error": "near \"WHERE\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 245,
+      "db_id": "codebase_community",
+      "question": "Among all the posts posted by the most influential user, identify the percentage with a score above 50.",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.Score > 50 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.Id) FROM users T1 INNER JOIN posts T2 ON T1.Id = T2.OwnerUserId INNER JOIN ( SELECT MAX(Reputation) AS max_reputati",
+      "pred_sql": "SELECT CAST(COUNT(p.Id) * 100.0 / (SELECT COUNT(p.Id) FROM posts WHERE OwnerUserId = (SELECT Id FROM users ORDER BY Reputation DESC LIMIT 1)) AS TEXT) FROM posts p WHERE Score > 50",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 246,
+      "db_id": "codebase_community",
+      "question": "Among the posts with views ranging from 100 to 150, what is the comment with the highest score?",
+      "gold_sql": "SELECT Text FROM comments WHERE PostId IN ( SELECT Id FROM posts WHERE ViewCount BETWEEN 100 AND 150 ) ORDER BY Score DESC LIMIT 1",
+      "pred_sql": "SELECT T2.Text FROM comments AS T1 JOIN posts AS T2 ON T1.PostId = T2.Id WHERE T2.ViewCount BETWEEN 100 AND 150 ORDER BY T1.Score DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: T2.Text",
+      "call_count": 2
+    },
+    {
+      "query_idx": 247,
+      "db_id": "codebase_community",
+      "question": "List the creation date and age of the user that commented with webiste.",
+      "gold_sql": "SELECT T2.CreationDate, T2.Age FROM comments AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T1.text LIKE '%http://%'",
+      "pred_sql": "SELECT T1.CreationDate, T2.Age FROM comments AS T1 INNER JOIN users AS T2 ON T1.UserId = T2.Id WHERE T1.Text LIKE '%http:/%'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 248,
+      "db_id": "codebase_community",
+      "question": "Among the comments with scores between 5 to 10, what is the percentage of the users with 0 up votes?",
+      "gold_sql": "SELECT CAST(SUM(IIF(T1.UpVotes = 0, 1, 0)) AS REAL) * 100/ COUNT(T1.Id) AS per FROM users AS T1 INNER JOIN comments AS T2 ON T1.Id = T2.UserId WHERE T2.Score BETWEEN 5 AND 10",
+      "pred_sql": "SELECT CAST(COUNT(DISTINCT T1.UserId) * 100.0 / COUNT(T1.UserId) AS REAL) FROM comments AS T1 WHERE T1.Score BETWEEN 5 AND 10 AND T1.UserId IN (SELECT UserId FROM users WHERE UpVotes = 0)",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 249,
+      "db_id": "superhero",
+      "question": "Among the superheroes with the super power of \"Super Strength\", how many of them have a height of over 200cm?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Super Strength' AND T1.height_cm > ",
+      "pred_sql": "SELECT COUNT(DISTINCT hero_id) FROM hero_attribute WHERE attribute_id = (SELECT id FROM attribute WHERE power_name = 'Super Strength') AND attribute_value > 200",
+      "correct": false,
+      "error": "no such column: power_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 250,
+      "db_id": "superhero",
+      "question": "Among the superheroes with blue eyes, how many of them have the super power of \"Agility\"?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id INNER JOIN colour AS T4 ON T1.eye_colour_id = T4.id WHERE ",
+      "pred_sql": "SELECT COUNT(DISTINCT s.id) FROM hero_power hp JOIN supehero s ON hp.hero_id = s.id JOIN colour c ON s.eye_colour_id = c.id WHERE c.colour = 'Blue' AND hp.power_id = (SELECT id FROM superpower WHERE p",
+      "correct": false,
+      "error": "no such table: supehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 251,
+      "db_id": "superhero",
+      "question": "Please list the superhero names of all the superheroes that have blue eyes and blond hair.",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id WHERE T2.colour = 'Blue' AND T3.colour = 'Blond'",
+      "pred_sql": "SELECT id FROM colour WHERE colour = 'Blue' AND colour = 'Blond'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 252,
+      "db_id": "superhero",
+      "question": "Rank heroes published by Marvel Comics by their height in descending order.",
+      "gold_sql": "SELECT superhero_name, height_cm, RANK() OVER (ORDER BY height_cm DESC) AS HeightRank FROM superhero INNER JOIN publisher ON superhero.publisher_id = publisher.id WHERE publisher.publisher_name = 'Mar",
+      "pred_sql": "SELECT hero_name FROM hero\nWHERE publisher_name = 'Marvel Comics'\nORDER BY height_cm DESC",
+      "correct": false,
+      "error": "no such table: hero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 253,
+      "db_id": "superhero",
+      "question": "Rank superheroes from Marvel Comics by their eye color popularity, starting with the most common color.",
+      "gold_sql": "SELECT colour.colour AS EyeColor, COUNT(superhero.id) AS Count, RANK() OVER (ORDER BY COUNT(superhero.id) DESC) AS PopularityRank FROM superhero INNER JOIN colour ON superhero.eye_colour_id = colour.i",
+      "pred_sql": "SELECT colour FROM colour c JOIN publisher p ON c.id = p.id WHERE p.publisher_name = 'Marvel Comics' GROUP BY colour ORDER BY COUNT(c.id) DESC",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 254,
+      "db_id": "superhero",
+      "question": "List the superheroes from Marvel Comics who have the super power of 'Super Strength'.",
+      "gold_sql": "SELECT superhero_name FROM superhero AS T1 WHERE EXISTS (SELECT 1 FROM hero_power AS T2 INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Super Strength' AND T1.id = T2.hero_id",
+      "pred_sql": "SELECT id FROM publisher WHERE publisher_name = 'Marvel Comics'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 255,
+      "db_id": "superhero",
+      "question": "Which publisher published the slowest superhero?",
+      "gold_sql": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN hero_attribute AS T3 ON T1.id = T3.hero_id INNER JOIN attribute AS T4 ON T3.attribute_id ",
+      "pred_sql": "SELECT p.publisher_name FROM publisher p JOIN hero_attribute ha ON p.id = ha.hero_id WHERE ha.attribute_name = 'Speed' GROUP BY p.publisher_name ORDER BY MIN(ha.attribute_value) ASC LIMIT 1",
+      "correct": false,
+      "error": "no such column: ha.attribute_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 256,
+      "db_id": "superhero",
+      "question": "How many gold-eyed superheroes did Marvel Comics publish?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN colour AS T3 ON T1.eye_colour_id = T3.id WHERE T2.publisher_name = 'Marvel Comics' AND T3.colo",
+      "pred_sql": "SELECT COUNT(T1.id) FROM colour AS T1 INNER JOIN publisher AS T2 ON T1.colour = T2.publisher_name WHERE T1.colour = 'Gold' AND T2.publisher_name = 'Marvel Comics'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 257,
+      "db_id": "superhero",
+      "question": "Who is the dumbest superhero?",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Intelligence' ORDER",
+      "pred_sql": "SELECT hero_id FROM hero_attribute WHERE attribute_name = 'Intelligence' ORDER BY attribute_value DESC LIMIT 1",
+      "correct": false,
+      "error": "no such column: attribute_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 258,
+      "db_id": "superhero",
+      "question": "What are the names of the superheroes with the power of death touch?",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Death Touch'",
+      "pred_sql": "SELECT DISTINCT\n  s.superehero_name\nFROM supehero AS s\nJOIN hero_power AS hp\n  ON s.id = hp.hero_id\nJOIN superpower AS sp\n  ON hp.power_id = sp.id\nWHERE\n  sp.power_name = 'Death Touch'",
+      "correct": false,
+      "error": "no such table: supehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 259,
+      "db_id": "superhero",
+      "question": "How many female superheroes have a strength value of 100?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id INNER JOIN gender AS T4 ON T1.gender_id = T4.id WHE",
+      "pred_sql": "SELECT COUNT(DISTINCT T1.id) FROM gender T1 INNER JOIN hero_attribute T2 ON T1.id = T2.hero_id WHERE T1.gender = 'Female' AND T2.attribute_id IN (SELECT id FROM attribute WHERE attribute_name = 'Stren",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 260,
+      "db_id": "superhero",
+      "question": "What is the percentage of superheroes who act in their own self-interest or make decisions based on their own moral code",
+      "gold_sql": "SELECT (CAST(COUNT(*) AS REAL) * 100 / (SELECT COUNT(*) FROM superhero)), CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) FROM superhero AS T1 INNER JOIN publisher A",
+      "pred_sql": "SELECT\n  CAST(SUM(CASE WHEN alignment = 'Bad' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(id) AS percentage,\n  SUM(CASE WHEN alignment = 'Bad' THEN 1 ELSE 0 END) AS number_of_superheroes\nFROM alignment\n",
+      "correct": false,
+      "error": "no such column: publisher_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 261,
+      "db_id": "superhero",
+      "question": "Between DC and Marvel Comics, which publisher has published more superheroes? Find the difference in the number of super",
+      "gold_sql": "SELECT SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.pub",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS INTEGER) - CAST(SUM(CASE WHEN publisher_name = 'DC Comics' THEN 1 ELSE 0 END) AS INTEGER) FROM publisher",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 262,
+      "db_id": "superhero",
+      "question": "List down at least five superpowers of male superheroes.",
+      "gold_sql": "SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T3.id = T2.power_id INNER JOIN gender AS T4 ON T4.id = T1.gender_id WHERE T4.",
+      "pred_sql": "SELECT DISTINCT T1.power_name\nFROM superpower AS T1\nINNER JOIN hero_power AS T2 ON T1.id = T2.power_id\nINNER JOIN supehero AS T3 ON T2.hero_id = T3.id\nWHERE T3.gender = 'Male'\nLIMIT 5",
+      "correct": false,
+      "error": "no such table: supehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 263,
+      "db_id": "superhero",
+      "question": "Among the superheroes with height from 170 to 190, list the names of the superheroes with no eye color.",
+      "gold_sql": "SELECT DISTINCT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.height_cm BETWEEN 170 AND 190 AND T2.colour = 'No Colour'",
+      "pred_sql": "SELECT id FROM colour WHERE colour = 'No Colour' AND id BETWEEN 170 AND 190",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 264,
+      "db_id": "superhero",
+      "question": "Provide the hair colour of the human superhero who is 185 cm tall.",
+      "gold_sql": "SELECT DISTINCT T3.colour FROM superhero AS T1 INNER JOIN race AS T2 ON T1.race_id = T2.id INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id WHERE T1.height_cm = 185 AND T2.race = 'Human'",
+      "pred_sql": "SELECT colour FROM colour WHERE id = (SELECT id FROM colour WHERE colour = 'human' AND id = 185)",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 265,
+      "db_id": "superhero",
+      "question": "In superheroes with height between 150 to 180, what is the percentage of heroes published by Marvel Comics?",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN p.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*)\nFROM publisher p\nWHERE p.id BETWEEN 13 AND 18",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 266,
+      "db_id": "superhero",
+      "question": "Among the male superheroes, list the super hero names of superheroes with weight greater than the 79% average weight of ",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id WHERE T2.gender = 'Male' AND T1.weight_kg * 100 > ( SELECT AVG(weight_kg) FROM superhero ) * 79",
+      "pred_sql": "SELECT super_hero_name\nFROM superhero\nWHERE gender = 'Male'\n  AND weight_kg > (SELECT AVG(weight_kg) * 0.79 FROM superhero)",
+      "correct": false,
+      "error": "no such column: super_hero_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 267,
+      "db_id": "superhero",
+      "question": "What is the hero's full name with the highest attribute in strength?",
+      "gold_sql": "SELECT T1.full_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Strength' ORDER BY T2.at",
+      "pred_sql": "SELECT s.name FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id WHERE ha.attribute_name = 'strength' AND ha.attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute WHERE attribut",
+      "correct": false,
+      "error": "no such column: s.name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 268,
+      "db_id": "superhero",
+      "question": "Which superhero has the most durability published by Dark Horse Comics?",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T3.id = T2.attribute_id INNER JOIN publisher AS T4 ON T4.id = T1.publi",
+      "pred_sql": "SELECT T1.superhero_name FROM superhero T1 INNER JOIN hero_attribute T2 ON T1.id = T2.hero_id INNER JOIN attribute T3 ON T2.attribute_id = T3.id INNER JOIN publisher T4 ON T2.attribute_id = T4.id WHER",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 269,
+      "db_id": "superhero",
+      "question": "List the eyes, hair and skin colour of all female superheroes published by Dark Horse Comics.",
+      "gold_sql": "SELECT T1.eye_colour_id, T1.hair_colour_id, T1.skin_colour_id FROM superhero AS T1 INNER JOIN publisher AS T2 ON T2.id = T1.publisher_id INNER JOIN gender AS T3 ON T3.id = T1.gender_id WHERE T2.publis",
+      "pred_sql": "SELECT\n  c.colour,\n  g.gender,\n  h.colour AS hair_colour,\n  e.colour AS eye_colour\nFROM colour AS c\nJOIN gender AS g\n  ON c.id = g.id\nJOIN hair AS h\n  ON c.id = h.id\nJOIN eye AS e\n  ON c.id = e.id\nWHE",
+      "correct": false,
+      "error": "no such table: hair",
+      "call_count": 2
+    },
+    {
+      "query_idx": 270,
+      "db_id": "superhero",
+      "question": "Which superhero has the same eyes, hair and skin colour? Indicate the publisher of the superhero.",
+      "gold_sql": "SELECT T1.superhero_name, T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.eye_colour_id = T1.hair_colour_id AND T1.eye_colour_id = T1.skin_colour_",
+      "pred_sql": "SELECT p.publisher_name FROM publisher p JOIN colour c ON c.id IN (SELECT hair_colour_id FROM colour WHERE skin_colour_id = c.id AND eye_colour_id = c.id)",
+      "correct": false,
+      "error": "no such column: hair_colour_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 271,
+      "db_id": "superhero",
+      "question": "What is the percentage of blue female superheroes among all female superheroes?",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T3.colour = 'Blue' THEN T1.id ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id INNER JOIN colour AS T3 ON T",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN colour = 'Blue' AND gender = 'Female' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(gender = 'Female') FROM gender",
+      "correct": false,
+      "error": "no such column: colour",
+      "call_count": 2
+    },
+    {
+      "query_idx": 272,
+      "db_id": "superhero",
+      "question": "List the heroes' names whose eyes and hair colours are both black.",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id AND T1.hair_colour_id = T2.id WHERE T2.colour = 'Black'",
+      "pred_sql": "SELECT DISTINCT superhero_name\nFROM hero\nWHERE eye_colour_id IN (SELECT id FROM colour WHERE colour = 'Black')\n  AND hair_colour_id IN (SELECT id FROM colour WHERE colour = 'Black')",
+      "correct": false,
+      "error": "no such table: hero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 273,
+      "db_id": "superhero",
+      "question": "How many heroes have the highest attribute value in strength?",
+      "gold_sql": "SELECT COUNT(T1.hero_id) FROM hero_attribute AS T1 INNER JOIN attribute AS T2 ON T1.attribute_id = T2.id WHERE T2.attribute_name = 'Strength' AND T1.attribute_value = ( SELECT MAX(attribute_value) FRO",
+      "pred_sql": "SELECT COUNT(DISTINCT hero_id) FROM hero_attribute WHERE attribute_name = 'Strength' AND attribute_value = (SELECT MAX(attribute_value) FROM hero_attribute WHERE attribute_name = 'Strength')",
+      "correct": false,
+      "error": "no such column: attribute_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 274,
+      "db_id": "superhero",
+      "question": "How many percent of female heroes were published by Marvel Comics?",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOI",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.gender = 'Female' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.publisher_name) FROM gender AS T1 JOIN publisher AS T2 ON T1.id = T2.id WHERE T2.publisher_name = 'Marvel Co",
+      "correct": false,
+      "error": "no such column: T1.publisher_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 275,
+      "db_id": "superhero",
+      "question": "Calculate the difference between Emil Blonsky's weight and Charles Chandler's weight.",
+      "gold_sql": "SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE",
+      "pred_sql": "SELECT\n  SUM(T1.weight_kg) - SUM(T2.weight_kg)\nFROM superehero AS T1\nINNER JOIN superehero AS T2\n  ON T1.full_name = 'Emil Blonsky'\nWHERE\n  T2.full_name = 'Charles Chandler'",
+      "correct": false,
+      "error": "no such table: superehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 276,
+      "db_id": "superhero",
+      "question": "Which hero was the fastest?",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Speed' ORDER BY T2.",
+      "pred_sql": "SELECT\n  T1.hero_id\nFROM hero_attribute AS T1\nINNER JOIN attribute AS T2\n  ON T1.attribute_id = T2.id\nWHERE\n  T2.attribute_name = 'Speed'\nORDER BY\n  T1.attribute_value DESC\nLIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 277,
+      "db_id": "superhero",
+      "question": "State all of 3-D Man's attributes along with their values.",
+      "gold_sql": "SELECT T3.attribute_name, T2.attribute_value FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T1.superhero_name = ",
+      "pred_sql": "SELECT A.attribute_name, HA.attribute_value FROM attribute AS A JOIN hero_attribute AS HA ON A.id = HA.attribute_id WHERE HA.hero_id = (SELECT id FROM superhero WHERE superhero_name = '3-D Man')",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 278,
+      "db_id": "superhero",
+      "question": "Which superheroes have blue eyes with brown hair?",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id WHERE T2.colour = 'Blue' AND T3.colour = 'Brown'",
+      "pred_sql": "SELECT DISTINCT T1.superhero_name FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id AND T2.colour = 'Blue' INNER JOIN colour AS T3 ON T1.hair_colour_id = T3.id AND T3.colour = '",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 279,
+      "db_id": "superhero",
+      "question": "What is the publisher for Hawkman, Karate Kid and Speedy?",
+      "gold_sql": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy')",
+      "pred_sql": "SELECT publisher_name FROM publisher WHERE id IN (SELECT id FROM superhero WHERE superehero_name IN ('Hawkman', 'Karate Kid', 'Speedy'))",
+      "correct": false,
+      "error": "no such column: superehero_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 280,
+      "db_id": "superhero",
+      "question": "Calculate the percentage of superheroes with blue eyes.",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T2.colour = 'Blue' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.colour = 'Blue' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) FROM colour AS T1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 281,
+      "db_id": "superhero",
+      "question": "Find the ratio between male superheroes and female superheroes.",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T2.gender = 'Male' THEN T1.id ELSE NULL END) AS REAL) / COUNT(CASE WHEN T2.gender = 'Female' THEN T1.id ELSE NULL END) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.ge",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN gender = 'Male' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN gender = 'Female' THEN 1 ELSE 0 END) FROM gender",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 282,
+      "db_id": "superhero",
+      "question": "List the skin colour of the superheroes with 100 attribute value.",
+      "gold_sql": "SELECT DISTINCT T2.colour FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.skin_colour_id = T2.id INNER JOIN hero_attribute AS T3 ON T1.id = T3.hero_id WHERE T3.attribute_value = 100",
+      "pred_sql": "SELECT DISTINCT c.colour FROM colour c JOIN hero_attribute ha ON c.id = ha.attribute_id JOIN supehero s ON ha.hero_id = s.id WHERE ha.attribute_value = 100",
+      "correct": false,
+      "error": "no such table: supehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 283,
+      "db_id": "superhero",
+      "question": "Give the race of the blue-haired male superhero.",
+      "gold_sql": "SELECT T3.race FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.hair_colour_id = T2.id INNER JOIN race AS T3 ON T1.race_id = T3.id INNER JOIN gender AS T4 ON T1.gender_id = T4.id WHERE T2.colour = '",
+      "pred_sql": "SELECT T2.race\nFROM colour AS T1\nINNER JOIN gender AS T2 ON T1.id = T2.id\nWHERE T1.colour = 'blue'\nAND T2.gender = 'male'",
+      "correct": false,
+      "error": "no such column: T2.race",
+      "call_count": 2
+    },
+    {
+      "query_idx": 284,
+      "db_id": "superhero",
+      "question": "Among the bad superheroes, what is the percentage of female superheroes?",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T3.gender = 'Female' THEN T1.id ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN alignment AS T2 ON T1.alignment_id = T2.id INNER JOIN gender AS",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN g.gender = 2 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(a.id) FROM alignment a JOIN gender g ON a.id = g.id WHERE a.id = 2",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 285,
+      "db_id": "superhero",
+      "question": "In superheroes with missing weight data, calculate the difference between the number of superheroes with blue eyes and n",
+      "gold_sql": "SELECT SUM(CASE WHEN T2.id = 7 THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.id = 1 THEN 1 ELSE 0 END) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.weight_kg = 0 OR T1.wei",
+      "pred_sql": "SELECT\n  SUM(CASE WHEN T1.eye_colour_id = 7 THEN 1 ELSE 0 END) - SUM(CASE WHEN T1.eye_colour_id = 1 THEN 1 ELSE 0 END)\nFROM colour\nWHERE\n  T1.weight_kg = 0 OR T1.weight_kg IS NULL",
+      "correct": false,
+      "error": "no such column: T1.eye_colour_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 286,
+      "db_id": "superhero",
+      "question": "How strong is the Hulk?",
+      "gold_sql": "SELECT T2.attribute_value FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T1.superhero_name = 'Hulk' AND T3.attri",
+      "pred_sql": "SELECT\n  a.attribute_value\nFROM hero_attribute AS a\nJOIN suphero AS s\n  ON a.hero_id = s.id\nWHERE\n  s.superhero_name = 'Hulk' AND a.attribute_id = (\n    SELECT\n      id\n    FROM attribute\n    WHERE\n  ",
+      "correct": false,
+      "error": "no such table: suphero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 287,
+      "db_id": "superhero",
+      "question": "How many green-skinned villains are there in the superhero universe?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN alignment AS T2 ON T1.alignment_id = T2.id INNER JOIN colour AS T3 ON T1.skin_colour_id = T3.id WHERE T2.alignment = 'Bad' AND T3.colour = 'Green'",
+      "pred_sql": "SELECT count(DISTINCT a.id) FROM alignment a JOIN colour c ON a.alignment = 'Bad' JOIN colour c2 ON a.alignment = 'Bad' AND c2.colour = c.colour WHERE c2.colour = 'Green'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 288,
+      "db_id": "superhero",
+      "question": "How many female superheroes are in Marvel Comics?",
+      "gold_sql": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN gender AS T3 ON T1.gender_id = T3.id WHERE T2.publisher_name = 'Marvel Comics' AND T3.gender =",
+      "pred_sql": "SELECT COUNT(g.id) FROM gender g JOIN publisher p ON g.id = p.id WHERE g.gender = 'Female' AND p.publisher_name = 'Marvel Comics'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 289,
+      "db_id": "superhero",
+      "question": "Identify superheroes who can control wind and list their names in alphabetical order.",
+      "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Wind Control' ORDER BY T1.supe",
+      "pred_sql": "SELECT DISTINCT hero_name\nFROM hero_power hp\nJOIN supehero sh ON hp.hero_id = sh.id\nJOIN superpower sp ON hp.power_id = sp.id\nWHERE sp.power_name = 'Wind Control'\nORDER BY hero_name",
+      "correct": false,
+      "error": "no such table: supehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 290,
+      "db_id": "superhero",
+      "question": "Identify the gender of the superhero who has the ability of Phoenix Force.",
+      "gold_sql": "SELECT T4.gender FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id INNER JOIN gender AS T4 ON T1.gender_id = T4.id WHERE T3.powe",
+      "pred_sql": "SELECT\n  s.gender\nFROM supehero AS s\nJOIN hero_power AS hp\n  ON s.id = hp.hero_id\nJOIN superpower AS sp\n  ON hp.power_id = sp.id\nWHERE\n  sp.power_name = 'Phoenix Force'",
+      "correct": false,
+      "error": "no such table: supehero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 291,
+      "db_id": "superhero",
+      "question": "What is the average height of a non-human superhero in Dark Horse Comics?",
+      "gold_sql": "SELECT AVG(T1.height_cm) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN race AS T3 ON T1.race_id = T3.id WHERE T2.publisher_name = 'Dark Horse Comics' AND T3.rac",
+      "pred_sql": "SELECT AVG(height_cm) FROM superhero WHERE publisher_name = 'Dark Horse Comics' AND race <> 'Human'",
+      "correct": false,
+      "error": "no such column: publisher_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 292,
+      "db_id": "superhero",
+      "question": "Which publisher created more superheroes: DC or Marvel Comics? Find the difference in the number of superheroes.",
+      "gold_sql": "SELECT SUM(CASE WHEN T2.publisher_name = 'DC Comics' THEN 1 ELSE 0 END) - SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.pub",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN publisher_name = 'DC Comics' THEN 1 ELSE 0 END) AS INTEGER) - CAST(SUM(CASE WHEN publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS INTEGER)",
+      "correct": false,
+      "error": "no such column: publisher_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 293,
+      "db_id": "superhero",
+      "question": "Identify the weakest attribute of the Black Panther.",
+      "gold_sql": "SELECT T3.attribute_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T1.superhero_name = 'Black Panther' ORDE",
+      "pred_sql": "SELECT a.attribute_name FROM attribute a JOIN hero_attribute ha ON a.id = ha.attribute_id WHERE ha.hero_id = (SELECT id FROM suphero WHERE suphero_name = 'Black Panther') ORDER BY ha.attribute_value A",
+      "correct": false,
+      "error": "no such table: suphero",
+      "call_count": 2
+    },
+    {
+      "query_idx": 294,
+      "db_id": "superhero",
+      "question": "Among all superheroes created by George Lucas, identify the percentage of female superheroes.",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T3.gender = 'Female' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN gender AS T3 ",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN T1.gender = 'Female' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(T1.gender) FROM gender T1 JOIN publisher T2 ON T1.id = T2.id WHERE T2.publisher_name = 'George Lucas'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 295,
+      "db_id": "superhero",
+      "question": "Among all superheroes in Marvel Comics, identify the percentage of 'good' superheroes.",
+      "gold_sql": "SELECT CAST(COUNT(CASE WHEN T3.alignment = 'Good' THEN T1.id ELSE NULL END) AS REAL) * 100 / COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN alignmen",
+      "pred_sql": "SELECT CAST(CAST(SUM(CASE WHEN alignment = 'Good' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(publisher_name = 'Marvel Comics') AS TEXT)\nFROM alignment\nWHERE publisher_name = 'Marvel Comics'",
+      "correct": false,
+      "error": "no such column: publisher_name",
+      "call_count": 2
+    },
+    {
+      "query_idx": 296,
+      "db_id": "superhero",
+      "question": "List the power of superheroes with height greater than 80% of the average height of all superheroes.",
+      "gold_sql": "SELECT T3.power_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T1.height_cm * 100 > ( SELECT AVG(height_cm) FROM s",
+      "pred_sql": "SELECT DISTINCT T1.attribute_value FROM hero_attribute AS T1 INNER JOIN superhero AS T2 ON T1.hero_id = T2.id WHERE T2.height_cm > (SELECT AVG(height_cm) FROM superhero)",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 297,
+      "db_id": "formula_1",
+      "question": "Please list the reference names of the drivers who are eliminated in the first period in race number 20.",
+      "gold_sql": "SELECT T2.driverRef FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 20 ORDER BY T1.q1 DESC LIMIT 5",
+      "pred_sql": "SELECT DISTINCT T1.driverRef FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 20 ORDER BY T2.q1 DESC LIMIT 5",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 298,
+      "db_id": "formula_1",
+      "question": "How many races in the year 2010 are held on grand prixs outside Asia and Europe?",
+      "gold_sql": "SELECT COUNT(T3.raceId) FROM circuits AS T1 INNER JOIN races AS T3 ON T3.circuitID = T1.circuitId WHERE T1.country NOT IN ( 'Bahrain', 'China', 'Singapore', 'Japan', 'Korea', 'Turkey', 'UAE', 'Malaysi",
+      "pred_sql": "SELECT\n  COUNT(r.raceId)\nFROM races AS r\nWHERE\n  r.year = 2010\n  AND r.name LIKE '%Grand Prix%'\n  AND r.circuitId IN (\n    SELECT\n      circuitId\n    FROM circuits\n    WHERE\n      country NOT IN ('Asi",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 299,
+      "db_id": "formula_1",
+      "question": "For all the drivers who finished the game in race No. 592, who is the oldest?",
+      "gold_sql": "SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T2.raceId = 592 AND T2.time IS NOT NULL AND T1.dob IS NOT NULL ORDER BY T1.dob ASC LIMIT 1",
+      "pred_sql": "SELECT T1.driverRef FROM drivers AS T1 INNER JOIN results AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 592 ORDER BY T1.dob ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 300,
+      "db_id": "formula_1",
+      "question": "Who was the player that got the lap time of 0:01:27 in the race No. 161? Show his introduction website.",
+      "gold_sql": "SELECT DISTINCT T2.forename, T2.surname, T2.url FROM lapTimes AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 161 AND T1.time LIKE '1:27%'",
+      "pred_sql": "SELECT\n  d.url\nFROM drivers AS d\nJOIN lapTimes AS lt\n  ON d.driverId = lt.driverId\nWHERE\n  lt.raceId = 161 AND lt.time = '0:01:27'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 301,
+      "db_id": "formula_1",
+      "question": "For the constructor which got the highest point in the race No. 9 , what is its introduction website?",
+      "gold_sql": "SELECT T2.url FROM constructorResults AS T1 INNER JOIN constructors AS T2 ON T2.constructorId = T1.constructorId WHERE T1.raceId = 9 ORDER BY T1.points DESC LIMIT 1",
+      "pred_sql": "SELECT url FROM constructors c JOIN constructorStandings cs ON c.constructorId = cs.constructorId WHERE cs.raceId = 9 ORDER BY cs.points DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 302,
+      "db_id": "formula_1",
+      "question": "For all the drivers who finished the game in race No. 872, who is the youngest?",
+      "gold_sql": "SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T2.raceId = 872 AND T2.time IS NOT NULL ORDER BY T1.dob DESC LIMIT 1",
+      "pred_sql": "SELECT T1.driverRef FROM drivers AS T1 JOIN results AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 872 ORDER BY T1.dob DESC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 303,
+      "db_id": "formula_1",
+      "question": "For the driver who set the fastest lap speed, what is his nationality?",
+      "gold_sql": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId ORDER BY T2.fastestLapSpeed DESC LIMIT 1",
+      "pred_sql": "SELECT T1.nationality FROM drivers AS T1 INNER JOIN lapTimes AS T2 ON T1.driverId = T2.driverId ORDER BY T2.time ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    }
+  ]
+}

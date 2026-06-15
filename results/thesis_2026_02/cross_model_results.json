@@ -1,0 +1,20 @@
+{
+  "sqlcoder": {
+    "s0_correct": 0,
+    "s4_correct": 0,
+    "s0_total": 5,
+    "s4_total": 5
+  },
+  "qwen2.5-coder": {
+    "s0_correct": 2,
+    "s4_correct": 2,
+    "s0_total": 5,
+    "s4_total": 5
+  },
+  "codellama": {
+    "s0_correct": 0,
+    "s4_correct": 0,
+    "s0_total": 5,
+    "s4_total": 5
+  }
+}

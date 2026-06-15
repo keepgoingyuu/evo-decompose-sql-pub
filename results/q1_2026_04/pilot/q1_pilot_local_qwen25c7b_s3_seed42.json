@@ -1,0 +1,513 @@
+{
+  "metadata": {
+    "model": "qwen25c7b",
+    "strategy": "s3",
+    "seed": 42,
+    "n_queries": 50,
+    "correct": 7,
+    "accuracy": 0.14,
+    "elapsed_min": 2.48
+  },
+  "results": [
+    {
+      "query_idx": 0,
+      "db_id": "california_schools",
+      "question": "Please list the lowest three eligible free rates for students aged 5-17 in continuation schools.",
+      "gold_sql": "SELECT `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` FROM frpm WHERE `Educational Option Type` = 'Continuation School' AND `Free Meal Count (Ages 5-17)` / `Enrollment (Ages 5-17)` IS NOT NU",
+      "pred_sql": "SELECT `School Name`, `Percent (%) Eligible Free (Ages 5-17)` FROM frpm WHERE `School Type` = 'Continuation' ORDER BY `Percent (%) Eligible Free (Ages 5-17)` ASC LIMIT 3",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 1,
+      "db_id": "california_schools",
+      "question": "Please list the phone numbers of the direct charter-funded schools that are opened after 2000/1/1.",
+      "gold_sql": "SELECT T2.Phone FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter Funding Type` = 'Directly funded' AND T1.`Charter School (Y/N)` = 1 AND T2.OpenDate > '2000-01-01'",
+      "pred_sql": "SELECT T1.Phone FROM schools AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 AND T1.OpenDate > '2000-01-01'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 2,
+      "db_id": "california_schools",
+      "question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17",
+      "gold_sql": "SELECT MAX(CAST(T1.`Free Meal Count (Ages 5-17)` AS REAL) / T1.`Enrollment (Ages 5-17)`) FROM frpm AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds WHERE CAST(T2.NumGE1500 AS REAL) / T2.NumTstT",
+      "pred_sql": "SELECT MAX(f.[Percent (%) Eligible Free (Ages 5-17)]) AS MaxEligibleFreeRate FROM frpm f JOIN satscores s ON f.CDSCode = s.cds WHERE s.NumGE1500 / s.NumTstTakr > 0.3",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 3,
+      "db_id": "california_schools",
+      "question": "List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the ",
+      "gold_sql": "SELECT T1.School, T1.Street FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Enrollment (K-12)` - T2.`Enrollment (Ages 5-17)` > 30",
+      "pred_sql": "SELECT \n    s.School, \n    s.Street, \n    s.StreetAbr, \n    s.City, \n    s.Zip, \n    s.State \nFROM \n    frpm f \nJOIN \n    schools s ON f.CDSCode = s.CDSCode \nWHERE \n    ABS(f.`Enrollment (K-12)` - f.`",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 4,
+      "db_id": "california_schools",
+      "question": "Give the names of the schools with the percent eligible for free meals in K-12 is more than 0.1 and test takers whose te",
+      "gold_sql": "SELECT T2.`School Name` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE CAST(T2.`Free Meal Count (K-12)` AS REAL) / T2.`Enrollment (K-12)` > 0.1 AND T1.NumGE1500 > 0",
+      "pred_sql": "SELECT s.School \nFROM schools s\nJOIN frpm f ON s.CDSCode = f.CDSCode\nJOIN satscores sa ON s.CDSCode = sa.cds\nWHERE f.[Percent (%) Eligible Free (K-12)] > 0.1 AND sa.NumGE1500 >= 1500",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 5,
+      "db_id": "california_schools",
+      "question": "Name schools in Riverside which the average of average math score for SAT is grater than 400, what is the funding type o",
+      "gold_sql": "SELECT T1.sname, T2.`Charter Funding Type` FROM satscores AS T1 INNER JOIN frpm AS T2 ON T1.cds = T2.CDSCode WHERE T2.`District Name` LIKE 'Riverside%' GROUP BY T1.sname, T2.`Charter Funding Type` HAV",
+      "pred_sql": "SELECT s.School, s.FundingType \nFROM schools s\nJOIN (\n    SELECT cds, AVG(AvgScrMath) AS AvgMathScore\n    FROM satscores\n    WHERE dname = 'Riverside'\n    GROUP BY cds\n) sub ON s.CDSCode = sub.cds\nWHE",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 6,
+      "db_id": "california_schools",
+      "question": "State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price",
+      "gold_sql": "SELECT T1.`School Name`, T2.Street, T2.City, T2.State, T2.Zip FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Monterey' AND T1.`Free Meal Count (Ages 5-17)` > 80",
+      "pred_sql": "SELECT \n    s.School,\n    s.Street,\n    s.City,\n    s.State,\n    s.Zip\nFROM \n    schools s\nJOIN \n    frpm f ON s.CDSCode = f.CDSCode\nWHERE \n    s.County = 'Monterey'\n    AND f.[Percent (%) Eligible Fr",
+      "correct": false,
+      "error": "no such column: s.SchoolType",
+      "call_count": 2
+    },
+    {
+      "query_idx": 7,
+      "db_id": "california_schools",
+      "question": "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school ",
+      "gold_sql": "SELECT T2.School, T1.AvgScrWrite, T2.Phone FROM schools AS T2 LEFT JOIN satscores AS T1 ON T2.CDSCode = T1.cds WHERE strftime('%Y', T2.OpenDate) > '1991' OR strftime('%Y', T2.ClosedDate) < '2000'",
+      "pred_sql": "SELECT \n    s.School, \n    s.Phone, \n    AVG(ss.AvgScrWrite) AS AvgWritingScore\nFROM \n    schools s\nJOIN \n    satscores ss ON s.CDSCode = ss.cds\nWHERE \n    (s.OpenDate > '1991-01-01' OR s.ClosedDate <",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 8,
+      "db_id": "california_schools",
+      "question": "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list th",
+      "gold_sql": "SELECT T2.School, T2.DOC FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.FundingType = 'Locally funded' AND (T1.`Enrollment (K-12)` - T1.`Enrollment (Ages 5-17)`) > (SELEC",
+      "pred_sql": "SELECT \n    s.School, \n    s.DOCType, \n    AVG(f.[Enrollment (K-12)] - f.[Enrollment (Ages 5-17)]) AS AvgDiff\nFROM \n    frpm f\nJOIN \n    schools s ON f.CDSCode = s.CDSCode\nWHERE \n    s.FundingType = '",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 9,
+      "db_id": "california_schools",
+      "question": "What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through ",
+      "gold_sql": "SELECT CAST(`Free Meal Count (K-12)` AS REAL) / `Enrollment (K-12)` FROM frpm ORDER BY `Enrollment (K-12)` DESC LIMIT 9, 2",
+      "pred_sql": "SELECT \n    CDSCode, \n    `Percent (%) Eligible Free (K-12)` \nFROM \n    frpm \nORDER BY \n    `Enrollment (K-12)` DESC \nLIMIT 10",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 10,
+      "db_id": "california_schools",
+      "question": "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduc",
+      "gold_sql": "SELECT CAST(T1.`FRPM Count (K-12)` AS REAL) / T1.`Enrollment (K-12)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.SOC = 66 ORDER BY T1.`FRPM Count (K-12)` DESC LIMIT 5",
+      "pred_sql": "SELECT \n    s.CDSCode,\n    s.School,\n    f.[Percent (%) Eligible Free (K-12)] AS FRPM_Rate\nFROM \n    schools s\nJOIN \n    frpm f ON s.CDSCode = f.CDSCode\nWHERE \n    s.OwnerCode = 66\nORDER BY \n    f.[FR",
+      "correct": false,
+      "error": "no such column: s.OwnerCode",
+      "call_count": 2
+    },
+    {
+      "query_idx": 11,
+      "db_id": "california_schools",
+      "question": "If there are any, what are the websites address of the schools with a free meal count of 1,900-2,000 to students aged 5-",
+      "gold_sql": "SELECT T2.Website, T1.`School Name` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Free Meal Count (Ages 5-17)` BETWEEN 1900 AND 2000 AND T2.Website IS NOT NULL",
+      "pred_sql": "SELECT T2.Website, T2.School FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Free Meal Count (Ages 5-17)` BETWEEN 1900 AND 2000",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 12,
+      "db_id": "california_schools",
+      "question": "What is the free rate for students between the ages of 5 and 17 at the school run by Kacey Gibson?",
+      "gold_sql": "SELECT CAST(T2.`Free Meal Count (Ages 5-17)` AS REAL) / T2.`Enrollment (Ages 5-17)` FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.AdmFName1 = 'Kacey' AND T1.AdmLName1 = ",
+      "pred_sql": "SELECT \n    (SUM([Free Meal Count (Ages 5-17)]) / SUM([Enrollment (Ages 5-17)])) AS FreeRate\nFROM \n    frpm\nJOIN \n    schools ON frpm.CDSCode = schools.CDSCode\nWHERE \n    [AdmFName1] = 'Kacey' AND [Ad",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 13,
+      "db_id": "california_schools",
+      "question": "What is the administrator's email address of the chartered school with the fewest students enrolled in grades 1 through ",
+      "gold_sql": "SELECT T2.AdmEmail1 FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`Charter School (Y/N)` = 1 ORDER BY T1.`Enrollment (K-12)` ASC LIMIT 1",
+      "pred_sql": "SELECT T1.AdmEmail1 FROM schools AS T1 JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.`Charter School (Y/N)` = 1 ORDER BY T2.`Enrollment (K-12)` ASC LIMIT 1",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 14,
+      "db_id": "california_schools",
+      "question": "Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate t",
+      "gold_sql": "SELECT T2.AdmFName1, T2.AdmLName1, T2.AdmFName2, T2.AdmLName2, T2.AdmFName3, T2.AdmLName3 FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.NumGE1500 DESC LIMIT 1",
+      "pred_sql": "SELECT \n    s.AdmFName1, \n    s.AdmLName1, \n    s.AdmFName2, \n    s.AdmLName2, \n    s.AdmFName3, \n    s.AdmLName3 \nFROM \n    schools s \nJOIN \n    satscores ss ON s.CDSCode = ss.cds \nWHERE \n    ss.NumG",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 15,
+      "db_id": "california_schools",
+      "question": "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.",
+      "gold_sql": "SELECT T2.Street, T2.City, T2.State, T2.Zip FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY CAST(T1.NumGE1500 AS REAL) / T1.NumTstTakr ASC LIMIT 1",
+      "pred_sql": "SELECT Street, City, State, Zip FROM schools JOIN satscores ON schools.CDSCode = satscores.cds ORDER BY NumGE1500 / NumTstTakr ASC LIMIT 1",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 16,
+      "db_id": "california_schools",
+      "question": "What is the telephone number for the school with the lowest average score in reading in Fresno Unified?",
+      "gold_sql": "SELECT T2.Phone FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.District = 'Fresno Unified' AND T1.AvgScrRead IS NOT NULL ORDER BY T1.AvgScrRead ASC LIMIT 1",
+      "pred_sql": "SELECT T2.Phone FROM satscores AS T1 JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.District = 'Fresno Unified' ORDER BY T1.AvgScrRead ASC LIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 17,
+      "db_id": "california_schools",
+      "question": "What is the average math score of the school with the lowest average score for all subjects, and in which county is it l",
+      "gold_sql": "SELECT T1.AvgScrMath, T2.County FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrMath IS NOT NULL ORDER BY T1.AvgScrMath + T1.AvgScrRead + T1.AvgScrWrite ASC LIMIT 1",
+      "pred_sql": "SELECT AVG(AvgScrMath + AvgScrRead + AvgScrWrite) AS AvgScore, T2.County \nFROM satscores AS T1 \nJOIN schools AS T2 ON T1.cds = T2.CDSCode \nORDER BY AvgScrMath + AvgScrRead + AvgScrWrite ASC \nLIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 18,
+      "db_id": "california_schools",
+      "question": "What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding",
+      "gold_sql": "SELECT T2.School, T1.AvgScrWrite FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.AdmFName1 = 'Ricci' AND T2.AdmLName1 = 'Ulrich'",
+      "pred_sql": "SELECT s.School, AVG(sw.AvgScrWrite) AS AvgWritingScore FROM schools s JOIN satscores sw ON s.CDSCode = sw.cds WHERE s.AdmFName1 = 'Ricci' AND s.AdmLName1 = 'Ulrich' GROUP BY s.School",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 19,
+      "db_id": "california_schools",
+      "question": "What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary Sch",
+      "gold_sql": "SELECT CAST(COUNT(School) AS REAL) / 12 FROM schools WHERE DOC = 52 AND County = 'Alameda' AND strftime('%Y', OpenDate) = '1980'",
+      "pred_sql": "SELECT COUNT(CDSCode) / 12 AS MonthlyAverage \nFROM schools \nWHERE County = 'Alameda' AND DOC = 52 AND STRFTIME('%Y', OpenDate) = '1980'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 20,
+      "db_id": "california_schools",
+      "question": "What is the ratio of merged Unified School District schools in Orange County to merged Elementary School District school",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN DOC = 54 THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN DOC = 52 THEN 1 ELSE 0 END) FROM schools WHERE StatusType = 'Merged' AND County = 'Orange'",
+      "pred_sql": "SELECT \n    SUM(CASE WHEN DOC = 54 THEN 1 ELSE 0 END) / \n    SUM(CASE WHEN DOC = 52 THEN 1 ELSE 0 END) AS Ratio\nFROM \n    schools\nWHERE \n    County = 'Orange'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 21,
+      "db_id": "california_schools",
+      "question": "Which different county has the most number of closed schools? Please provide the name of each school as well as the clos",
+      "gold_sql": "SELECT DISTINCT County, School, ClosedDate FROM schools WHERE County = ( SELECT County FROM schools WHERE StatusType = 'Closed' GROUP BY County ORDER BY COUNT(School) DESC LIMIT 1 ) AND StatusType = '",
+      "pred_sql": "SELECT \n    s.County, \n    s.School, \n    s.ClosedDate \nFROM \n    schools s \nWHERE \n    s.StatusType = 'Closed' \nGROUP BY \n    s.County, \n    s.School, \n    s.ClosedDate \nORDER BY \n    COUNT(s.CDSCode",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 22,
+      "db_id": "california_schools",
+      "question": "Of the schools with a mailing state address in California, what is the ratio of the schools located in the county of Col",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN County = 'Colusa' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN County = 'Humboldt' THEN 1 ELSE 0 END) FROM schools WHERE MailState = 'CA'",
+      "pred_sql": "SELECT \n    SUM(CASE WHEN T1.County = 'Colusa' THEN 1 ELSE 0 END) / \n    SUM(CASE WHEN T1.County = 'Humboldt' THEN 1 ELSE 0 END) AS Ratio\nFROM \n    schools AS T1\nWHERE \n    T1.MailState = 'CA'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 23,
+      "db_id": "california_schools",
+      "question": "What is the total number of non-chartered schools in the county of Los Angeles with a percent (%) of eligible free meals",
+      "gold_sql": "SELECT COUNT(T2.School) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Los Angeles' AND T2.Charter = 0 AND CAST(T1.`Free Meal Count (K-12)` AS REAL) * 100 / T1.",
+      "pred_sql": "SELECT COUNT(*) \nFROM frpm \nJOIN schools ON frpm.CDSCode = schools.CDSCode \nWHERE schools.Charter = 0 AND (frpm.`Free Meal Count (K-12)` * 100 / frpm.`Enrollment (K-12)`) < 0.18",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 24,
+      "db_id": "california_schools",
+      "question": "What is the ratio in percentage of Santa Clara County schools that are locally funded compared to all other types of cha",
+      "gold_sql": "SELECT CAST(SUM(CASE WHEN FundingType = 'Locally funded' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN FundingType != 'Locally funded' THEN 1 ELSE 0 END) FROM schools WHERE County = 'Santa Clara' ",
+      "pred_sql": "SELECT \n    (COUNT(CASE WHEN T1.FundingType = 'Locally Funded' THEN 1 ELSE NULL END) / COUNT(T1.CDSCode)) * 100 AS RatioPercentage\nFROM \n    schools AS T1\nJOIN \n    frpm AS T2 ON T1.CDSCode = T2.CDSCo",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 25,
+      "db_id": "california_schools",
+      "question": "Which county reported the most number of school closure in the 1980s with school wonership code belonging to Youth Autho",
+      "gold_sql": "SELECT County FROM schools WHERE strftime('%Y', ClosedDate) BETWEEN '1980' AND '1989' AND StatusType = 'Closed' AND SOC = 11 GROUP BY County ORDER BY COUNT(School) DESC LIMIT 1",
+      "pred_sql": "SELECT \n    s.County,\n    COUNT(s.CDSCode) AS ClosureCount\nFROM \n    schools s\nJOIN \n    frpm f ON s.CDSCode = f.CDSCode\nWHERE \n    s.SOC = 11 AND \n    s.ClosedDate BETWEEN '1980-01-01' AND '1989-12-3",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 26,
+      "db_id": "california_schools",
+      "question": "How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 ",
+      "gold_sql": "SELECT T1.`Enrollment (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.EdOpsCode = 'SSS' AND T2.City = 'Fremont' AND T1.`Academic Year` BETWEEN 2014 AND 2015",
+      "pred_sql": "SELECT SUM([Enrollment (Ages 5-17)]) \nFROM frpm \nJOIN schools ON frpm.CDSCode = schools.CDSCode \nWHERE schools.School = 'State Special School' AND schools.County = 'Fremont' AND frpm.`Academic Year` =",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 27,
+      "db_id": "california_schools",
+      "question": "What is the lowest grade for the District Special Education Consortia School with National Center for Educational Statis",
+      "gold_sql": "SELECT MIN(T1.`Low Grade`) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.NCESDist = '0613360' AND T2.EdOpsCode = 'SPECON'",
+      "pred_sql": "SELECT MIN(`Low Grade`) FROM frpm JOIN schools ON frpm.CDSCode = schools.CDSCode WHERE schools.NCESDist = '0613360' AND schools.EdOpsCode = 'SPECON'",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 28,
+      "db_id": "california_schools",
+      "question": "What is the city location of the high school level school with Lunch Provision 2 whose lowest grade is 9 and the highest",
+      "gold_sql": "SELECT T2.City FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.`NSLP Provision Status` = 'Lunch Provision 2' AND T2.County = 'Merced' AND T1.`Low Grade` = 9 AND T1.`High G",
+      "pred_sql": "SELECT T2.City \nFROM frpm AS T1 \nJOIN schools AS T2 ON T1.CDSCode = T2.CDSCode \nWHERE T1.[Low Grade] = 9 AND T1.[High Grade] = 12 AND T1.[County Name] = 'Merced' AND T2.EILCode = 'HS'",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 29,
+      "db_id": "california_schools",
+      "question": "Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) ",
+      "gold_sql": "SELECT T2.School, T1.`FRPM Count (Ages 5-17)` * 100 / T1.`Enrollment (Ages 5-17)` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'Los Angeles' AND T2.GSserved = ",
+      "pred_sql": "SELECT \n    s.School,\n    (f.[FRPM Count (Ages 5-17)] / f.[Enrollment (Ages 5-17)]) * 100 AS PercentEligibleFRPM\nFROM \n    schools s\nJOIN \n    frpm f ON s.CDSCode = f.CDSCode\nWHERE \n    s.County = 'Lo",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 30,
+      "db_id": "california_schools",
+      "question": "Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical buildin",
+      "gold_sql": "SELECT County, COUNT(Virtual) FROM schools WHERE (County = 'San Diego' OR County = 'Santa Barbara') AND Virtual = 'F' GROUP BY County ORDER BY COUNT(Virtual) DESC LIMIT 1",
+      "pred_sql": "SELECT COUNT(*) AS NumberOfSchools \nFROM schools \nWHERE County IN ('San Diego', 'Santa Barbara') AND Virtual = 0",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 31,
+      "db_id": "california_schools",
+      "question": "In which city can you find the school in the state of California with the lowest latitude coordinates and what is its lo",
+      "gold_sql": "SELECT T2.City, T1.`Low Grade`, T1.`School Name` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.State = 'CA' ORDER BY T2.Latitude ASC LIMIT 1",
+      "pred_sql": "SELECT s.School, f.[Low Grade]\nFROM schools s\nJOIN frpm f ON s.CDSCode = f.CDSCode\nWHERE s.State = 'CA'\nORDER BY s.Latitude ASC\nLIMIT 1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 32,
+      "db_id": "california_schools",
+      "question": "Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple ",
+      "gold_sql": "SELECT T2.City, COUNT(T2.CDSCode) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.Magnet = 1 AND T2.GSoffered = 'K-8' AND T1.`NSLP Provision Status` = 'Multiple Provision ",
+      "pred_sql": "SELECT COUNT(DISTINCT T1.City), T1.City, COUNT(T2.CDSCode) AS SchoolCount \nFROM schools AS T1 \nJOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode \nWHERE T1.Magnet = 1 AND T1.GSoffered = 'K-8' AND T2.`NSLP Pro",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 33,
+      "db_id": "california_schools",
+      "question": "What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine.",
+      "gold_sql": "SELECT T1.`Free Meal Count (K-12)` * 100 / T1.`Enrollment (K-12)`, T1.`District Code` FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.AdmFName1 = 'Alusine'",
+      "pred_sql": "SELECT \n    T1.[Percent (%) Eligible Free (K-12)], \n    T2.[District Code]\nFROM \n    frpm AS T1\nJOIN \n    schools AS T2 ON T1.CDSCode = T2.CDSCode\nWHERE \n    T2.[AdmFName1] = 'Alusine'",
+      "correct": false,
+      "error": "no such column: T2.District Code",
+      "call_count": 2
+    },
+    {
+      "query_idx": 34,
+      "db_id": "california_schools",
+      "question": "What are the valid e-mail addresses of the administrator of the school located in the San Bernardino county, City of San",
+      "gold_sql": "SELECT T2.AdmEmail1, T2.AdmEmail2 FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.County = 'San Bernardino' AND T2.City = 'San Bernardino' AND T2.DOC = 54 AND strftime('%Y",
+      "pred_sql": "SELECT AdmEmail1, AdmEmail2, AdmEmail3 \nFROM schools \nWHERE County = 'San Bernardino' \n  AND City = 'City of San Bernardino City Unified' \n  AND OpenDate BETWEEN '2009-01-01' AND '2010-12-31' \n  AND (",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 35,
+      "db_id": "financial",
+      "question": "How many accounts who choose issuance after transaction are staying in East Bohemia region?",
+      "gold_sql": "SELECT COUNT(T2.account_id) FROM district AS T1 INNER JOIN account AS T2 ON T1.district_id = T2.district_id WHERE T1.A3 = 'east Bohemia' AND T2.frequency = 'POPLATEK PO OBRATU'",
+      "pred_sql": "SELECT COUNT(DISTINCT a.account_id) \nFROM account a\nJOIN disp d ON a.account_id = d.account_id\nJOIN client c ON d.client_id = c.client_id\nJOIN district dis ON c.district_id = dis.district_id\nWHERE d.t",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 36,
+      "db_id": "financial",
+      "question": "How many male customers who are living in North Bohemia have average salary greater than 8000?",
+      "gold_sql": "SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'M' AND T2.A3 = 'north Bohemia' AND T2.A11 > 8000",
+      "pred_sql": "SELECT COUNT(client_id) FROM client JOIN district ON client.district_id = district.district_id WHERE gender = 'M' AND A3 = 'North Bohemia' AND A11 > 8000",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 37,
+      "db_id": "financial",
+      "question": "List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between t",
+      "gold_sql": "SELECT T1.account_id , ( SELECT MAX(A11) - MIN(A11) FROM district ) FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T3 ON T1.account_id = T3.account_",
+      "pred_sql": "SELECT client_id, AVG(A11) AS avg_salary\n    FROM client\n    JOIN district ON client.district_id = district.district_id\n    WHERE gender = 'F'\n    GROUP BY client_id\n),\noldest_female_client AS (\n    S",
+      "correct": false,
+      "error": "near \")\": syntax error",
+      "call_count": 2
+    },
+    {
+      "query_idx": 38,
+      "db_id": "financial",
+      "question": "List out the account numbers of clients who are youngest and have highest average salary?",
+      "gold_sql": "SELECT T1.account_id  FROM account AS T1 INNER JOIN disp AS T2 ON T1.account_id = T2.account_id INNER JOIN client AS T3 ON T2.client_id = T3.client_id INNER JOIN district AS T4 on T4.district_id = T1.",
+      "pred_sql": "SELECT T1.account_id \nFROM account AS T1 \nJOIN disp AS T2 ON T1.account_id = T2.account_id \nJOIN client AS T3 ON T2.client_id = T3.client_id \nGROUP BY T1.account_id \nORDER BY AVG(T3.A11) DESC, MIN(T3.",
+      "correct": false,
+      "error": "no such column: T3.A11",
+      "call_count": 2
+    },
+    {
+      "query_idx": 39,
+      "db_id": "financial",
+      "question": "Among the accounts who have approved loan date in 1997, list out the accounts that have the lowest approved amount and c",
+      "gold_sql": "SELECT T2.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T1.date) = '1997' AND T2.frequency = 'POPLATEK TYDNE' ORDER BY T1.amount LIMIT 1",
+      "pred_sql": "SELECT \n    a.account_id,\n    d.A2 AS district_name,\n    MIN(l.amount) AS lowest_loan_amount\nFROM \n    account a\nJOIN \n    disp d ON a.account_id = d.account_id\nJOIN \n    loan l ON a.account_id = l.ac",
+      "correct": false,
+      "error": "no such column: d.A2",
+      "call_count": 2
+    },
+    {
+      "query_idx": 40,
+      "db_id": "financial",
+      "question": "Among the accounts who have loan validity more than 12 months, list out the accounts that have the highest approved amou",
+      "gold_sql": "SELECT T1.account_id FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id WHERE STRFTIME('%Y', T2.date) = '1993' AND T1.duration > 12 ORDER BY T1.amount DESC LIMIT 1",
+      "pred_sql": "SELECT \n    a.account_id,\n    MAX(l.amount) AS max_amount\nFROM \n    account a\nJOIN \n    loan l ON a.account_id = l.account_id\nWHERE \n    l.duration > 12 AND strftime('%Y', a.date) = '1993'\nGROUP BY \n ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 41,
+      "db_id": "financial",
+      "question": "Among the account opened, how many female customers who were born before 1950 and stayed in Sokolov?",
+      "gold_sql": "SELECT COUNT(T2.client_id) FROM district AS T1 INNER JOIN client AS T2 ON T1.district_id = T2.district_id WHERE T2.gender = 'F' AND STRFTIME('%Y', T2.birth_date) < '1950' AND T1.A2 = 'Sokolov'",
+      "pred_sql": "SELECT COUNT(DISTINCT c.client_id) \nFROM client c \nJOIN disp d ON c.client_id = d.client_id \nJOIN account a ON d.account_id = a.account_id \nWHERE c.gender = 'F' \n  AND c.birth_date < '1950-01-01' \n  A",
+      "correct": false,
+      "error": "no such column: d.district_id",
+      "call_count": 2
+    },
+    {
+      "query_idx": 42,
+      "db_id": "financial",
+      "question": "For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male",
+      "gold_sql": "SELECT CAST(SUM(T1.gender = 'M') AS REAL) * 100 / COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'south Bohemia' GROUP BY T2.A4 ORDER ",
+      "pred_sql": "SELECT \n    CAST(COUNT(CASE WHEN T1.gender = 'M' THEN 1 ELSE NULL END) AS REAL) * 100 / COUNT(T1.client_id) AS percentage_male_clients\nFROM \n    client AS T1\nJOIN \n    district AS T2 ON T1.district_id",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 43,
+      "db_id": "financial",
+      "question": "For the client whose loan was approved first in 1993/7/5, what is the increase rate of his/her account balance from 1993",
+      "gold_sql": "SELECT CAST((SUM(IIF(T3.date = '1998-12-27', T3.balance, 0)) - SUM(IIF(T3.date = '1993-03-22', T3.balance, 0))) AS REAL) * 100 / SUM(IIF(T3.date = '1993-03-22', T3.balance, 0)) FROM loan AS T1 INNER J",
+      "pred_sql": "SELECT \n    (t1.balance - t2.balance) / t2.balance * 100 AS increase_rate\nFROM \n    trans t1\nJOIN \n    trans t2\nON \n    t1.account_id = t2.account_id\nWHERE \n    t1.date = '1998-12-27'\n    AND t2.date ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 44,
+      "db_id": "financial",
+      "question": "What is the percentage of loan amount that has been fully paid with no issue.",
+      "gold_sql": "SELECT (CAST(SUM(CASE WHEN status = 'A' THEN amount ELSE 0 END) AS REAL) * 100) / SUM(amount) FROM loan",
+      "pred_sql": "SELECT \n    (SUM(CASE WHEN T1.status = 'A' THEN T1.amount ELSE 0 END) / SUM(T1.amount)) * 100 AS percentage_paid\nFROM \n    loan AS T1",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 45,
+      "db_id": "financial",
+      "question": "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.",
+      "gold_sql": "SELECT CAST(SUM(status = 'C') AS REAL) * 100 / COUNT(account_id) FROM loan WHERE amount < 100000",
+      "pred_sql": "SELECT \n    (SUM(CASE WHEN T1.status = 'C' THEN 1 ELSE 0 END) / COUNT(T2.account_id)) * 100 AS percentage_running\nFROM \n    loan AS T1\nJOIN \n    account AS T2 ON T1.account_id = T2.account_id\nWHERE \n ",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 46,
+      "db_id": "financial",
+      "question": "For accounts in 1993 with statement issued after transaction, list the account ID, district name and district region.",
+      "gold_sql": "SELECT T1.account_id, T2.A2, T2.A3 FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.frequency = 'POPLATEK PO OBRATU' AND STRFTIME('%Y', T1.date)= '1993'",
+      "pred_sql": "SELECT \n    a.account_id, \n    d.A2 AS district_name, \n    d.A3 AS district_region \nFROM \n    account a \nJOIN \n    disp d ON a.account_id = d.account_id \nJOIN \n    trans t ON a.account_id = t.account_",
+      "correct": false,
+      "error": "no such column: d.A2",
+      "call_count": 2
+    },
+    {
+      "query_idx": 47,
+      "db_id": "financial",
+      "question": "From Year 1995 to 2000, who are the accounts holders from 'east Bohemia'. State the account ID the frequency of statemen",
+      "gold_sql": "SELECT T1.account_id, T1.frequency FROM account AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T2.A3 = 'east Bohemia' AND STRFTIME('%Y', T1.date) BETWEEN '1995' AND '2000'",
+      "pred_sql": "SELECT \n    a.account_id, \n    a.frequency \nFROM \n    account a \nJOIN \n    disp d ON a.account_id = d.account_id \nJOIN \n    client c ON d.client_id = c.client_id \nJOIN \n    district dis ON c.district_",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 48,
+      "db_id": "financial",
+      "question": "For loans contracts which are still running where client are in debt, list the district of the and the state the percent",
+      "gold_sql": "SELECT CAST((T3.A13 - T3.A12) AS REAL) * 100 / T3.A12 FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN district AS T3 ON T2.district_id = T3.district_id WHERE T1.st",
+      "pred_sql": "SELECT \n    d.A2 AS district,\n    d.A3 AS state,\n    ((d.A13 - d.A12) / d.A12) * 100 AS unemployment_rate_increment\nFROM \n    loan l\nJOIN \n    account a ON l.account_id = a.account_id\nJOIN \n    disp d",
+      "correct": false,
+      "error": null,
+      "call_count": 2
+    },
+    {
+      "query_idx": 49,
+      "db_id": "financial",
+      "question": "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.",
+      "gold_sql": "SELECT T2.A2, COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE T1.gender = 'F' GROUP BY T2.district_id, T2.A2 ORDER BY COUNT(T1.client_id) DESC ",
+      "pred_sql": "SELECT d.A2, COUNT(c.client_id) AS female_count \nFROM district d \nJOIN client c ON d.district_id = c.district_id \nWHERE c.gender = 'F' \nGROUP BY d.A2 \nORDER BY female_count DESC \nLIMIT 9",
+      "correct": true,
+      "error": null,
+      "call_count": 2
+    }
+  ]
+}
