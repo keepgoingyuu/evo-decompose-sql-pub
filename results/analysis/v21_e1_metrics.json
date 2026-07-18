@@ -1,0 +1,222 @@
+{
+  "gemma4": {
+    "bird_main": {
+      "s0": {
+        "accuracy": 14.45,
+        "n_queries": 609,
+        "correct": 88
+      },
+      "s1": {
+        "accuracy": 14.29,
+        "n_queries": 609,
+        "correct": 87
+      },
+      "s2": {
+        "accuracy": 10.84,
+        "n_queries": 609,
+        "correct": 66
+      },
+      "s3": {
+        "accuracy": 14.12,
+        "n_queries": 609,
+        "correct": 86
+      },
+      "s4": {
+        "accuracy": 8.7,
+        "n_queries": 609,
+        "correct": 53
+      }
+    },
+    "xlingual_spider_en": {
+      "s0": {
+        "accuracy": 51.26,
+        "n_queries": 1034,
+        "correct": 530
+      },
+      "s1": {
+        "accuracy": 53.58,
+        "n_queries": 1034,
+        "correct": 554
+      },
+      "s2": {
+        "accuracy": 41.88,
+        "n_queries": 1034,
+        "correct": 433
+      },
+      "s3": {
+        "accuracy": 42.55,
+        "n_queries": 1034,
+        "correct": 440
+      },
+      "s4": {
+        "accuracy": 43.71,
+        "n_queries": 1034,
+        "correct": 452
+      }
+    },
+    "xlingual_cspider_zh_tw": {
+      "s0": {
+        "accuracy": 45.84,
+        "n_queries": 1034,
+        "correct": 474
+      },
+      "s1": {
+        "accuracy": 49.9,
+        "n_queries": 1034,
+        "correct": 516
+      },
+      "s2": {
+        "accuracy": 35.88,
+        "n_queries": 1034,
+        "correct": 371
+      },
+      "s3": {
+        "accuracy": 39.36,
+        "n_queries": 1034,
+        "correct": 407
+      },
+      "s4": {
+        "accuracy": 38.97,
+        "n_queries": 1034,
+        "correct": 403
+      }
+    },
+    "xlingual_multispider_ja": {
+      "s0": {
+        "accuracy": 41.39,
+        "n_queries": 1034,
+        "correct": 428
+      },
+      "s1": {
+        "accuracy": 43.04,
+        "n_queries": 1034,
+        "correct": 445
+      },
+      "s2": {
+        "accuracy": 29.59,
+        "n_queries": 1034,
+        "correct": 306
+      },
+      "s3": {
+        "accuracy": 28.92,
+        "n_queries": 1034,
+        "correct": 299
+      },
+      "s4": {
+        "accuracy": 32.69,
+        "n_queries": 1034,
+        "correct": 338
+      }
+    }
+  },
+  "qwen25c7b": {
+    "bird_main": {
+      "s0": {
+        "accuracy": 33.0,
+        "n_queries": 609,
+        "correct": 201
+      },
+      "s1": {
+        "accuracy": 32.18,
+        "n_queries": 609,
+        "correct": 196
+      },
+      "s2": {
+        "accuracy": 30.71,
+        "n_queries": 609,
+        "correct": 187
+      },
+      "s3": {
+        "accuracy": 26.93,
+        "n_queries": 609,
+        "correct": 164
+      },
+      "s4": {
+        "accuracy": 26.6,
+        "n_queries": 609,
+        "correct": 162
+      }
+    },
+    "xlingual_spider_en": {
+      "s0": {
+        "accuracy": 72.63,
+        "n_queries": 1034,
+        "correct": 751
+      },
+      "s1": {
+        "accuracy": 73.6,
+        "n_queries": 1034,
+        "correct": 761
+      },
+      "s2": {
+        "accuracy": 69.34,
+        "n_queries": 1034,
+        "correct": 717
+      },
+      "s3": {
+        "accuracy": 72.15,
+        "n_queries": 1034,
+        "correct": 746
+      },
+      "s4": {
+        "accuracy": 66.92,
+        "n_queries": 1034,
+        "correct": 692
+      }
+    },
+    "xlingual_cspider_zh_tw": {
+      "s0": {
+        "accuracy": 66.25,
+        "n_queries": 1034,
+        "correct": 685
+      },
+      "s1": {
+        "accuracy": 66.54,
+        "n_queries": 1034,
+        "correct": 688
+      },
+      "s2": {
+        "accuracy": 61.03,
+        "n_queries": 1034,
+        "correct": 631
+      },
+      "s3": {
+        "accuracy": 64.89,
+        "n_queries": 1034,
+        "correct": 671
+      },
+      "s4": {
+        "accuracy": 63.64,
+        "n_queries": 1034,
+        "correct": 658
+      }
+    },
+    "xlingual_multispider_ja": {
+      "s0": {
+        "accuracy": 56.96,
+        "n_queries": 1034,
+        "correct": 589
+      },
+      "s1": {
+        "accuracy": 57.64,
+        "n_queries": 1034,
+        "correct": 596
+      },
+      "s2": {
+        "accuracy": 52.32,
+        "n_queries": 1034,
+        "correct": 541
+      },
+      "s3": {
+        "accuracy": 55.42,
+        "n_queries": 1034,
+        "correct": 573
+      },
+      "s4": {
+        "accuracy": 53.87,
+        "n_queries": 1034,
+        "correct": 557
+      }
+    }
+  }
+}

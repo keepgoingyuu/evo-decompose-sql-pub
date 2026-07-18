@@ -2,7 +2,7 @@
 
 Sources:
 - Original 4 models EN/ZH-TW : results/thesis_2026_02/phase4_<model>_<strategy>_<lang>.json
-- v2.1 Gemma4 / Qwen25C7B    : data/results/E1_gemma_4_e4b/merged/v21_xlingual_<bench>_<m>_<s>_seed42.json
+- v2.1 Gemma4 / Qwen25C7B    : results/q1_2026_04/main/v21_xlingual_<bench>_<m>_<s>_seed42.json
 - v2.1 GPT-4.1 Japanese      : results/q1_2026_04/main/v21_gpt41_japanese_<s>_seed42.json
 - v2.1 Arctic-R1 (待補)       : <future>
 
@@ -14,7 +14,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent  # repo root
 
 PHASE4_DIR = REPO / 'results/thesis_2026_02'
-V21_E1_DIR = REPO / 'data/results/E1_gemma_4_e4b/merged'
+V21_E1_DIR = REPO / 'results/q1_2026_04/main'
 V21_GPT41_JA_DIR = REPO / 'results/q1_2026_04/main'
 
 MODEL_NAME_MAP = {
@@ -147,7 +147,7 @@ def main():
                 row += f"{v:>8}" if isinstance(v, str) else f"{v:>8.2f}"
             print(row)
 
-    out_path = REPO / 'data/results/analysis/xlingual_metrics_unified.json'
+    out_path = REPO / 'results/analysis/xlingual_metrics_unified.json'
     json.dump(merged, open(out_path, 'w'), indent=2)
     print(f"\n✓ Saved: {out_path}")
 

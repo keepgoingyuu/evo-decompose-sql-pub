@@ -1,0 +1,11 @@
+{
+  "model": "Arctic-Text2SQL-R1-7B",
+  "engine": "vllm-0.6.6 + V100 TP=2",
+  "note": "RL specialist single-pass (S0 only). For RQ5 RL boundary analysis.",
+  "per_benchmark_s0": {
+    "bird_modchal": 7.88,
+    "spider_en": 25.34,
+    "cspider_zh_tw": 22.53,
+    "multispider_ja": 18.67
+  }
+}

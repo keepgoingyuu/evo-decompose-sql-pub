@@ -1,0 +1,1004 @@
+{
+  "_meta": {
+    "note": "地端用 wall-clock elapsed; 雲端用 per-query gen_time p50 (wall-clock 受 API retry 汙染). 絕不跨 benchmark 混平均.",
+    "local_skipped_merged_none_files": 40,
+    "local_skipped_no_metadata": 1
+  },
+  "local_models": {
+    "gemma4": {
+      "s0": {
+        "MultiSpider-JA": {
+          "sec_per_query": 2.42,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.4139,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 13.33,
+          "n_queries": 609,
+          "mean_calls": 1,
+          "accuracy": 0.1445,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 2.53,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.4584,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 2.4,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.5126,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s1": {
+        "CSpider-TW": {
+          "sec_per_query": 4.61,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.499,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 4.45,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.5358,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 4.58,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.4304,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 17.46,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "accuracy": 0.1429,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s4": {
+        "BIRD": {
+          "sec_per_query": 43.94,
+          "n_queries": 609,
+          "mean_calls": 3,
+          "accuracy": 0.087,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 14.07,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.3269,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 13.89,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.3897,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 12.17,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.4371,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s2": {
+        "Spider-EN": {
+          "sec_per_query": 14.07,
+          "n_queries": 1034,
+          "mean_calls": 4.57,
+          "accuracy": 0.4188,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 15.53,
+          "n_queries": 1034,
+          "mean_calls": 4.6,
+          "accuracy": 0.3588,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 66.56,
+          "n_queries": 609,
+          "mean_calls": 5.25,
+          "accuracy": 0.1083,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 14.74,
+          "n_queries": 1034,
+          "mean_calls": 4.62,
+          "accuracy": 0.2959,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s3": {
+        "BIRD": {
+          "sec_per_query": 34.43,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "accuracy": 0.1412,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 6.56,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.2891,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 5.93,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.4255,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 6.39,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.3936,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      }
+    },
+    "qwen25c7b": {
+      "s4": {
+        "CSpider-TW": {
+          "sec_per_query": 2.4,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.6364,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 2.59,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.6692,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 2.11,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.5387,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 4.86,
+          "n_queries": 609,
+          "mean_calls": 3,
+          "accuracy": 0.266,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s1": {
+        "BIRD": {
+          "sec_per_query": 2.15,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "accuracy": 0.3218,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 1.21,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.736,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 1.22,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.6653,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 1.22,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.5764,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s0": {
+        "Spider-EN": {
+          "sec_per_query": 0.59,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.7263,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 0.6,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.6624,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 0.58,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.5696,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 1.01,
+          "n_queries": 609,
+          "mean_calls": 1,
+          "accuracy": 0.33,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s3": {
+        "MultiSpider-JA": {
+          "sec_per_query": 1.38,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.5541,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 1.36,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.6489,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 1.35,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.7214,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 2.83,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "accuracy": 0.2693,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s2": {
+        "BIRD": {
+          "sec_per_query": 8.96,
+          "n_queries": 609,
+          "mean_calls": 4.81,
+          "accuracy": 0.3071,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 2.75,
+          "n_queries": 1034,
+          "mean_calls": 4.21,
+          "accuracy": 0.5232,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 2.73,
+          "n_queries": 1034,
+          "mean_calls": 4.18,
+          "accuracy": 0.6103,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "Spider-EN": {
+          "sec_per_query": 2.8,
+          "n_queries": 1034,
+          "mean_calls": 4.23,
+          "accuracy": 0.6935,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      }
+    },
+    "gemini": {
+      "s1": {
+        "MultiSpider-JA": {
+          "sec_per_query": 8.12,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.6876,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s4": {
+        "MultiSpider-JA": {
+          "sec_per_query": 10.41,
+          "n_queries": 1034,
+          "mean_calls": 2.83,
+          "accuracy": 0.6741,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s2": {
+        "MultiSpider-JA": {
+          "sec_per_query": 18.45,
+          "n_queries": 1034,
+          "mean_calls": 3.45,
+          "accuracy": 0.5774,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s0": {
+        "MultiSpider-JA": {
+          "sec_per_query": 3.59,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.6886,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s3": {
+        "MultiSpider-JA": {
+          "sec_per_query": 11.96,
+          "n_queries": 1034,
+          "mean_calls": 1.88,
+          "accuracy": 0.6654,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      }
+    },
+    "deepseek": {
+      "s1": {
+        "MultiSpider-JA": {
+          "sec_per_query": 2.89,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.5948,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s4": {
+        "MultiSpider-JA": {
+          "sec_per_query": 7.23,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.5706,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s2": {
+        "MultiSpider-JA": {
+          "sec_per_query": 7.01,
+          "n_queries": 1034,
+          "mean_calls": 4.09,
+          "accuracy": 0.5435,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s0": {
+        "MultiSpider-JA": {
+          "sec_per_query": 1.48,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.5774,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      },
+      "s3": {
+        "MultiSpider-JA": {
+          "sec_per_query": 3.36,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.5629,
+          "timing_basis": "wall_clock_single_thread_n100"
+        }
+      }
+    },
+    "gpt41": {
+      "s3": {
+        "MultiSpider-JA": {
+          "sec_per_query": 2.45,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.5957,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s0": {
+        "MultiSpider-JA": {
+          "sec_per_query": 1.14,
+          "n_queries": 1034,
+          "mean_calls": 1,
+          "accuracy": 0.5996,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s2": {
+        "MultiSpider-JA": {
+          "sec_per_query": 4.59,
+          "n_queries": 1034,
+          "mean_calls": 3.8,
+          "accuracy": 0.5329,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s4": {
+        "MultiSpider-JA": {
+          "sec_per_query": 5.77,
+          "n_queries": 1034,
+          "mean_calls": 3,
+          "accuracy": 0.5832,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      },
+      "s1": {
+        "MultiSpider-JA": {
+          "sec_per_query": 2.21,
+          "n_queries": 1034,
+          "mean_calls": 2,
+          "accuracy": 0.6132,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      }
+    },
+    "arctic-r1": {
+      "s0": {
+        "Spider-EN": {
+          "sec_per_query": 0.13,
+          "n_queries": 1034,
+          "mean_calls": null,
+          "accuracy": 0.2534,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "CSpider-TW": {
+          "sec_per_query": 0.13,
+          "n_queries": 1034,
+          "mean_calls": null,
+          "accuracy": 0.2253,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "BIRD": {
+          "sec_per_query": 0.3,
+          "n_queries": 609,
+          "mean_calls": null,
+          "accuracy": 0.0788,
+          "timing_basis": "wall_clock_elapsed"
+        },
+        "MultiSpider-JA": {
+          "sec_per_query": 0.13,
+          "n_queries": 1034,
+          "mean_calls": null,
+          "accuracy": 0.1867,
+          "timing_basis": "wall_clock_elapsed"
+        }
+      }
+    }
+  },
+  "cloud_models": {
+    "deepseek": {
+      "s0": {
+        "MultiSpider-en": {
+          "gen_time_p50": 2.4,
+          "gen_time_mean": 2.51,
+          "gen_time_p95": 3.72,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.7031,
+          "api_cost_usd_full_set": 0.3932,
+          "wall_clock_min_ref": 43.36,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-cn": {
+          "gen_time_p50": 2.45,
+          "gen_time_mean": 2.6,
+          "gen_time_p95": 4.03,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6277,
+          "api_cost_usd_full_set": 0.3551,
+          "wall_clock_min_ref": 40.74,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 2.34,
+          "gen_time_mean": 2.53,
+          "gen_time_p95": 3.91,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6364,
+          "api_cost_usd_full_set": 0.3551,
+          "wall_clock_min_ref": 39.34,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 3.08,
+          "gen_time_mean": 3.32,
+          "gen_time_p95": 5.32,
+          "n_queries": 609,
+          "mean_calls": null,
+          "timing_basis": "per_query_gen_time",
+          "wall_clock_min_ref_full_bird": 121.35345865090689
+        }
+      },
+      "s1": {
+        "MultiSpider-en": {
+          "gen_time_p50": 4.47,
+          "gen_time_mean": 4.66,
+          "gen_time_p95": 6.46,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.7128,
+          "api_cost_usd_full_set": 0.634,
+          "wall_clock_min_ref": 64.58,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 2.55,
+          "gen_time_mean": 2.67,
+          "gen_time_p95": 3.35,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.6296,
+          "api_cost_usd_full_set": 0.7102,
+          "wall_clock_min_ref": 41.37,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 5.44,
+          "gen_time_mean": 5.68,
+          "gen_time_p95": 7.67,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s2": {
+        "MultiSpider-en": {
+          "gen_time_p50": 10.64,
+          "gen_time_mean": 11.42,
+          "gen_time_p95": 19.31,
+          "n_queries": 1032,
+          "mean_calls": 4.37,
+          "accuracy": 0.617,
+          "api_cost_usd_full_set": 1.7187,
+          "wall_clock_min_ref": 196.6,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 5.29,
+          "gen_time_mean": 5.29,
+          "gen_time_p95": 8.26,
+          "n_queries": 1032,
+          "mean_calls": 3.92,
+          "accuracy": 0.5638,
+          "api_cost_usd_full_set": 1.5404,
+          "wall_clock_min_ref": 91.1,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 16.17,
+          "gen_time_mean": 16.93,
+          "gen_time_p95": 26.01,
+          "n_queries": 609,
+          "mean_calls": 4.87,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s3": {
+        "MultiSpider-en": {
+          "gen_time_p50": 4.88,
+          "gen_time_mean": 5.16,
+          "gen_time_p95": 7.8,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.7021,
+          "api_cost_usd_full_set": 0.7864,
+          "wall_clock_min_ref": 88.89,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 2.44,
+          "gen_time_mean": 2.56,
+          "gen_time_p95": 3.5,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.5967,
+          "api_cost_usd_full_set": 0.7102,
+          "wall_clock_min_ref": 39.01,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 6.14,
+          "gen_time_mean": 6.46,
+          "gen_time_p95": 9.75,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s4": {
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 5.42,
+          "gen_time_mean": 5.69,
+          "gen_time_p95": 8.02,
+          "n_queries": 1032,
+          "mean_calls": 3,
+          "accuracy": 0.6199,
+          "api_cost_usd_full_set": 1.1796,
+          "wall_clock_min_ref": 98.47,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 11.27,
+          "gen_time_mean": 12.22,
+          "gen_time_p95": 19.48,
+          "n_queries": 609,
+          "mean_calls": 3,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-en": {
+          "gen_time_p50": 5.53,
+          "n_queries": 1032,
+          "timing_basis": "per_query_gen_time"
+        }
+      }
+    },
+    "gemini": {
+      "s0": {
+        "MultiSpider-en": {
+          "gen_time_p50": 2.53,
+          "gen_time_mean": 3.64,
+          "gen_time_p95": 8.83,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.7998,
+          "api_cost_usd_full_set": 0.7897,
+          "wall_clock_min_ref": 57.28,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-cn": {
+          "gen_time_p50": 2.98,
+          "gen_time_mean": 3.74,
+          "gen_time_p95": 6.95,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6373,
+          "api_cost_usd_full_set": 0.2167,
+          "wall_clock_min_ref": 64.37,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 3.18,
+          "gen_time_mean": 3.81,
+          "gen_time_p95": 6.94,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6383,
+          "api_cost_usd_full_set": 0.2167,
+          "wall_clock_min_ref": 65.68,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 6.7,
+          "gen_time_mean": 6.3,
+          "gen_time_p95": 7.99,
+          "n_queries": 609,
+          "mean_calls": null,
+          "timing_basis": "per_query_gen_time",
+          "wall_clock_min_ref_full_bird": 143.49460680087407
+        }
+      },
+      "s1": {
+        "MultiSpider-en": {
+          "gen_time_p50": 6.2,
+          "gen_time_mean": 7.7,
+          "gen_time_p95": 19.18,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.795,
+          "api_cost_usd_full_set": 1.7544,
+          "wall_clock_min_ref": 132.54,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 8.32,
+          "gen_time_mean": 10.18,
+          "gen_time_p95": 25.94,
+          "n_queries": 1032,
+          "mean_calls": 1.95,
+          "accuracy": 0.6857,
+          "api_cost_usd_full_set": 0.4217,
+          "wall_clock_min_ref": 58.54,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 14.32,
+          "gen_time_mean": 18.03,
+          "gen_time_p95": 37.65,
+          "n_queries": 607,
+          "mean_calls": 2,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s2": {
+        "MultiSpider-en": {
+          "gen_time_p50": 22.66,
+          "gen_time_mean": 23.24,
+          "gen_time_p95": 46.7,
+          "n_queries": 1032,
+          "mean_calls": 3.56,
+          "accuracy": 0.7756,
+          "api_cost_usd_full_set": 0.7724,
+          "wall_clock_min_ref": 133.43,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 22.27,
+          "gen_time_mean": 23.97,
+          "gen_time_p95": 48.74,
+          "n_queries": 1032,
+          "mean_calls": 3.58,
+          "accuracy": 0.6547,
+          "api_cost_usd_full_set": 0.7753,
+          "wall_clock_min_ref": 137.76,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 38.29,
+          "gen_time_mean": 41.09,
+          "gen_time_p95": 77.04,
+          "n_queries": 607,
+          "mean_calls": 4.57,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s3": {
+        "MultiSpider-en": {
+          "gen_time_p50": 11.41,
+          "gen_time_mean": 13.99,
+          "gen_time_p95": 31.05,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.7669,
+          "api_cost_usd_full_set": 0.4334,
+          "wall_clock_min_ref": 240.74,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 11.21,
+          "gen_time_mean": 58.47,
+          "gen_time_p95": 31.77,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.6625,
+          "api_cost_usd_full_set": 0.4334,
+          "wall_clock_min_ref": 1005.86,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 2.59,
+          "gen_time_mean": 2.68,
+          "gen_time_p95": 3.31,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s4": {
+        "MultiSpider-en": {
+          "gen_time_p50": 9.68,
+          "gen_time_mean": 11.79,
+          "gen_time_p95": 24.59,
+          "n_queries": 1032,
+          "mean_calls": 3,
+          "accuracy": 0.8017,
+          "api_cost_usd_full_set": 0.6502,
+          "wall_clock_min_ref": 202.88,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 10.43,
+          "gen_time_mean": 12.19,
+          "gen_time_p95": 22.82,
+          "n_queries": 1032,
+          "mean_calls": 3,
+          "accuracy": 0.6876,
+          "api_cost_usd_full_set": 0.6502,
+          "wall_clock_min_ref": 209.8,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 3.42,
+          "gen_time_mean": 3.54,
+          "gen_time_p95": 4.22,
+          "n_queries": 609,
+          "mean_calls": 3,
+          "timing_basis": "per_query_gen_time"
+        }
+      }
+    },
+    "gpt41": {
+      "s0": {
+        "MultiSpider-en": {
+          "gen_time_p50": 1.1,
+          "gen_time_mean": 1.26,
+          "gen_time_p95": 2.1,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6992,
+          "api_cost_usd_full_set": 2.8896,
+          "wall_clock_min_ref": 21.97,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-cn": {
+          "gen_time_p50": 1.05,
+          "gen_time_mean": 1.17,
+          "gen_time_p95": 1.96,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6654,
+          "api_cost_usd_full_set": 2.6096,
+          "wall_clock_min_ref": 18.85,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 1.08,
+          "gen_time_mean": 1.21,
+          "gen_time_p95": 2.03,
+          "n_queries": 1032,
+          "mean_calls": 1,
+          "accuracy": 0.6557,
+          "api_cost_usd_full_set": 2.6096,
+          "wall_clock_min_ref": 19.59,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 1.65,
+          "gen_time_mean": 1.97,
+          "gen_time_p95": 3.97,
+          "n_queries": 609,
+          "mean_calls": null,
+          "timing_basis": "per_query_gen_time",
+          "wall_clock_min_ref_full_bird": 65.92914098501205
+        }
+      },
+      "s1": {
+        "MultiSpider-en": {
+          "gen_time_p50": 2.29,
+          "gen_time_mean": 2.5,
+          "gen_time_p95": 3.58,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.7041,
+          "api_cost_usd_full_set": 5.7792,
+          "wall_clock_min_ref": 43.23,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 2.38,
+          "gen_time_mean": 2.56,
+          "gen_time_p95": 3.74,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.6654,
+          "api_cost_usd_full_set": 5.7792,
+          "wall_clock_min_ref": 44.73,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 3.01,
+          "gen_time_mean": 3.35,
+          "gen_time_p95": 5.35,
+          "n_queries": 607,
+          "mean_calls": 2,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s2": {
+        "MultiSpider-en": {
+          "gen_time_p50": 4.68,
+          "gen_time_mean": 4.75,
+          "gen_time_p95": 8.07,
+          "n_queries": 1032,
+          "mean_calls": 3.83,
+          "accuracy": 0.5938,
+          "api_cost_usd_full_set": 11.0796,
+          "wall_clock_min_ref": 81.75,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 5.36,
+          "gen_time_mean": 5.47,
+          "gen_time_p95": 9.45,
+          "n_queries": 1032,
+          "mean_calls": 3.82,
+          "accuracy": 0.5774,
+          "api_cost_usd_full_set": 11.0348,
+          "wall_clock_min_ref": 94.24,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 6.87,
+          "gen_time_mean": 7.47,
+          "gen_time_p95": 12.58,
+          "n_queries": 607,
+          "mean_calls": 4.59,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s3": {
+        "MultiSpider-en": {
+          "gen_time_p50": 2.25,
+          "gen_time_mean": 2.38,
+          "gen_time_p95": 3.37,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.6983,
+          "api_cost_usd_full_set": 5.7792,
+          "wall_clock_min_ref": 41.27,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 2.44,
+          "gen_time_mean": 2.7,
+          "gen_time_p95": 4.5,
+          "n_queries": 1032,
+          "mean_calls": 2,
+          "accuracy": 0.6576,
+          "api_cost_usd_full_set": 5.7792,
+          "wall_clock_min_ref": 46.64,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 2.8,
+          "gen_time_mean": 3.21,
+          "gen_time_p95": 5.62,
+          "n_queries": 609,
+          "mean_calls": 2,
+          "timing_basis": "per_query_gen_time"
+        }
+      },
+      "s4": {
+        "MultiSpider-en": {
+          "gen_time_p50": 5.88,
+          "gen_time_mean": 6.45,
+          "gen_time_p95": 10.97,
+          "n_queries": 1032,
+          "mean_calls": 3,
+          "accuracy": 0.6905,
+          "api_cost_usd_full_set": 8.6688,
+          "wall_clock_min_ref": 111.0,
+          "timing_basis": "per_query_gen_time"
+        },
+        "MultiSpider-zh-tw": {
+          "gen_time_p50": 4.88,
+          "gen_time_mean": 5.3,
+          "gen_time_p95": 8.71,
+          "n_queries": 1032,
+          "mean_calls": 3,
+          "accuracy": 0.6402,
+          "api_cost_usd_full_set": 8.6688,
+          "wall_clock_min_ref": 91.76,
+          "timing_basis": "per_query_gen_time"
+        },
+        "BIRD": {
+          "gen_time_p50": 7.66,
+          "gen_time_mean": 8.72,
+          "gen_time_p95": 17.4,
+          "n_queries": 607,
+          "mean_calls": 3,
+          "timing_basis": "per_query_gen_time"
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
 Per 04_execution_plan_v2.md §3.2 — fit one law per language, check whether
 α values for each strategy overlap across EN / ZH-TW / JA within 95% bootstrap CI.
 
-Data source: data/results/analysis/xlingual_metrics_unified.json
+Data source: results/analysis/xlingual_metrics_unified.json
 (built by scripts/build_xlingual_metrics.py)
 """
 import json
@@ -13,7 +13,7 @@ REPO = Path(__file__).resolve().parent.parent  # repo root
 import numpy as np
 from scipy import stats
 
-ANALYSIS_DIR = REPO / 'data' / 'results' / 'analysis'
+ANALYSIS_DIR = REPO / 'results' / 'analysis'
 DATA = json.load(open(ANALYSIS_DIR / 'xlingual_metrics_unified.json'))
 
 

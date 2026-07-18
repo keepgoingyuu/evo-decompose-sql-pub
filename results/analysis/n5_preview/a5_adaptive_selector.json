@@ -1,0 +1,42 @@
+{
+  "note": "A5 N=5 preview (Gemma4 added; awaiting Arctic-R1). Selector ML training deferred to N=6 final to avoid double-fitting on incomplete data.",
+  "n_unified_questions": 347,
+  "per_model_oracle": {
+    "DeepSeek-V3": {
+      "n": 347,
+      "s0_acc": 42.07492795389049,
+      "oracle": 53.602305475504316,
+      "rescue_pp": 11.527377521613829
+    },
+    "GPT-4.1": {
+      "n": 347,
+      "s0_acc": 39.481268011527376,
+      "oracle": 53.89048991354467,
+      "rescue_pp": 14.409221902017293
+    },
+    "Gemini-3-Flash-Preview": {
+      "n": 347,
+      "s0_acc": 35.158501440922194,
+      "oracle": 57.925072046109506,
+      "rescue_pp": 22.76657060518731
+    },
+    "Gemma-4-E4B": {
+      "n": 347,
+      "s0_acc": 17.29106628242075,
+      "oracle": 31.412103746397698,
+      "rescue_pp": 14.121037463976947
+    },
+    "Qwen2.5-Coder-7B": {
+      "n": 347,
+      "s0_acc": 33.429394812680115,
+      "oracle": 54.17867435158501,
+      "rescue_pp": 20.749279538904894
+    }
+  },
+  "pooled_baselines": {
+    "n_pooled": 1735,
+    "always_s0": 33.487031700288185,
+    "s0_then_s1": 42.76657060518732,
+    "oracle": 50.20172910662824
+  }
+}

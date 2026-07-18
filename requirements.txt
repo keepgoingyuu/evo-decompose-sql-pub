@@ -1,36 +1,25 @@
-# Core dependencies
-openai>=1.0.0           # OpenAI API (GPT-4, GPT-3.5)
-anthropic>=0.18.0       # Claude API
-python-dotenv>=1.0.0    # Environment variable management
-
-# Data processing
-pandas>=2.0.0           # Data manipulation
+# Analysis & statistics (required to reproduce the paper's tables)
 numpy>=1.24.0           # Numerical computing
-datasets>=2.14.0        # Hugging Face datasets
+scipy>=1.10.0           # Paired t-tests, Kendall's tau/W, permutation tests
+pandas>=2.0.0           # Data manipulation
+scikit-learn>=1.3.0     # Learned-selector panel (phase3 selector scripts)
 
-# Evolution algorithm
-# Note: OpenEvolve is not available on PyPI yet
-# We'll implement basic evolution from scratch or use alternatives
-
-# Database
+# SQL evaluation
 sqlparse>=0.4.4         # SQL parsing
+sqlglot>=20.0.0         # SQL transformation and comparison
 sqlalchemy>=2.0.0       # SQL toolkit
 
-# Evaluation
-sqlglot>=20.0.0         # SQL transformation and comparison
+# Model inference (only needed to RE-RUN experiments, not to reproduce tables)
+openai>=1.0.0           # OpenAI-compatible APIs (GPT-4.1, DeepSeek, Qwen endpoints)
+anthropic>=0.18.0       # Claude API
+python-dotenv>=1.0.0    # Environment variable management
+requests>=2.31.0        # HTTP requests
+datasets>=2.14.0        # Hugging Face datasets (benchmark download helpers)
 
 # Utilities
 tqdm>=4.65.0            # Progress bars
 pyyaml>=6.0             # YAML configuration
-requests>=2.31.0        # HTTP requests
 
-# Development
-pytest>=7.4.0           # Testing
-black>=23.0.0           # Code formatting
-flake8>=6.0.0           # Code linting
-jupyter>=1.0.0          # Jupyter notebooks
-notebook>=7.0.0         # Jupyter notebook server
-
-# Visualization
+# Visualization (selector plots)
 matplotlib>=3.7.0       # Plotting
 seaborn>=0.12.0         # Statistical visualization

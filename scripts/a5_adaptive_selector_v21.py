@@ -6,7 +6,7 @@ N=5 models on BIRD mod+chal 609 queries.
 
 This is a slimmed/adapted version of scripts/phase3_adaptive_selector.py:
 - Loads original-4 from results/thesis_2026_02/phase1+phase2_<model>_<s>.json
-- Loads v2.1 Gemma4 + Qwen25C7B from data/results/E1_gemma_4_e4b/merged/v21_bird_main_*
+- Loads v2.1 Gemma4 + Qwen25C7B from results/q1_2026_04/main/v21_bird_main_*
 - Aligns query_id (phase1) ↔ query_idx (v2.1) by BIRD mod+chal subset
 - Awaits Arctic-R1 to upgrade to N=6
 """
@@ -22,9 +22,9 @@ import numpy as np
 REPO = REPO
 sys.path.insert(0, str(REPO))
 
-ANALYSIS_DIR = REPO / 'data/results/analysis'
+ANALYSIS_DIR = REPO / 'results/analysis'
 PHASE_DIR = REPO / 'results/thesis_2026_02'
-V21_E1_DIR = REPO / 'data/results/E1_gemma_4_e4b/merged'
+V21_E1_DIR = REPO / 'results/q1_2026_04/main'
 
 # Original 4 models: phase1 baseline + phase2 s1-s4
 ORIGINAL_4 = {

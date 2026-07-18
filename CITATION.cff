@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this reproducibility package, please cite the paper below."
+title: "Strategy Selection for LLM-based Text-to-SQL: reproducibility package"
+authors:
+  - family-names: Lin
+    given-names: Chih-Yu
+    orcid: "https://orcid.org/0009-0000-3722-8226"
+    affiliation: "National Taichung University of Science and Technology"
+  - family-names: Chen
+    given-names: Huan-Yu
+    orcid: "https://orcid.org/0000-0001-6211-9646"
+    affiliation: "National Taichung University of Science and Technology"
+repository-code: "https://github.com/keepgoingyuu/evo-decompose-sql-pub"
+license: MIT
+year: 2026
+preferred-citation:
+  type: article
+  title: "Strategy Selection for LLM-based Text-to-SQL: A Cross-Model Cross-Lingual Empirical Study with Reinforcement Learning Boundary"
+  authors:
+    - family-names: Lin
+      given-names: Chih-Yu
+    - family-names: Chen
+      given-names: Huan-Yu
+  year: 2026
+  notes: "Under journal review."
