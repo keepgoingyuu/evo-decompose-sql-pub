@@ -3,8 +3,8 @@
 Sources:
 - Original 4 models EN/ZH-TW : results/thesis_2026_02/phase4_<model>_<strategy>_<lang>.json
 - v2.1 Gemma4 / Qwen25C7B    : results/q1_2026_04/main/v21_xlingual_<bench>_<m>_<s>_seed42.json
-- v2.1 GPT-4.1 Japanese      : results/q1_2026_04/main/v21_gpt41_japanese_<s>_seed42.json
-- v2.1 Arctic-R1 (待補)       : <future>
+- v2.1 frontier Japanese     : results/q1_2026_04/main/v21_<gpt41|deepseek|gemini>_japanese_<s>_seed42.json
+- v2.1 Arctic-R1             : results/E2_arctic_r1/ (RL anchor; loaded separately, not part of this matrix)
 
 Output schema: {model: {lang: {strategy: accuracy_pct}}}
 """
@@ -80,22 +80,28 @@ def load_v21_e1() -> dict:
     return out
 
 
-def load_v21_gpt41_ja() -> dict:
-    """GPT-4.1 Japanese (補資料缺口)."""
+def load_v21_frontier_ja() -> dict:
+    """Frontier-model Japanese runs (GPT-4.1 / DeepSeek-V3 / Gemini): v21_<m>_japanese_<s>_seed42.json."""
     out = {}
-    for s in ['s0', 's1', 's2', 's3', 's4']:
-        f = V21_GPT41_JA_DIR / f'v21_gpt41_japanese_{s}_seed42.json'
-        if not f.exists():
-            continue
-        d = json.load(open(f))
-        # try multiple schema possibilities
-        meta = d.get('metadata', d)
-        acc = meta.get('accuracy')
-        if acc is None:
-            continue
-        if acc <= 1.0:
-            acc *= 100
-        out.setdefault('GPT-4.1', {}).setdefault('JA', {})[s] = round(acc, 2)
+    for raw_m in ['gpt41', 'deepseek', 'gemini']:
+        model = MODEL_NAME_MAP[raw_m]
+        for s in ['s0', 's1', 's2', 's3', 's4']:
+            f = V21_GPT41_JA_DIR / f'v21_{raw_m}_japanese_{s}_seed42.json'
+            if not f.exists():
+                continue
+            d = json.load(open(f))
+            # try multiple schema possibilities
+            meta = d.get('metadata', d)
+            acc = meta.get('accuracy')
+            if acc is None:
+                # fall back to recomputing from per-query records
+                r = d.get('results')
+                if not r:
+                    continue
+                acc = sum(1 for x in r if x.get('correct')) / len(r)
+            if acc <= 1.0:
+                acc *= 100
+            out.setdefault(model, {}).setdefault('JA', {})[s] = round(acc, 2)
     return out
 
 
@@ -112,8 +118,8 @@ def merge(*sources) -> dict:
 def main():
     p4 = load_phase4_originals()
     v21_e1 = load_v21_e1()
-    v21_gpt41_ja = load_v21_gpt41_ja()
-    merged = merge(p4, v21_e1, v21_gpt41_ja)
+    v21_frontier_ja = load_v21_frontier_ja()
+    merged = merge(p4, v21_e1, v21_frontier_ja)
 
     # Coverage report
     print("=" * 70)

@@ -84,20 +84,28 @@ print(f'GPT-4.1 BIRD S1 accuracy = {acc:.2f}%')
 |---|---|---|
 | Accuracy tables (per model × strategy × benchmark) | per-query `correct` fields (snippet above) | — |
 | Unified metrics matrix (all models × 3 languages × 5 strategies) | `scripts/build_xlingual_metrics.py` | `results/analysis/xlingual_metrics_unified.json` |
-| Cross-lingual ranking concordance (Kendall's W = 0.91, exact permutation p = 0.017, pairwise τ ≥ 0.67) | `scripts/a3_cross_lingual_invariance.py` | `results/analysis/n5_preview/a3_cross_lingual_invariance.json` |
+| Cross-lingual ranking concordance (Kendall's W = 0.91, exact permutation p = 240/13,824 = 0.017, pairwise τ ≥ 0.67) | `scripts/a6_kendall_w.py` | `results/analysis/n5_preview/a6_kendall_w.json` |
+| Cross-lingual slope-invariance test (per-strategy α CIs) | `scripts/a3_cross_lingual_invariance.py` | `results/analysis/n5_preview/a3_cross_lingual_invariance.json` |
 | Paired t-tests + Cohen's d_z (decomposition harm, d_z > 1.0 in all 3 languages) | `scripts/a4_statistical_rigor.py` | `results/analysis/n5_preview/a4_statistical_rigor.json` |
 | Capability–benefit fits (per-strategy α) | `scripts/a2_strategy_specific_alpha.py` | `results/analysis/n5_preview/a2_strategy_specific_alpha.json` |
-| Adaptive-selector evaluation (oracle gap 16.71 pp; S0→S1 fallback 9.28 pp; 11 learned selectors) | `scripts/a5_adaptive_selector_v21.py` | `results/analysis/n5_preview/a5_adaptive_selector.json` |
+| Adaptive-selector evaluation (oracle 50.20%, gap 16.71 pp; S0→S1 fallback 9.28 pp; 11 learned selectors, 5-fold CV) | `scripts/phase3_v3_n5_selector.py`¹ | `results/analysis/n5_final/n5_selector_results.json` |
+| Per-model oracle preview (simplified alignment variant) | `scripts/a5_adaptive_selector_v21.py` | `results/analysis/n5_preview/a5_adaptive_selector.json` |
 | RL-anchor accuracy under uniform protocol | per-query files | `results/E2_arctic_r1/*.json`, summary in `results/analysis/rl_baseline_summary.json` |
 | Latency profile | `scripts/analyze_latency.py` | `results/analysis/latency_metrics.json` |
 
-Quick verification run (uses the shipped artifacts; each script also rebuilds its
-output in place):
+¹ Re-running the full selector cross-validation (28-feature set) additionally
+requires the BIRD databases downloaded under `data/` (see below); the shipped
+`n5_final` artifact contains all numbers reported in the paper. All other
+scripts run from the shipped `results/` tree alone.
+
+Quick verification run (needs only `numpy` + `scipy`; each script rebuilds its
+output artifact in place):
 
 ```bash
-python scripts/a3_cross_lingual_invariance.py   # Kendall W, exact permutation p, pairwise tau
-python scripts/a4_statistical_rigor.py          # paired t-tests + Cohen's d_z
-python scripts/a5_adaptive_selector_v21.py      # oracle gap + fallback + ML-selector panel
+python scripts/build_xlingual_metrics.py        # rebuild the 5-model x 3-language matrix
+python scripts/a6_kendall_w.py                  # Kendall W = 0.91, exact p = 240/13824, tau >= 0.67
+python scripts/a4_statistical_rigor.py          # paired t-tests + Cohen's d_z (> 1.0 in all 3 languages)
+python scripts/a3_cross_lingual_invariance.py   # per-strategy slope-invariance verdicts
 ```
 
 ---

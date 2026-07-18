@@ -1,0 +1,99 @@
+======================================================================
+Phase 3 v3: N=5 Adaptive Selector Full ML Evaluation
+======================================================================
+
+[1] Loading original-4 (phase1 + phase2)...
+  Loaded models: ['DeepSeek-V3', 'GPT-4.1', 'Gemini-3-Flash-Preview', 'Qwen2.5-Coder-7B']
+
+[2] Loading v2.1 E1 new models (Gemma4)...
+  Loaded models: ['Gemma-4-E4B']
+
+[3] Aligning by question text...
+  Original 4 unique questions: 609
+  v2.1 unique questions:       609
+  Common (intersection):       347
+
+[4] All N=5 models: ['DeepSeek-V3', 'GPT-4.1', 'Gemini-3-Flash-Preview', 'Gemma-4-E4B', 'Qwen2.5-Coder-7B']
+
+[5] Building pooled dataset (N=5 models, query-level features)...
+  Queries with all 5 models having S0: 347
+  Total records: 1735 (queries × models)
+  Unique queries: 347
+
+[6] Computing anchor baselines...
+  Always-S0:     33.49%  (CI 31.30-35.74%)
+  S0→S1:         42.77%
+  Oracle:        50.20%  (CI 47.85-52.55%)
+  Rescue ceiling: 16.71 pp
+
+[7] Building 5-fold StratifiedKFold (query level, stratify on majority S0)...
+  Fold 1: train_q=277, test_q=70
+  Fold 2: train_q=277, test_q=70
+  Fold 3: train_q=278, test_q=69
+  Fold 4: train_q=278, test_q=69
+  Fold 5: train_q=278, test_q=69
+
+[8] Paradigm A: Rule-based selectors
+  rule_v1: 33.95% (Δ +0.46pp)
+  rule_v2: 33.14% (Δ -0.35pp)
+
+[9] Paradigm B: Multi-class ML selectors
+  multiclass_dt: end-to-end 33.49% (Δ +0.00pp) | f1_macro=0.182 f1_weighted=0.757 | 0.0s
+  multiclass_rf: end-to-end 32.39% (Δ -1.10pp) | f1_macro=0.162 f1_weighted=0.515 | 1.5s
+  multiclass_gb: end-to-end 33.49% (Δ +0.00pp) | f1_macro=0.182 f1_weighted=0.757 | 1.8s
+
+[10] Paradigm C: Binary gate selectors (fallback=S1)
+  gate_dt: end-to-end 36.66% (Δ +3.17pp) | AUROC=0.550 AUPRC=0.705 f1_fail=0.728 | 0.0s
+  gate_rf: end-to-end 36.54% (Δ +3.05pp) | AUROC=0.624 AUPRC=0.752 f1_fail=0.685 | 1.7s
+  gate_gb: end-to-end 37.18% (Δ +3.69pp) | AUROC=0.593 AUPRC=0.741 f1_fail=0.755 | 0.4s
+
+[11] Paradigm D: Cascade selectors (gate → S1→S3→S4→S2 rescue)
+  cascade_dt: end-to-end 36.43% (Δ +2.94pp) | gate AUROC=0.550 | 0.5s
+      rescue s1: support=161/1154 (14.0%) AUPRC=0.133 F1=0.031
+      rescue s3: support=93/1154 (8.1%) AUPRC=0.090 F1=0.032
+      rescue s4: support=81/1154 (7.0%) AUPRC=0.073 F1=0.021
+      rescue s2: support=138/1154 (12.0%) AUPRC=0.119 F1=0.023
+  cascade_rf: end-to-end 35.68% (Δ +2.19pp) | gate AUROC=0.624 | 58.7s
+      rescue s1: support=161/1154 (14.0%) AUPRC=0.131 F1=0.150
+      rescue s3: support=93/1154 (8.1%) AUPRC=0.091 F1=0.115
+      rescue s4: support=81/1154 (7.0%) AUPRC=0.080 F1=0.129
+      rescue s2: support=138/1154 (12.0%) AUPRC=0.133 F1=0.173
+  cascade_gb: end-to-end 37.06% (Δ +3.57pp) | gate AUROC=0.593 | 2.6s
+      rescue s1: support=161/1154 (14.0%) AUPRC=0.128 F1=0.022
+      rescue s3: support=93/1154 (8.1%) AUPRC=0.103 F1=0.020
+      rescue s4: support=81/1154 (7.0%) AUPRC=0.076 F1=0.000
+      rescue s2: support=138/1154 (12.0%) AUPRC=0.131 F1=0.040
+
+[12] Per-model breakdown (always-S0 / oracle)
+  DeepSeek-V3: n=347 S0=42.07% Oracle=53.60% (Δ +11.53pp)
+  GPT-4.1: n=347 S0=39.48% Oracle=53.89% (Δ +14.41pp)
+  Gemini-3-Flash-Preview: n=347 S0=35.16% Oracle=57.93% (Δ +22.77pp)
+  Gemma-4-E4B: n=347 S0=17.29% Oracle=31.41% (Δ +14.12pp)
+  Qwen2.5-Coder-7B: n=347 S0=33.43% Oracle=54.18% (Δ +20.75pp)
+
+[13] Results saved → /home/dgx/evo-decompose-sql/data/results/analysis/n5_final/n5_selector_results.json
+
+[14] Generating figures...
+  Figures saved to /home/dgx/evo-decompose-sql/data/results/analysis/n5_final/figures
+
+======================================================================
+Total elapsed: 69.4s
+======================================================================
+
+SUMMARY TABLE (end-to-end accuracy, pooled n=1735)
+Selector                 Acc %    Δ pp           Wilson CI
+------------------------------------------------------------
+Always-S0 (anchor)       33.49    0.00  [31.30, 35.74]
+S0→S1 (anchor)           42.77    9.28
+rule_v1                  33.95    0.46  [31.76, 36.21]
+rule_v2                  33.14   -0.35  [30.97, 35.39]
+multiclass_dt            33.49    0.00  [31.30, 35.74]
+multiclass_rf            32.39   -1.10  [30.23, 34.63]
+multiclass_gb            33.49    0.00  [31.30, 35.74]
+gate_dt                  36.66    3.17  [34.42, 38.95]
+gate_rf                  36.54    3.05  [34.31, 38.84]
+gate_gb                  37.18    3.69  [34.93, 39.48]
+cascade_dt               36.43    2.94  [34.19, 38.72]
+cascade_rf               35.68    2.19  [33.46, 37.96]
+cascade_gb               37.06    3.57  [34.82, 39.36]
+Oracle (ceiling)         50.20   16.71  [47.85, 52.55]

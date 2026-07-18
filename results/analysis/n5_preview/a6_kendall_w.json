@@ -1,0 +1,60 @@
+{
+  "note": "Kendall W over per-language rankings of S1-S4 (mean accuracy across models); exact permutation test over (4!)^3 arrangements.",
+  "mean_accuracy": {
+    "EN": {
+      "s1": 69.674,
+      "s2": 61.972,
+      "s3": 66.28599999999999,
+      "s4": 65.936
+    },
+    "ZH-TW": {
+      "s1": 62.90200000000001,
+      "s2": 55.3,
+      "s3": 59.186,
+      "s4": 59.476
+    },
+    "JA": {
+      "s1": 58.048,
+      "s2": 49.458,
+      "s3": 53.348,
+      "s4": 53.86999999999999
+    }
+  },
+  "ranks": {
+    "EN": [
+      1,
+      4,
+      2,
+      3
+    ],
+    "ZH-TW": [
+      1,
+      4,
+      3,
+      2
+    ],
+    "JA": [
+      1,
+      4,
+      3,
+      2
+    ]
+  },
+  "strategies": [
+    "s1",
+    "s2",
+    "s3",
+    "s4"
+  ],
+  "kendalls_w": 0.9111,
+  "exact_permutation": {
+    "count_ge": 240,
+    "total": 13824,
+    "p": 0.01736
+  },
+  "pairwise_tau": {
+    "EN~ZH-TW": 0.6667,
+    "EN~JA": 0.6667,
+    "ZH-TW~JA": 1.0
+  }
+}

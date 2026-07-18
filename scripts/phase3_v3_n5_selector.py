@@ -41,7 +41,7 @@ from src.utils.schema_utils import DB_DIR, BIRD_DIR  # noqa: E402
 # ============================================================
 # Paths
 # ============================================================
-ANALYSIS_DIR = REPO / "data/results/analysis"
+ANALYSIS_DIR = REPO / "results/analysis"
 PHASE_DIR = REPO / "results/thesis_2026_02"
 
 # Gemma-4 v21 results location: try multiple paths since DGX (pre-reorg) and
