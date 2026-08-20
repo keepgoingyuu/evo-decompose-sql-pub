@@ -1,0 +1,39 @@
+{
+  "experiment_id": "a9-summary",
+  "model": "qwen (local ollama q4, self-contained control)",
+  "subset": "spider_en seed42 n=400",
+  "s0_local_acc": 73.25,
+  "canonical_vllm_reference": {
+    "s0": 72.63,
+    "s2_v1_drop": 3.29
+  },
+  "variants": {
+    "v1": {
+      "n": 400,
+      "s0_acc": 73.25,
+      "s2_acc": 69.75,
+      "drop_pp": 3.5,
+      "discordant_s2_loses": 25,
+      "discordant_s2_rescues": 11,
+      "p_mcnemar_exact": 0.028816719655878845
+    },
+    "v2": {
+      "n": 400,
+      "s0_acc": 73.25,
+      "s2_acc": 71.5,
+      "drop_pp": 1.75,
+      "discordant_s2_loses": 20,
+      "discordant_s2_rescues": 13,
+      "p_mcnemar_exact": 0.296206368599087
+    },
+    "v3": {
+      "n": 400,
+      "s0_acc": 73.25,
+      "s2_acc": 70.0,
+      "drop_pp": 3.25,
+      "discordant_s2_loses": 24,
+      "discordant_s2_rescues": 11,
+      "p_mcnemar_exact": 0.040959591511636986
+    }
+  }
+}

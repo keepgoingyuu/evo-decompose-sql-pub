@@ -1,0 +1,569 @@
+{
+  "experiment_id": "a8",
+  "name": "s2_error_propagation_evidence",
+  "seed": 42,
+  "n_permutations": 100000,
+  "per_cell": {
+    "GPT-4.1|BIRD": {
+      "n_common": 609,
+      "n_broken": 54,
+      "broken_exec_share": 0.5925925925925926,
+      "s0_fail_exec_share": 0.0427807486631016,
+      "dose_response_by_k": {
+        "2": {
+          "n": 133,
+          "break_rate": 0.18045112781954886
+        },
+        "3": {
+          "n": 88,
+          "break_rate": 0.29545454545454547
+        },
+        "4": {
+          "n": 14,
+          "break_rate": 0.2857142857142857
+        }
+      },
+      "p_trend_perm": 0.037239627603723964
+    },
+    "DeepSeek-V3|BIRD": {
+      "n_common": 609,
+      "n_broken": 55,
+      "broken_exec_share": 0.14545454545454545,
+      "s0_fail_exec_share": 0.0821917808219178,
+      "dose_response_by_k": {
+        "2": {
+          "n": 69,
+          "break_rate": 0.15942028985507245
+        },
+        "3": {
+          "n": 148,
+          "break_rate": 0.21621621621621623
+        },
+        "4": {
+          "n": 27,
+          "break_rate": 0.4444444444444444
+        }
+      },
+      "p_trend_perm": 0.0048699513004869955
+    },
+    "Gemini-3-Flash-Preview|BIRD": {
+      "n_common": 609,
+      "n_broken": 10,
+      "broken_exec_share": 0.2,
+      "s0_fail_exec_share": 0.6323529411764706,
+      "dose_response_by_k": {
+        "2": {
+          "n": 84,
+          "break_rate": 0.047619047619047616
+        },
+        "3": {
+          "n": 100,
+          "break_rate": 0.06
+        },
+        "4": {
+          "n": 6,
+          "break_rate": 0.0
+        },
+        "5": {
+          "n": 2,
+          "break_rate": 0.0
+        },
+        "7": {
+          "n": 1,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.5870441295587044
+    },
+    "Qwen2.5-Coder-7B|BIRD": {
+      "n_common": 609,
+      "n_broken": 48,
+      "broken_exec_share": 0.3958333333333333,
+      "s0_fail_exec_share": 0.2696078431372549,
+      "dose_response_by_k": {
+        "2": {
+          "n": 90,
+          "break_rate": 0.2111111111111111
+        },
+        "3": {
+          "n": 73,
+          "break_rate": 0.2465753424657534
+        },
+        "4": {
+          "n": 33,
+          "break_rate": 0.30303030303030304
+        },
+        "5": {
+          "n": 3,
+          "break_rate": 0.3333333333333333
+        }
+      },
+      "p_trend_perm": 0.15037849621503785
+    },
+    "Gemma-4-E4B|BIRD": {
+      "n_common": 609,
+      "n_broken": 52,
+      "broken_exec_share": 0.6923076923076923,
+      "s0_fail_exec_share": 0.6007677543186181,
+      "dose_response_by_k": {
+        "2": {
+          "n": 11,
+          "break_rate": 0.7272727272727273
+        },
+        "3": {
+          "n": 45,
+          "break_rate": 0.5555555555555556
+        },
+        "4": {
+          "n": 28,
+          "break_rate": 0.6785714285714286
+        }
+      },
+      "p_trend_perm": 0.4000459995400046
+    },
+    "GPT-4.1|EN": {
+      "n_common": 1034,
+      "n_broken": 123,
+      "broken_exec_share": 0.7154471544715447,
+      "s0_fail_exec_share": 0.022508038585209004,
+      "dose_response_by_k": {
+        "2": {
+          "n": 376,
+          "break_rate": 0.18882978723404256
+        },
+        "3": {
+          "n": 144,
+          "break_rate": 0.3055555555555556
+        },
+        "4": {
+          "n": 14,
+          "break_rate": 0.5
+        },
+        "5": {
+          "n": 1,
+          "break_rate": 1.0
+        }
+      },
+      "p_trend_perm": 6.999930000699993e-05
+    },
+    "DeepSeek-V3|EN": {
+      "n_common": 1034,
+      "n_broken": 118,
+      "broken_exec_share": 0.288135593220339,
+      "s0_fail_exec_share": 0.016286644951140065,
+      "dose_response_by_k": {
+        "2": {
+          "n": 363,
+          "break_rate": 0.14049586776859505
+        },
+        "3": {
+          "n": 229,
+          "break_rate": 0.19213973799126638
+        },
+        "4": {
+          "n": 59,
+          "break_rate": 0.3898305084745763
+        }
+      },
+      "p_trend_perm": 5.999940000599994e-05
+    },
+    "Gemini-3-Flash-Preview|EN": {
+      "n_common": 1034,
+      "n_broken": 49,
+      "broken_exec_share": 0.22448979591836735,
+      "s0_fail_exec_share": 0.028985507246376812,
+      "dose_response_by_k": {
+        "1": {
+          "n": 68,
+          "break_rate": 0.08823529411764706
+        },
+        "2": {
+          "n": 211,
+          "break_rate": 0.061611374407582936
+        },
+        "3": {
+          "n": 170,
+          "break_rate": 0.07058823529411765
+        },
+        "4": {
+          "n": 36,
+          "break_rate": 0.1111111111111111
+        },
+        "5": {
+          "n": 18,
+          "break_rate": 0.05555555555555555
+        },
+        "6": {
+          "n": 8,
+          "break_rate": 0.125
+        },
+        "7": {
+          "n": 1,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.4047459525404746
+    },
+    "Qwen2.5-Coder-7B|EN": {
+      "n_common": 1034,
+      "n_broken": 74,
+      "broken_exec_share": 0.17567567567567569,
+      "s0_fail_exec_share": 0.14840989399293286,
+      "dose_response_by_k": {
+        "2": {
+          "n": 430,
+          "break_rate": 0.11627906976744186
+        },
+        "3": {
+          "n": 178,
+          "break_rate": 0.08426966292134831
+        },
+        "4": {
+          "n": 52,
+          "break_rate": 0.17307692307692307
+        },
+        "5": {
+          "n": 2,
+          "break_rate": 0.0
+        },
+        "6": {
+          "n": 1,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.45699543004569954
+    },
+    "Gemma-4-E4B|EN": {
+      "n_common": 1034,
+      "n_broken": 159,
+      "broken_exec_share": 0.7295597484276729,
+      "s0_fail_exec_share": 0.44642857142857145,
+      "dose_response_by_k": {
+        "2": {
+          "n": 175,
+          "break_rate": 0.4228571428571429
+        },
+        "3": {
+          "n": 198,
+          "break_rate": 0.30303030303030304
+        },
+        "4": {
+          "n": 60,
+          "break_rate": 0.4166666666666667
+        },
+        "5": {
+          "n": 1,
+          "break_rate": 0.0
+        },
+        "6": {
+          "n": 5,
+          "break_rate": 0.0
+        },
+        "8": {
+          "n": 3,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.986670133298667
+    },
+    "GPT-4.1|ZH-TW": {
+      "n_common": 1034,
+      "n_broken": 115,
+      "broken_exec_share": 0.5391304347826087,
+      "s0_fail_exec_share": 0.019662921348314606,
+      "dose_response_by_k": {
+        "2": {
+          "n": 322,
+          "break_rate": 0.18944099378881987
+        },
+        "3": {
+          "n": 142,
+          "break_rate": 0.323943661971831
+        },
+        "4": {
+          "n": 23,
+          "break_rate": 0.2608695652173913
+        }
+      },
+      "p_trend_perm": 0.003979960200397996
+    },
+    "DeepSeek-V3|ZH-TW": {
+      "n_common": 1034,
+      "n_broken": 112,
+      "broken_exec_share": 0.6160714285714286,
+      "s0_fail_exec_share": 0.03723404255319149,
+      "dose_response_by_k": {
+        "2": {
+          "n": 265,
+          "break_rate": 0.1811320754716981
+        },
+        "3": {
+          "n": 185,
+          "break_rate": 0.25405405405405407
+        },
+        "4": {
+          "n": 16,
+          "break_rate": 0.4375
+        }
+      },
+      "p_trend_perm": 0.004669953300466995
+    },
+    "Gemini-3-Flash-Preview|ZH-TW": {
+      "n_common": 1034,
+      "n_broken": 50,
+      "broken_exec_share": 0.28,
+      "s0_fail_exec_share": 0.28342245989304815,
+      "dose_response_by_k": {
+        "1": {
+          "n": 43,
+          "break_rate": 0.0
+        },
+        "2": {
+          "n": 199,
+          "break_rate": 0.07537688442211055
+        },
+        "3": {
+          "n": 135,
+          "break_rate": 0.14814814814814814
+        },
+        "4": {
+          "n": 26,
+          "break_rate": 0.07692307692307693
+        },
+        "5": {
+          "n": 16,
+          "break_rate": 0.125
+        },
+        "6": {
+          "n": 8,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.06487935120648794
+    },
+    "Qwen2.5-Coder-7B|ZH-TW": {
+      "n_common": 1034,
+      "n_broken": 94,
+      "broken_exec_share": 0.19148936170212766,
+      "s0_fail_exec_share": 0.12893982808022922,
+      "dose_response_by_k": {
+        "2": {
+          "n": 382,
+          "break_rate": 0.1544502617801047
+        },
+        "3": {
+          "n": 157,
+          "break_rate": 0.1592356687898089
+        },
+        "4": {
+          "n": 46,
+          "break_rate": 0.21739130434782608
+        },
+        "5": {
+          "n": 2,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.20976790232097678
+    },
+    "Gemma-4-E4B|ZH-TW": {
+      "n_common": 1034,
+      "n_broken": 180,
+      "broken_exec_share": 0.7388888888888889,
+      "s0_fail_exec_share": 0.48928571428571427,
+      "dose_response_by_k": {
+        "2": {
+          "n": 135,
+          "break_rate": 0.4
+        },
+        "3": {
+          "n": 184,
+          "break_rate": 0.4891304347826087
+        },
+        "4": {
+          "n": 80,
+          "break_rate": 0.45
+        },
+        "5": {
+          "n": 1,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.22484775152248476
+    },
+    "GPT-4.1|JA": {
+      "n_common": 1034,
+      "n_broken": 82,
+      "broken_exec_share": 0.573170731707317,
+      "s0_fail_exec_share": 0.016908212560386472,
+      "dose_response_by_k": {
+        "2": {
+          "n": 340,
+          "break_rate": 0.15
+        },
+        "3": {
+          "n": 105,
+          "break_rate": 0.26666666666666666
+        },
+        "4": {
+          "n": 10,
+          "break_rate": 0.3
+        }
+      },
+      "p_trend_perm": 0.004519954800451995
+    },
+    "DeepSeek-V3|JA": {
+      "n_common": 1034,
+      "n_broken": 81,
+      "broken_exec_share": 0.48148148148148145,
+      "s0_fail_exec_share": 0.011441647597254004,
+      "dose_response_by_k": {
+        "2": {
+          "n": 309,
+          "break_rate": 0.12297734627831715
+        },
+        "3": {
+          "n": 180,
+          "break_rate": 0.23333333333333334
+        },
+        "4": {
+          "n": 6,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.007019929800701993
+    },
+    "Gemini-3-Flash-Preview|JA": {
+      "n_common": 1034,
+      "n_broken": 129,
+      "broken_exec_share": 0.7209302325581395,
+      "s0_fail_exec_share": 0.015527950310559006,
+      "dose_response_by_k": {
+        "1": {
+          "n": 30,
+          "break_rate": 0.16666666666666666
+        },
+        "2": {
+          "n": 230,
+          "break_rate": 0.05217391304347826
+        },
+        "3": {
+          "n": 143,
+          "break_rate": 0.1258741258741259
+        },
+        "4": {
+          "n": 10,
+          "break_rate": 0.4
+        },
+        "5": {
+          "n": 6,
+          "break_rate": 0.16666666666666666
+        },
+        "6": {
+          "n": 5,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.058049419505804944
+    },
+    "Qwen2.5-Coder-7B|JA": {
+      "n_common": 1034,
+      "n_broken": 108,
+      "broken_exec_share": 0.19444444444444445,
+      "s0_fail_exec_share": 0.14831460674157304,
+      "dose_response_by_k": {
+        "2": {
+          "n": 363,
+          "break_rate": 0.18181818181818182
+        },
+        "3": {
+          "n": 111,
+          "break_rate": 0.21621621621621623
+        },
+        "4": {
+          "n": 40,
+          "break_rate": 0.425
+        },
+        "5": {
+          "n": 1,
+          "break_rate": 0.0
+        },
+        "6": {
+          "n": 1,
+          "break_rate": 1.0
+        }
+      },
+      "p_trend_perm": 0.0007899921000789992
+    },
+    "Gemma-4-E4B|JA": {
+      "n_common": 1034,
+      "n_broken": 182,
+      "broken_exec_share": 0.5989010989010989,
+      "s0_fail_exec_share": 0.40924092409240925,
+      "dose_response_by_k": {
+        "2": {
+          "n": 119,
+          "break_rate": 0.4117647058823529
+        },
+        "3": {
+          "n": 174,
+          "break_rate": 0.5402298850574713
+        },
+        "4": {
+          "n": 70,
+          "break_rate": 0.5428571428571428
+        },
+        "5": {
+          "n": 4,
+          "break_rate": 0.0
+        }
+      },
+      "p_trend_perm": 0.1095989040109599
+    }
+  },
+  "pooled_dose_response": {
+    "by_k": {
+      "1": {
+        "n": 141,
+        "break_rate": 0.07801418439716312
+      },
+      "2": {
+        "n": 4606,
+        "break_rate": 0.16891011723838473
+      },
+      "3": {
+        "n": 2889,
+        "break_rate": 0.24783662166839737
+      },
+      "4": {
+        "n": 656,
+        "break_rate": 0.3597560975609756
+      },
+      "5": {
+        "n": 57,
+        "break_rate": 0.10526315789473684
+      },
+      "6": {
+        "n": 28,
+        "break_rate": 0.07142857142857142
+      },
+      "7": {
+        "n": 2,
+        "break_rate": 0.0
+      },
+      "8": {
+        "n": 3,
+        "break_rate": 0.0
+      }
+    },
+    "p_trend_perm": 9.99990000099999e-06
+  },
+  "pooled_failure_modes": {
+    "broken_exec": 964,
+    "broken_total": 1875,
+    "s0fail_exec": 1789,
+    "s0fail_total": 7927,
+    "broken_exec_share": 0.5141333333333333,
+    "s0_fail_exec_share": 0.22568436987511037
+  }
+}

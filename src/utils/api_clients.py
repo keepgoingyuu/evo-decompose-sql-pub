@@ -120,12 +120,12 @@ def _get_key(env_name: str) -> str:
     return _KEY_CACHE.get(env_name) or os.environ.get(env_name, "")
 
 
-def _call_ollama(prompt, cfg, seed=None):
+def _call_ollama(prompt, cfg, seed=None, temperature=0.0):
     payload = {
         "model": cfg["model"],
         "messages": [{"role": "user", "content": prompt}],
         "stream": False,
-        "options": {"temperature": 0, "num_predict": 4096},
+        "options": {"temperature": temperature, "num_predict": 4096},
     }
     if seed is not None:
         payload["options"]["seed"] = seed
@@ -133,12 +133,12 @@ def _call_ollama(prompt, cfg, seed=None):
     return r.json().get("message", {}).get("content", "")
 
 
-def _call_gemini(prompt, cfg, seed=None):
+def _call_gemini(prompt, cfg, seed=None, temperature=0.0):
     key = _get_key("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY not set in .env")
     url = cfg["url"] + "?key=" + key
-    gen_cfg = {"temperature": 0, "maxOutputTokens": 4096}
+    gen_cfg = {"temperature": temperature, "maxOutputTokens": 4096}
     if seed is not None:
         gen_cfg["seed"] = seed
     r = requests.post(url, json={
@@ -153,7 +153,7 @@ def _call_gemini(prompt, cfg, seed=None):
     return ""
 
 
-def _call_openai_compat(prompt, cfg, seed=None):
+def _call_openai_compat(prompt, cfg, seed=None, temperature=0.0):
     key = _get_key(cfg["key_env"])
     if not key:
         raise RuntimeError("%s not set in .env" % cfg["key_env"])
@@ -171,7 +171,7 @@ def _call_openai_compat(prompt, cfg, seed=None):
             payload["reasoning_effort"] = cfg["reasoning_effort"]
     else:
         payload["max_tokens"] = 4096
-        payload["temperature"] = 0.0
+        payload["temperature"] = float(temperature)
     if seed is not None:
         payload["seed"] = seed
 
@@ -187,7 +187,7 @@ def _call_openai_compat(prompt, cfg, seed=None):
     return ""
 
 
-def call_llm(prompt: str, model_name: str, retries: int = 5, seed=None) -> str:
+def call_llm(prompt: str, model_name: str, retries: int = 5, seed=None, temperature: float = 0.0) -> str:
     """Call LLM with unified interface.
 
     Args:
@@ -195,6 +195,7 @@ def call_llm(prompt: str, model_name: str, retries: int = 5, seed=None) -> str:
         model_name: key from MODEL_CONFIG
         retries: max retry on transient failures
         seed: integer seed for multi-seed reproducibility (where API supports it)
+        temperature: sampling temperature (default 0.0 = deterministic protocol)
 
     Returns:
         raw text response from the model
@@ -220,7 +221,7 @@ def call_llm(prompt: str, model_name: str, retries: int = 5, seed=None) -> str:
 
     for attempt in range(retries):
         try:
-            result = fn(prompt, cfg, seed=seed)
+            result = fn(prompt, cfg, seed=seed, temperature=temperature)
             if cfg["delay"]:
                 time.sleep(cfg["delay"])
             return result

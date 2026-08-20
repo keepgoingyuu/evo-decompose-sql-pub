@@ -88,7 +88,12 @@ print(f'GPT-4.1 BIRD S1 accuracy = {acc:.2f}%')
 | Cross-lingual slope-invariance test (per-strategy α CIs) | `scripts/a3_cross_lingual_invariance.py` | `results/analysis/n5_preview/a3_cross_lingual_invariance.json` |
 | Paired t-tests + Cohen's d_z (decomposition harm, d_z > 1.0 in all 3 languages) | `scripts/a4_statistical_rigor.py` | `results/analysis/n5_preview/a4_statistical_rigor.json` |
 | Capability–benefit fits (per-strategy α) | `scripts/a2_strategy_specific_alpha.py` | `results/analysis/n5_preview/a2_strategy_specific_alpha.json` |
-| Adaptive-selector evaluation (oracle 50.20%, gap 16.71 pp; S0→S1 fallback 9.28 pp; 11 learned selectors, 5-fold CV) | `scripts/phase3_v3_n5_selector.py`¹ | `results/analysis/n5_final/n5_selector_results.json` |
+| Adaptive-selector evaluation (oracle 48.60%, gap 16.78 pp; S0→S1 fallback 8.54 pp; 11 learned selectors, 5-fold CV; gold-sql join, all 609 queries) | `scripts/phase3_v3_n5_selector.py`¹ | `results/analysis/n5_final/n5_selector_results.json` |
+| Question-level S0-vs-S2 statistics (exact McNemar per cell, 14/15 significant after Holm; per-language sign-flip permutation p < 1e-4) | `scripts/a7_question_level_s2_stats.py` | `results/analysis/question_level_s2_stats.json` |
+| Error-propagation evidence (execution-failure share of S2-broken queries 51% vs 23% S0 baseline; dose-response in #sub-questions) | `scripts/a8_s2_error_propagation.py` | `results/analysis/s2_error_propagation.json` |
+| S2 template ablation (V1/V2/V3 × GPT-4.1 + local Qwen, 400-query Spider EN subset) | `scripts/a9_s2_template_ablation.py` | `results/ablation_2026_08/a9_*.json` |
+| Temperature-0.7 sampling variance (3 samples × S0/S2, 200-query subset) | `scripts/a10_temperature_variance.py` | `results/ablation_2026_08/a10_*.json` |
+| Embedding-based gate selectors (all-MiniLM-L6-v2; best +4.11 pp vs hand-crafted +4.04 pp) | `scripts/a11_embedding_selector.py` | `results/analysis/n5_final/embedding_selector_results.json` |
 | Per-model oracle preview (simplified alignment variant) | `scripts/a5_adaptive_selector_v21.py` | `results/analysis/n5_preview/a5_adaptive_selector.json` |
 | RL-anchor accuracy under uniform protocol | per-query files | `results/E2_arctic_r1/*.json`, summary in `results/analysis/rl_baseline_summary.json` |
 | Latency profile | `scripts/analyze_latency.py` | `results/analysis/latency_metrics.json` |

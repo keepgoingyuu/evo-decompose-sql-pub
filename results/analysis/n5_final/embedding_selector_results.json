@@ -1,0 +1,262 @@
+{
+  "experiment_id": "a11",
+  "name": "embedding_gate_selectors",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedding_dim": 384,
+  "seed": 42,
+  "anchors": {
+    "n_pooled": 3045,
+    "always_s0_correct": 969,
+    "always_s0_pct": 31.822660098522164,
+    "s0_then_s1_correct": 1229,
+    "s0_then_s1_pct": 40.36124794745484,
+    "oracle_correct": 1480,
+    "oracle_pct": 48.60426929392447,
+    "rescue_ceiling_pp": 16.7816091954023,
+    "wilson_ci_always_s0_pct": [
+      30.192009179473793,
+      33.4991186246076
+    ],
+    "wilson_ci_oracle_pct": [
+      46.83188100553688,
+      50.38017487824534
+    ]
+  },
+  "selectors": {
+    "emb_gate_lr": {
+      "name": "emb_gate_lr",
+      "paradigm": "C",
+      "fallback": "s1",
+      "n": 3045,
+      "end_to_end_correct": 1081,
+      "end_to_end_acc_pct": 35.500821018062396,
+      "rescue_pp": 3.6781609195402325,
+      "wilson_ci_pct": [
+        33.820416221096096,
+        37.217764312782734
+      ],
+      "picks": {
+        "s1": 2655,
+        "s0": 390
+      },
+      "gate_metrics": {
+        "confusion_matrix": [
+          [
+            192,
+            777
+          ],
+          [
+            198,
+            1878
+          ]
+        ],
+        "precision_s0_succeed": 0.49230769230769234,
+        "precision_s0_fail": 0.7073446327683616,
+        "recall_s0_succeed": 0.19814241486068113,
+        "recall_s0_fail": 0.9046242774566474,
+        "f1_s0_succeed": 0.282560706401766,
+        "f1_s0_fail": 0.7939124920735574,
+        "auroc": 0.6196235516821067,
+        "auprc": 0.7632536942288577
+      },
+      "feature_importance_top10": []
+    },
+    "emb_gate_gb": {
+      "name": "emb_gate_gb",
+      "paradigm": "C",
+      "fallback": "s1",
+      "n": 3045,
+      "end_to_end_correct": 1093,
+      "end_to_end_acc_pct": 35.894909688013136,
+      "rescue_pp": 4.072249589490973,
+      "wilson_ci_pct": [
+        34.209837893491745,
+        37.61552686143682
+      ],
+      "picks": {
+        "s1": 2780,
+        "s0": 265
+      },
+      "gate_metrics": {
+        "confusion_matrix": [
+          [
+            128,
+            841
+          ],
+          [
+            137,
+            1939
+          ]
+        ],
+        "precision_s0_succeed": 0.4830188679245283,
+        "precision_s0_fail": 0.6974820143884892,
+        "recall_s0_succeed": 0.13209494324045407,
+        "recall_s0_fail": 0.9340077071290944,
+        "f1_s0_succeed": 0.20745542949756887,
+        "f1_s0_fail": 0.7985996705107083,
+        "auroc": 0.5895262780094291,
+        "auprc": 0.7325131466925963
+      },
+      "feature_importance_top10": [
+        {
+          "name": "e311",
+          "imp": 0.021063595810173558
+        },
+        {
+          "name": "e120",
+          "imp": 0.020545515155746014
+        },
+        {
+          "name": "e373",
+          "imp": 0.020165023202931405
+        },
+        {
+          "name": "e056",
+          "imp": 0.019960140878358273
+        },
+        {
+          "name": "e159",
+          "imp": 0.018099912088454732
+        },
+        {
+          "name": "e247",
+          "imp": 0.017417214087393138
+        },
+        {
+          "name": "e331",
+          "imp": 0.016887124193317022
+        },
+        {
+          "name": "e011",
+          "imp": 0.015964878700731214
+        },
+        {
+          "name": "e000",
+          "imp": 0.015640086827573042
+        },
+        {
+          "name": "e070",
+          "imp": 0.014605973397199056
+        }
+      ]
+    },
+    "embhc_gate_lr": {
+      "name": "embhc_gate_lr",
+      "paradigm": "C",
+      "fallback": "s1",
+      "n": 3045,
+      "end_to_end_correct": 1087,
+      "end_to_end_acc_pct": 35.69786535303777,
+      "rescue_pp": 3.875205254515606,
+      "wilson_ci_pct": [
+        34.01511141476207,
+        37.41666122964163
+      ],
+      "picks": {
+        "s1": 2570,
+        "s0": 475
+      },
+      "gate_metrics": {
+        "confusion_matrix": [
+          [
+            235,
+            734
+          ],
+          [
+            240,
+            1836
+          ]
+        ],
+        "precision_s0_succeed": 0.49473684210526314,
+        "precision_s0_fail": 0.7143968871595331,
+        "recall_s0_succeed": 0.24251805985552116,
+        "recall_s0_fail": 0.884393063583815,
+        "f1_s0_succeed": 0.3254847645429363,
+        "f1_s0_fail": 0.7903572965992252,
+        "auroc": 0.6233866429646598,
+        "auprc": 0.7704797821712455
+      },
+      "feature_importance_top10": []
+    },
+    "embhc_gate_gb": {
+      "name": "embhc_gate_gb",
+      "paradigm": "C",
+      "fallback": "s1",
+      "n": 3045,
+      "end_to_end_correct": 1094,
+      "end_to_end_acc_pct": 35.92775041050903,
+      "rescue_pp": 4.105090311986864,
+      "wilson_ci_pct": [
+        34.24229534018374,
+        37.64866809983229
+      ],
+      "picks": {
+        "s1": 2820,
+        "s0": 225
+      },
+      "gate_metrics": {
+        "confusion_matrix": [
+          [
+            117,
+            852
+          ],
+          [
+            108,
+            1968
+          ]
+        ],
+        "precision_s0_succeed": 0.52,
+        "precision_s0_fail": 0.6978723404255319,
+        "recall_s0_succeed": 0.12074303405572756,
+        "recall_s0_fail": 0.9479768786127167,
+        "f1_s0_succeed": 0.19597989949748743,
+        "f1_s0_fail": 0.803921568627451,
+        "auroc": 0.585842723662835,
+        "auprc": 0.7263001390026393
+      },
+      "feature_importance_top10": [
+        {
+          "name": "e373",
+          "imp": 0.02257975477191195
+        },
+        {
+          "name": "e311",
+          "imp": 0.021438897189168242
+        },
+        {
+          "name": "e120",
+          "imp": 0.018966955823709674
+        },
+        {
+          "name": "e159",
+          "imp": 0.017445554982436173
+        },
+        {
+          "name": "e000",
+          "imp": 0.017295824975110903
+        },
+        {
+          "name": "e367",
+          "imp": 0.01645097967547423
+        },
+        {
+          "name": "e056",
+          "imp": 0.016391545510959657
+        },
+        {
+          "name": "e011",
+          "imp": 0.01589879768565488
+        },
+        {
+          "name": "e330",
+          "imp": 0.01521131251455611
+        },
+        {
+          "name": "e331",
+          "imp": 0.015107811284577888
+        }
+      ]
+    }
+  },
+  "timestamp": "2026-08-20T01:09:02"
+}

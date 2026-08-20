@@ -47,24 +47,28 @@ PHASE_DIR = REPO / "results/thesis_2026_02"
 # Gemma-4 v21 results location: try multiple paths since DGX (pre-reorg) and
 # Mac (post-reorg) have different layouts. First match wins.
 V21_E1_CANDIDATES = [
-    REPO / "data/results/E1_gemma_4_e4b/merged",   # Mac after reorg
+    REPO / "results/E1_gemma_4_e4b/merged",   # Mac after reorg
     REPO / "results/q1_2026_04/main",              # DGX original
 ]
 V21_E1_DIR = next((p for p in V21_E1_CANDIDATES if p.exists()), V21_E1_CANDIDATES[0])
 
 DEFAULT_OUTPUT_DIR = ANALYSIS_DIR / "n5_final"
 
-# Original 4 models: phase1 baseline + phase2 s1-s4
+# Original 3 frontier models: phase1 baseline + phase2 s1-s4.
+# NOTE (2026-08-19): Qwen2.5-Coder-7B moved to V21_NEW — the paper's main
+# results table (tab:main) reports the v21 qwen25c7b BIRD rerun (S0 33.00),
+# not the older phase1_qwen run (S0 27.59); the selector panel must use the
+# same runs as the headline table.
 ORIGINAL_4 = {
     "DeepSeek-V3":             ("deepseek", "phase1_deepseek_baseline.json"),
     "GPT-4.1":                 ("gpt41",    "phase1_gpt41_baseline.json"),
     "Gemini-3-Flash-Preview":  ("gemini",   "phase1_gemini3flash_baseline.json"),
-    "Qwen2.5-Coder-7B":        ("qwen",     "phase1_qwen_baseline.json"),
 }
 
-# v2.1 new models on BIRD
+# v2.1 models on BIRD (same runs as tab:main)
 V21_NEW = {
     "Gemma-4-E4B": "gemma4",
+    "Qwen2.5-Coder-7B": "qwen25c7b",
 }
 
 SEED = 42
@@ -94,6 +98,7 @@ def load_original_4_per_query() -> dict:
                 "difficulty": r["difficulty"],
                 "question": r["question"],
                 "evidence": r.get("evidence", ""),
+                "gold_sql": r["gold_sql"],
             }
         for s in ["s1", "s2", "s3", "s4"]:
             f2 = PHASE_DIR / f"phase2_{raw}_{s}.json"
@@ -126,50 +131,93 @@ def load_v21_e1_per_query() -> dict:
                         "db_id": r["db_id"],
                         "question": r["question"],
                         "evidence": r.get("evidence", ""),
+                        "gold_sql": r["gold_sql"],
                     }
         out[display] = per_q
     return out
 
 
-def align_by_question(orig: dict, v21: dict) -> dict:
-    """Match by question text. Returns {q_text: {models: {model: {s0..s4}}, _meta: {...}}}."""
-    orig_q_to_id = {}
+def align_by_gold_sql(orig: dict, v21: dict) -> dict:
+    """Join Track A and Track B on (db_id, whitespace-normalized gold_sql).
+
+    The question-text join used previously was a JOIN ARTIFACT: phase1 files
+    truncate `question` at 100 chars and v21 files at 120, so joining on text
+    silently dropped every query longer than 100 chars (609 -> 347). gold_sql
+    is truncated at 200 chars in both tracks, but (db_id, gold_sql) is unique
+    across the 609 mod+chal queries, so this join recovers all 609.
+
+    Full (untruncated) question/evidence text is restored from BIRD dev.json
+    via SQL-prefix match with question-prefix disambiguation (verified unique
+    609/609), so query-time features are computed on complete text.
+
+    Returns {key: {question, models: {model: {s0..s4}}, _meta: {...}}}.
+    """
+    import re
+
+    def _norm(s: str) -> str:
+        return re.sub(r"\s+", " ", s).strip()
+
+    def key_of(meta: dict) -> tuple:
+        return (meta["db_id"], _norm(meta["gold_sql"]))
+
+    orig_key_to_id = {}
     for model, q_data in orig.items():
         for qid, sd in q_data.items():
-            q_text = sd.get("_meta", {}).get("question")
-            if q_text and q_text not in orig_q_to_id:
-                orig_q_to_id[q_text] = qid
+            meta = sd.get("_meta", {})
+            if meta.get("gold_sql"):
+                orig_key_to_id.setdefault(key_of(meta), qid)
 
-    v21_q_to_idx = {}
+    v21_key_to_idx = {}
     for model, q_data in v21.items():
         for qidx, sd in q_data.items():
-            q_text = sd.get("_meta", {}).get("question")
-            if q_text and q_text not in v21_q_to_idx:
-                v21_q_to_idx[q_text] = qidx
+            meta = sd.get("_meta", {})
+            if meta.get("gold_sql"):
+                v21_key_to_idx.setdefault(key_of(meta), qidx)
 
-    common_q = set(orig_q_to_id.keys()) & set(v21_q_to_idx.keys())
-    print(f"  Original 4 unique questions: {len(orig_q_to_id)}")
-    print(f"  v2.1 unique questions:       {len(v21_q_to_idx)}")
-    print(f"  Common (intersection):       {len(common_q)}")
+    common = set(orig_key_to_id) & set(v21_key_to_idx)
+    print(f"  Original 4 unique (db_id, gold_sql) keys: {len(orig_key_to_id)}")
+    print(f"  v2.1 unique keys:                         {len(v21_key_to_idx)}")
+    print(f"  Common (intersection):                    {len(common)}")
 
+    dev_file = Path(BIRD_DIR) / "dev.json"
+    by_db = {}
+    if dev_file.exists():
+        for r in json.load(open(dev_file)):
+            by_db.setdefault(r["db_id"], []).append(r)
+    else:
+        print(f"  ⚠ {dev_file} missing — falling back to truncated question text")
+
+    restored = 0
     unified = {}
-    for q_text in common_q:
-        orig_qid = orig_q_to_id[q_text]
-        v21_qidx = v21_q_to_idx[q_text]
-        rec = {"question": q_text, "models": {}}
+    for key in common:
+        orig_qid = orig_key_to_id[key]
+        v21_qidx = v21_key_to_idx[key]
+        rec = {"models": {}}
         for model in orig:
             if orig_qid in orig[model]:
                 rec["models"][model] = {
                     s: orig[model][orig_qid].get(s) for s in ["s0", "s1", "s2", "s3", "s4"]
                 }
                 if "_meta" not in rec:
-                    rec["_meta"] = orig[model][orig_qid]["_meta"]
+                    rec["_meta"] = dict(orig[model][orig_qid]["_meta"])
         for model in v21:
             if v21_qidx in v21[model]:
                 rec["models"][model] = {
                     s: v21[model][v21_qidx].get(s) for s in ["s0", "s1", "s2", "s3", "s4"]
                 }
-        unified[q_text] = rec
+        meta = rec.get("_meta", {})
+        g = _norm(meta.get("gold_sql", ""))
+        q_prefix = _norm(meta.get("question", ""))[:90]
+        cands = [x for x in by_db.get(meta.get("db_id"), []) if _norm(x["SQL"]).startswith(g)]
+        if len(cands) > 1:
+            cands = [x for x in cands if _norm(x["question"]).startswith(q_prefix)]
+        if len(cands) == 1:
+            meta["question"] = cands[0]["question"]
+            meta["evidence"] = cands[0].get("evidence", "")
+            restored += 1
+        rec["question"] = meta.get("question", "")
+        unified[key] = rec
+    print(f"  Full question/evidence restored from dev.json: {restored}/{len(common)}")
     return unified
 
 
@@ -284,15 +332,16 @@ def build_pooled_dataset(unified: dict, models: list[str]) -> tuple[list, list]:
 
     # Filter to queries where ALL models have S0 result (anchor consistency)
     valid_q = []
-    for q_text, rec in unified.items():
+    for key, rec in unified.items():
         if all(m in rec["models"] and rec["models"][m].get("s0") is not None for m in models):
-            valid_q.append(q_text)
+            valid_q.append(key)
     print(f"  Queries with all {len(models)} models having S0: {len(valid_q)}")
 
     records = []
     per_query_meta = []
-    for q_idx, q_text in enumerate(sorted(valid_q)):
-        rec = unified[q_text]
+    for q_idx, key in enumerate(sorted(valid_q)):
+        rec = unified[key]
+        q_text = rec["question"]
         meta = rec.get("_meta", {})
         db_id = meta.get("db_id", "")
         evidence = meta.get("evidence", "")
@@ -975,8 +1024,8 @@ def main():
     v21 = load_v21_e1_per_query()
     print(f"  Loaded models: {list(v21.keys())}")
 
-    print("\n[3] Aligning by question text...")
-    unified = align_by_question(orig, v21)
+    print("\n[3] Aligning by (db_id, gold_sql)...")
+    unified = align_by_gold_sql(orig, v21)
 
     if not unified:
         print("\nERROR: no common questions found.")
@@ -999,9 +1048,9 @@ def main():
     print(f"  Oracle:        {anchors['oracle_pct']:.2f}%  (CI {anchors['wilson_ci_oracle_pct'][0]:.2f}-{anchors['wilson_ci_oracle_pct'][1]:.2f}%)")
     print(f"  Rescue ceiling: {anchors['rescue_ceiling_pp']:.2f} pp")
 
-    expected_oracle = 50.20
+    expected_oracle = 49.26  # p0_1_portfolio_oracle.json corrected_anchors_609
     if abs(anchors["oracle_pct"] - expected_oracle) > 1.0:
-        print(f"\n  ⚠ WARNING: Oracle {anchors['oracle_pct']:.2f}% differs from a5 ({expected_oracle}%) by >1pp")
+        print(f"\n  ⚠ WARNING: Oracle {anchors['oracle_pct']:.2f}% differs from p0.1 corrected ({expected_oracle}%) by >1pp")
 
     # ---- CV folds ----
     print(f"\n[7] Building {N_FOLDS}-fold StratifiedKFold (query level, stratify on majority S0)...")

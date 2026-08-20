@@ -13,6 +13,7 @@ class BasePipeline:
         self.call_count = 0
         self.steps = []
         self._seed = None  # set by external runner if needed
+        self._temperature = 0.0  # set by external runner for sampling experiments
 
     def run(self, question: str, schema: str, evidence: str = "", db_path: str = "") -> dict:
         """Run the pipeline. Returns {"pred_sql", "steps", "call_count"}."""
@@ -22,7 +23,7 @@ class BasePipeline:
         """Call LLM and track the step. seed param overrides self._seed if given."""
         self.call_count += 1
         s = seed if seed is not None else self._seed
-        raw = call_llm(prompt, self.model, seed=s)
+        raw = call_llm(prompt, self.model, seed=s, temperature=self._temperature)
         self.steps.append({"step": step_name or f"call_{self.call_count}", "raw": raw[:500]})
         return raw
 
