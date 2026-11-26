@@ -1,8 +1,8 @@
 """Cross-check `compare_results_spider` against the official Spider execution evaluator (IS revision, R3-5).
 
 The official rule is `eval_exec_match` from test-suite-sql-eval (Zhong et al., 2020), vendored
-unchanged in baselines/MAC-SQL/evaluation/exec_eval.py. For every Spider-family record of the
-rerun (full, untruncated pred_sql) this script recomputes the verdict with the official function
+unchanged in baselines/MAC-SQL/evaluation/exec_eval.py. For every executable Spider-family
+prediction of the five panel models, regenerated or kept from the original runs (full SQL), this script recomputes the verdict with the official function
 and compares it with the stored `correct_official`.
 
 Two official settings are reported:
@@ -27,7 +27,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import REPO, load_queries  # noqa: E402
+from common import PANEL, REPO, STRATEGIES, UNSCORABLE, legacy_records, load_queries  # noqa: E402
 
 EVAL_DIR = REPO / "baselines/MAC-SQL/evaluation"
 OUT = REPO / "results/rerun_2026_11"
@@ -61,21 +61,36 @@ def main() -> None:
     args = ap.parse_args()
 
     tasks, meta = [], []
-    for f in sorted(OUT.glob("*.jsonl")):
-        if f.stem.count("__") != 2:
-            continue
-        bench, model, strat = f.stem.split("__")
-        if bench not in BENCHES:
-            continue
-        for line in open(f, encoding="utf-8"):
-            r = json.loads(line)
-            if str(r.get("error") or "").startswith("gold_error"):
-                continue
-            pred = r.get("pred_sql") or ""
-            if not r.get("correct_official") and (not pred or r.get("error")):
-                continue  # not executable: wrong under every rule, nothing to cross-check
-            tasks.append((bench, r["idx"], pred, r["gold_sql"]))
-            meta.append((bench, model, strat, r["idx"], bool(r["correct_official"]), bool(r["correct"])))
+    kept = defaultdict(dict)
+    for line in open(OUT / "kept_verdicts.jsonl", encoding="utf-8"):
+        k = json.loads(line)
+        if k["bench"] in BENCHES:
+            kept[k["bench"], k["model"], k["strategy"]][k["idx"]] = k
+    for bench in BENCHES:
+        qs = load_queries(bench)
+        for model in PANEL:
+            for strat in STRATEGIES:
+                new = {}
+                f = OUT / f"{bench}__{model}__{strat}.jsonl"
+                if f.exists():
+                    new = {(r := json.loads(line))["idx"]: r for line in open(f, encoding="utf-8") if line.strip()}
+                old = legacy_records(bench, model, strat)
+                for q in qs:
+                    i = q["idx"]
+                    if i in UNSCORABLE[bench]:
+                        continue  # reference query not evaluable; failure for all systems by definition
+                    if i in new:
+                        r = new[i]
+                        pred, err, ours, strict, src = (r.get("pred_sql") or "", r.get("error"),
+                                                        bool(r["correct_official"]), bool(r["correct"]), "new")
+                    else:
+                        k = kept[bench, model, strat][i]
+                        pred, err, ours, strict, src = (old[i].get("pred_sql") or "", k["error"],
+                                                        bool(k["official"]), bool(k["strict"]), "kept")
+                    if not ours and (not pred or err):
+                        continue  # not executable: wrong under every rule, nothing to cross-check
+                    tasks.append((bench, i, pred, q["gold_sql"]))
+                    meta.append((bench, model, strat, i, ours, strict, src))
 
     print(f"checking {len(tasks)} executable Spider-family predictions", flush=True)
     with ProcessPoolExecutor(args.jobs, initializer=_init) as ex:
@@ -85,13 +100,14 @@ def main() -> None:
     for kd in (True, False):
         c = Counter()
         per = defaultdict(Counter)
-        for (bench, model, strat, idx, ours, strict), o in zip(meta, res):
+        for (bench, model, strat, idx, ours, strict, src), o in zip(meta, res):
             off = o[kd]
             if isinstance(off, str):
                 c["official_error"] += 1
                 continue
             key = "agree" if off == ours else ("ours_only" if ours else "official_only")
             c[key] += 1
+            c[f"{src}_{key}"] += 1
             per[f"{bench}|{model}|{strat}"][key] += 1
             c["official_correct"] += off
             c["ours_correct"] += ours
@@ -104,9 +120,9 @@ def main() -> None:
 
     # disagreement examples with their SQL (keep_distinct setting)
     examples = []
-    for t, (bench, model, strat, idx, ours, _), o in zip(tasks, meta, res):
+    for t, (bench, model, strat, idx, ours, _, src), o in zip(tasks, meta, res):
         if not isinstance(o[True], str) and o[True] != ours:
-            examples.append({"bench": bench, "model": model, "strategy": strat, "idx": idx, "ours": ours,
+            examples.append({"bench": bench, "model": model, "strategy": strat, "idx": idx, "ours": ours, "src": src,
                              "official": o[True], "gold_sql": t[3], "pred_sql": t[2]})
     summ["keep_distinct"]["disagreements"] = examples[:200]
     json.dump(summ, open(OUT / "spider_official_check.json", "w"), ensure_ascii=False, indent=1)

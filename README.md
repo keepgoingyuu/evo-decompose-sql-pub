@@ -94,8 +94,9 @@ the original runs (`src: "old"`), and carries both verdicts for every row.
 
 Both official rules were checked against the benchmarks' own evaluation scripts:
 `bird_official_check.json` (all 19,488 BIRD predictions, 100% agreement) and
-`spider_official_check.json` (36,230 executable regenerated predictions, 100% agreement with
-`DISTINCT` kept; 96.7% in the script's default mode, which strips `DISTINCT`).
+`spider_official_check.json` (all 74,627 executable Spider-family predictions of the panel,
+regenerated and kept, 100% agreement with `DISTINCT` kept; 97.5% in the script's default mode,
+which strips `DISTINCT`).
 
 **One scoring environment.** The verdicts stored at generation time had been computed on two
 machines with different SQLite versions, which changed the outcome for a few queries

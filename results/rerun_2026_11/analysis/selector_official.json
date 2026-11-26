@@ -1,5 +1,40 @@
 {
  "rule": "official",
+ "bird_matched_cost": {
+  "gate_calls": 1.21,
+  "k_post": 324,
+  "k_pre": 639,
+  "selectors": {
+   "matched_xgate_rf": {
+    "acc": 44.11,
+    "to_s1": 324,
+    "delta": 0.99,
+    "calls": 1.21,
+    "info": "post-exec"
+   },
+   "matched_xgate_gb": {
+    "acc": 44.27,
+    "to_s1": 324,
+    "delta": 1.15,
+    "calls": 1.21,
+    "info": "post-exec"
+   },
+   "matched_gate_rf": {
+    "acc": 43.19,
+    "to_s1": 639,
+    "delta": 0.07,
+    "calls": 1.21,
+    "info": "pre"
+   },
+   "matched_gate_gb": {
+    "acc": 43.35,
+    "to_s1": 639,
+    "delta": 0.23,
+    "calls": 1.21,
+    "info": "pre"
+   }
+  }
+ },
  "bird": {
   "refs": {
    "n": 3045,

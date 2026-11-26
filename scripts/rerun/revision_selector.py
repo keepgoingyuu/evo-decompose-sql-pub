@@ -112,6 +112,26 @@ def gate_fit_apply(train: list, test: list, clf) -> dict:
             "auroc": float(roc_auc_score(yt, proba)) if len(set(yt)) > 1 else float("nan")}
 
 
+
+def budget_gate(records: list, folds: list, clf, k: int) -> dict:
+    """Matched-cost gate: out-of-fold P(S0 wrong) from `clf`; the k queries with the highest
+    probability go to S1, all others keep S0. k is chosen by the caller so that the mean call
+    count equals that of the execution gate."""
+    names = sorted(records[0]["features"])
+    X = np.array([[r["features"][f] for f in names] for r in records])
+    y = np.array([int(not r["s0_correct"]) for r in records])
+    proba = np.zeros(len(records))
+    for train_q, test_q in folds:
+        tr, te = p3.split_records_by_q_set(records, train_q, test_q)
+        c = type(clf)(**clf.get_params())
+        c.fit(X[tr], y[tr])
+        proba[te] = c.predict_proba(X[te])[:, list(c.classes_).index(1)]
+    order = np.argsort(-proba, kind="stable")
+    to_s1 = set(order[:k].tolist())
+    hit = sum(r["correct"]["s1" if i in to_s1 else "s0"] for i, r in enumerate(records))
+    return {"acc": round(100 * hit / len(records), 2), "to_s1": k}
+
+
 def main() -> None:
     from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
     from sklearn.linear_model import LogisticRegression
@@ -176,6 +196,21 @@ def main() -> None:
         res = p3.train_binary_gate(with_features(records, fn), folds, nm, clf, fallback="s1")
         to_s1 = res["picks"].get("s1", 0) / res["n"]
         add(nm, res, "post-exec", round(1 + 2 * to_s1, 2))
+    # matched cost: every selector held to the execution gate's mean call count
+    n_q = len(records)
+    k_post = sum(r["s0_exec_error"] for r in records)          # gate: 1 + 2 calls on these, 1 elsewhere
+    gate_calls = round(1 + 2 * k_post / n_q, 2)
+    k_pre = round((gate_calls - 1) * n_q)                       # pre-generation: S1 costs 2 calls, S0 one
+    matched = {}
+    for nm, fn, clf, k, info in [("matched_xgate_rf", hc_x, gates["rf"], k_post, "post-exec"),
+                                 ("matched_xgate_gb", hc_x, gb(), k_post, "post-exec"),
+                                 ("matched_gate_rf", lambda r: r["features"], gates["rf"], k_pre, "pre"),
+                                 ("matched_gate_gb", lambda r: r["features"], gb(), k_pre, "pre")]:
+        res = budget_gate(with_features(records, fn), folds, clf, k)
+        calls = gate_calls if info == "post-exec" else round(1 + k / n_q, 2)
+        matched[nm] = {**res, "delta": round(res["acc"] - base, 2), "calls": calls, "info": info}
+    out["bird_matched_cost"] = {"gate_calls": gate_calls, "k_post": k_post, "k_pre": k_pre, "selectors": matched}
+    print(f"  matched cost ({gate_calls} calls/query):", {k: (v["acc"], v["delta"]) for k, v in matched.items()})
     out["bird"] = {"refs": R, "rescue_ceiling": round(ceil, 2), "selectors": rows,
                    "per_model": {m: refs([r for r in records if r["model"] == m], s2c) for m in PANEL}}
 
