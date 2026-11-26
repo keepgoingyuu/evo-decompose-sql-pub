@@ -1,0 +1,96 @@
+{
+ "n": 609,
+ "exec_errors": 1,
+ "strict": {
+  "macsql": 47.95,
+  "vs": {
+   "s0": {
+    "gpt41": 38.75,
+    "gain": 9.2,
+    "mac_only": 87,
+    "single_only": 31,
+    "p": 2.482077505301118e-07
+   },
+   "s1": {
+    "gpt41": 40.39,
+    "gain": 7.55,
+    "mac_only": 81,
+    "single_only": 35,
+    "p": 2.3322382895728305e-05
+   },
+   "s2": {
+    "gpt41": 39.74,
+    "gain": 8.21,
+    "mac_only": 77,
+    "single_only": 27,
+    "p": 9.701730804528467e-07
+   },
+   "s3": {
+    "gpt41": 39.57,
+    "gain": 8.37,
+    "mac_only": 92,
+    "single_only": 41,
+    "p": 1.1515889454893262e-05
+   },
+   "s4": {
+    "gpt41": 39.9,
+    "gain": 8.05,
+    "mac_only": 86,
+    "single_only": 37,
+    "p": 1.1699599803798203e-05
+   }
+  }
+ },
+ "official": {
+  "macsql": 53.53,
+  "vs": {
+   "s0": {
+    "gpt41": 42.69,
+    "gain": 10.84,
+    "mac_only": 93,
+    "single_only": 27,
+    "p": 1.1130505022660528e-09
+   },
+   "s1": {
+    "gpt41": 44.33,
+    "gain": 9.2,
+    "mac_only": 85,
+    "single_only": 29,
+    "p": 1.467569126688569e-07
+   },
+   "s2": {
+    "gpt41": 43.35,
+    "gain": 10.18,
+    "mac_only": 84,
+    "single_only": 22,
+    "p": 1.0168289347541836e-09
+   },
+   "s3": {
+    "gpt41": 45.32,
+    "gain": 8.21,
+    "mac_only": 84,
+    "single_only": 34,
+    "p": 4.7244705700173904e-06
+   },
+   "s4": {
+    "gpt41": 44.01,
+    "gain": 9.52,
+    "mac_only": 88,
+    "single_only": 30,
+    "p": 8.553538707156113e-08
+   }
+  }
+ },
+ "cost": {
+  "calls_per_query": 2.03,
+  "calls_by_agent": {
+   "Selector": 519,
+   "Decomposer": 609,
+   "Refiner": 111
+  },
+  "prompt_tok_per_query": 5372,
+  "response_tok_per_query": 438,
+  "gpt41_s0_prompt_tok_per_query_regenerated": 943,
+  "gpt41_s0_n_regenerated": 607
+ }
+}

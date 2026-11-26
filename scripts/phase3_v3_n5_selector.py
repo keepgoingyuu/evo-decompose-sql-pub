@@ -41,13 +41,13 @@ from src.utils.schema_utils import DB_DIR, BIRD_DIR  # noqa: E402
 # ============================================================
 # Paths
 # ============================================================
-ANALYSIS_DIR = REPO / "results/analysis"
+ANALYSIS_DIR = REPO / "data/results/analysis"
 PHASE_DIR = REPO / "results/thesis_2026_02"
 
 # Gemma-4 v21 results location: try multiple paths since DGX (pre-reorg) and
 # Mac (post-reorg) have different layouts. First match wins.
 V21_E1_CANDIDATES = [
-    REPO / "results/E1_gemma_4_e4b/merged",   # Mac after reorg
+    REPO / "data/results/E1_gemma_4_e4b/merged",   # Mac after reorg
     REPO / "results/q1_2026_04/main",              # DGX original
 ]
 V21_E1_DIR = next((p for p in V21_E1_CANDIDATES if p.exists()), V21_E1_CANDIDATES[0])

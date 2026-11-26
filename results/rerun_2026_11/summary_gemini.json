@@ -1,0 +1,102 @@
+{
+ "bird|s0": {
+  "old": 33.0,
+  "strict": 53.37,
+  "official": 57.96
+ },
+ "bird|s1": {
+  "old": 52.87,
+  "strict": 52.22,
+  "official": 57.8
+ },
+ "bird|s2": {
+  "old": 49.26,
+  "strict": 48.77,
+  "official": 54.52
+ },
+ "bird|s3": {
+  "old": 42.69,
+  "strict": 45.65,
+  "official": 51.07
+ },
+ "bird|s4": {
+  "old": 47.13,
+  "strict": 49.92,
+  "official": 55.83
+ },
+ "en|s0": {
+  "old": 79.98,
+  "strict": 79.88,
+  "official": 85.88
+ },
+ "en|s1": {
+  "old": 79.5,
+  "strict": 79.59,
+  "official": 85.98
+ },
+ "en|s2": {
+  "old": 77.56,
+  "strict": 77.85,
+  "official": 83.85
+ },
+ "en|s3": {
+  "old": 76.69,
+  "strict": 77.37,
+  "official": 83.56
+ },
+ "en|s4": {
+  "old": 80.17,
+  "strict": 80.17,
+  "official": 86.36
+ },
+ "zh-tw|s0": {
+  "old": 63.83,
+  "strict": 69.25,
+  "official": 74.18
+ },
+ "zh-tw|s1": {
+  "old": 68.57,
+  "strict": 68.86,
+  "official": 73.98
+ },
+ "zh-tw|s2": {
+  "old": 65.47,
+  "strict": 65.57,
+  "official": 70.89
+ },
+ "zh-tw|s3": {
+  "old": 66.25,
+  "strict": 65.57,
+  "official": 71.18
+ },
+ "zh-tw|s4": {
+  "old": 68.76,
+  "strict": 68.57,
+  "official": 73.98
+ },
+ "ja|s0": {
+  "old": 68.86,
+  "strict": 69.15,
+  "official": 75.82
+ },
+ "ja|s1": {
+  "old": 68.76,
+  "strict": 68.86,
+  "official": 75.73
+ },
+ "ja|s2": {
+  "old": 57.74,
+  "strict": 65.57,
+  "official": 72.15
+ },
+ "ja|s3": {
+  "old": 66.54,
+  "strict": 66.34,
+  "official": 73.6
+ },
+ "ja|s4": {
+  "old": 67.41,
+  "strict": 67.41,
+  "official": 74.18
+ }
+}

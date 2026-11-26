@@ -60,6 +60,17 @@ MODEL_CONFIG = {
         "key_env": "OPENAI_API_KEY",
         "reasoning_effort": "minimal",  # avoid huge thinking traces, save $
     },
+    "gpt54mini": {
+        # GPT-5.4 mini (2026-03): upper capability anchor added 2026-09 to test
+        # whether the capability-benefit relation holds across a model generation.
+        # Verified 2026-09-01 to emit SQL with reasoning_tokens=0 under this config,
+        # so its output behaviour matches the non-reasoning panel models.
+        "url": "https://api.openai.com/v1/chat/completions",
+        "model": "gpt-5.4-mini",
+        "timeout": 120, "delay": 0.2, "type": "openai_compat",
+        "key_env": "OPENAI_API_KEY",
+        "reasoning_effort": "none",  # this model rejects 'minimal'; 'none' keeps reasoning_tokens at 0
+    },
     "gemini3f": {
         # Gemini 3 Flash Preview (alias of 'gemini', explicit name for paper)
         "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent",
@@ -102,12 +113,23 @@ COST_PER_M = {
     "gpt41": (2.00, 8.00),
     # Q1-path
     "gpt5mini": (0.25, 2.00),    # GPT-5 mini: $0.25/M in, $2/M out (note: reasoning tokens billed as output)
+    "gpt54mini": (0.25, 2.00),   # assumed same tier as gpt-5-mini; NOT verified against official pricing 2026-09
     "gemini3f": (0.50, 3.00),
     "deepseekv32": (0.27, 1.10),
     "qwen25c7b": (0, 0),
     "gemma4": (0, 0),
     "arctic": (0, 0),
 }
+
+# Metadata of the most recent call in this thread (finish reason, token usage).
+# Read by BasePipeline right after each call so truncated outputs can be detected.
+import threading
+_LAST = threading.local()
+
+
+def last_call_meta() -> dict:
+    return dict(getattr(_LAST, "meta", {}) or {})
+
 
 _KEY_CACHE = {
     "DEEPSEEK_API_KEY": DEEPSEEK_KEY,
@@ -125,12 +147,18 @@ def _call_ollama(prompt, cfg, seed=None, temperature=0.0):
         "model": cfg["model"],
         "messages": [{"role": "user", "content": prompt}],
         "stream": False,
-        "options": {"temperature": temperature, "num_predict": 4096},
+        # num_ctx was never set before 2026-11, i.e. the server default (4096 in the
+        # Ollama builds used) applied; it is now explicit so the value is recorded.
+        "options": {"temperature": temperature, "num_predict": 4096,
+                    "num_ctx": int(os.environ.get("OLLAMA_NUM_CTX", "4096"))},
     }
     if seed is not None:
         payload["options"]["seed"] = seed
     r = requests.post(cfg["url"], json=payload, timeout=cfg["timeout"])
-    return r.json().get("message", {}).get("content", "")
+    data = r.json()
+    _LAST.meta = {"finish": data.get("done_reason"), "in_tok": data.get("prompt_eval_count"),
+                  "out_tok": data.get("eval_count"), "num_ctx": payload["options"]["num_ctx"]}
+    return data.get("message", {}).get("content", "")
 
 
 def _call_gemini(prompt, cfg, seed=None, temperature=0.0):
@@ -138,7 +166,9 @@ def _call_gemini(prompt, cfg, seed=None, temperature=0.0):
     if not key:
         raise RuntimeError("GEMINI_API_KEY not set in .env")
     url = cfg["url"] + "?key=" + key
-    gen_cfg = {"temperature": temperature, "maxOutputTokens": 4096}
+    # Gemini 3 Flash thinks before answering and the thinking shares this budget; at 4096 about
+    # 4% of BIRD answers were cut off mid-query (IS revision, 2026-11). Overridable per run.
+    gen_cfg = {"temperature": temperature, "maxOutputTokens": int(os.environ.get("GEMINI_MAX_OUTPUT", "4096"))}
     if seed is not None:
         gen_cfg["seed"] = seed
     r = requests.post(url, json={
@@ -147,7 +177,12 @@ def _call_gemini(prompt, cfg, seed=None, temperature=0.0):
     }, timeout=cfg["timeout"])
     data = r.json()
     if "candidates" in data:
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+        cand = data["candidates"][0]
+        um = data.get("usageMetadata", {})
+        _LAST.meta = {"finish": cand.get("finishReason"), "in_tok": um.get("promptTokenCount"),
+                      "out_tok": um.get("candidatesTokenCount"), "think_tok": um.get("thoughtsTokenCount"),
+                      "model_version": data.get("modelVersion"), "max_output": gen_cfg["maxOutputTokens"]}
+        return cand["content"]["parts"][0]["text"]
     if "error" in data:
         raise RuntimeError(data["error"].get("message", str(data["error"])))
     return ""
@@ -178,6 +213,10 @@ def _call_openai_compat(prompt, cfg, seed=None, temperature=0.0):
     r = requests.post(cfg["url"], headers=headers, json=payload, timeout=cfg["timeout"])
     data = r.json()
     if "choices" in data:
+        u = data.get("usage", {}) or {}
+        _LAST.meta = {"finish": data["choices"][0].get("finish_reason"), "in_tok": u.get("prompt_tokens"),
+                      "out_tok": u.get("completion_tokens"), "model_version": data.get("model"),
+                      "fingerprint": data.get("system_fingerprint")}
         return data["choices"][0]["message"]["content"]
     if "error" in data:
         err = data["error"]
@@ -219,9 +258,21 @@ def call_llm(prompt: str, model_name: str, retries: int = 5, seed=None, temperat
     }
     fn = dispatch[cfg["type"]]
 
+    # Paid APIs: reuse any response already paid for (see _cache_get). Local models are free.
+    ckey = None
+    if cfg["type"] != "ollama" and os.environ.get("LLM_CACHE", "1") != "0":
+        ckey = _cache_key(cfg, prompt, seed, temperature)
+        hit = _cache_get(ckey)
+        if hit is not None:
+            _LAST.meta = dict(hit["meta"], cached=True)
+            return hit["text"]
+
     for attempt in range(retries):
         try:
+            _LAST.meta = {}
             result = fn(prompt, cfg, seed=seed, temperature=temperature)
+            if ckey and _LAST.meta:  # meta is set only when the API returned a real answer
+                _cache_put(ckey, result, _LAST.meta)
             if cfg["delay"]:
                 time.sleep(cfg["delay"])
             return result
@@ -230,11 +281,67 @@ def call_llm(prompt: str, model_name: str, retries: int = 5, seed=None, temperat
             time.sleep(wait)
             continue
         except Exception as e:
+            # Billing stops (spend cap, empty prepay balance) do not clear by retrying.
+            if any(s in str(e).lower() for s in _BILLING_STOP):
+                return "ERROR: " + str(e)
             if attempt < retries - 1:
                 time.sleep(5)
                 continue
             return "ERROR: " + str(e)
     return "ERROR: max retries"
+
+
+# ---- paid-response cache (added 2026-11-25) --------------------------------------------------
+# A multi-call strategy (S2-S4) whose last call failed used to be rerun from its first call,
+# paying again for calls that had already succeeded. Every successful paid response is now kept
+# in a local SQLite store keyed by everything that determines the request; a rerun of the same
+# request returns the stored answer (marked cached=True in the call metadata) instead of paying
+# twice. Store: $LLM_CACHE_DB (default results/llm_cache.sqlite, not committed). LLM_CACHE=0 disables.
+_BILLING_STOP = ("spending cap", "spend cap", "prepay", "credit balance", "billing", "insufficient_quota",
+                 "insufficient balance", "exceeded your current quota")
+_CACHE_LOCK = threading.Lock()
+
+
+def _cache_key(cfg, prompt, seed, temperature) -> str:
+    import hashlib
+    import json as _json
+    budget = os.environ.get("GEMINI_MAX_OUTPUT", "4096") if cfg["type"] == "gemini" else ""
+    raw = _json.dumps([cfg["model"], cfg.get("reasoning_effort"), seed, float(temperature), budget, prompt],
+                      ensure_ascii=False)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _cache_conn():
+    import sqlite3
+    path = os.environ.get("LLM_CACHE_DB") or os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "results", "llm_cache.sqlite")
+    con = sqlite3.connect(path, timeout=60)
+    con.execute("PRAGMA journal_mode=WAL")
+    con.execute("CREATE TABLE IF NOT EXISTS resp (k TEXT PRIMARY KEY, text TEXT, meta TEXT, ts TEXT)")
+    return con
+
+
+def _cache_get(k):
+    import json as _json
+    with _CACHE_LOCK:
+        con = _cache_conn()
+        try:
+            row = con.execute("SELECT text, meta FROM resp WHERE k=?", (k,)).fetchone()
+        finally:
+            con.close()
+    return {"text": row[0], "meta": _json.loads(row[1])} if row else None
+
+
+def _cache_put(k, text, meta):
+    import json as _json
+    with _CACHE_LOCK:
+        con = _cache_conn()
+        try:
+            con.execute("INSERT OR REPLACE INTO resp VALUES (?,?,?,datetime('now'))",
+                        (k, text, _json.dumps(meta, ensure_ascii=False)))
+            con.commit()
+        finally:
+            con.close()
 
 
 def estimate_cost(model_name: str, input_tokens: int = 500, output_tokens: int = 100) -> float:

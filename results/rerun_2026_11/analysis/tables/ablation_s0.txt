@@ -1,0 +1,7 @@
+GPT-4.1 en: S0 strict 70.00, official 76.50
+DeepSeek-V4.1-Flash en: S0 strict 76.25, official 83.75
+DeepSeek-V4.1-Flash zh-tw: S0 strict 65.25, official 72.50
+DeepSeek-V4.1-Flash ja: S0 strict 65.75, official 73.50
+Qwen2.5-Coder-7B en: S0 strict 72.75, official 77.25
+Qwen2.5-Coder-7B zh-tw: S0 strict 68.00, official 71.25
+Qwen2.5-Coder-7B ja: S0 strict 58.75, official 62.75

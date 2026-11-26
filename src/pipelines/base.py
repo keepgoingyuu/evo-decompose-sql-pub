@@ -1,5 +1,7 @@
 """Base pipeline class for all multi-step strategies."""
-from src.utils.api_clients import call_llm
+import hashlib
+
+from src.utils.api_clients import call_llm, last_call_meta
 from src.utils.sql_utils import clean_sql
 
 
@@ -24,7 +26,13 @@ class BasePipeline:
         self.call_count += 1
         s = seed if seed is not None else self._seed
         raw = call_llm(prompt, self.model, seed=s, temperature=self._temperature)
-        self.steps.append({"step": step_name or f"call_{self.call_count}", "raw": raw[:500]})
+        # Full raw response is kept (it was cut to 500 chars and never saved before 2026-11);
+        # the prompt is identified by hash and length, since schema + template reproduce it.
+        self.steps.append({
+            "step": step_name or f"call_{self.call_count}", "raw": raw,
+            "prompt_sha1": hashlib.sha1(prompt.encode("utf-8")).hexdigest(), "prompt_chars": len(prompt),
+            **last_call_meta(),
+        })
         return raw
 
     def _reset(self):

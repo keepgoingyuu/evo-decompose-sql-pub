@@ -1,0 +1,1052 @@
+{
+ "deepseek|en|s1|strict": {
+  "n": 400,
+  "s0": 76.25,
+  "variants": {
+   "v1": {
+    "acc": 75.0,
+    "drop": 1.25,
+    "broken": 9,
+    "rescued": 4,
+    "p": 0.266845703125,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 75.5,
+    "drop": 0.75,
+    "broken": 8,
+    "rescued": 5,
+    "p": 0.5810546875,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 76.5,
+    "drop": -0.25,
+    "broken": 7,
+    "rescued": 8,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "deepseek|en|s1|official": {
+  "n": 400,
+  "s0": 83.75,
+  "variants": {
+   "v1": {
+    "acc": 82.75,
+    "drop": 1.0,
+    "broken": 8,
+    "rescued": 4,
+    "p": 0.3876953125,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 83.25,
+    "drop": 0.5,
+    "broken": 7,
+    "rescued": 5,
+    "p": 0.7744140625,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 84.0,
+    "drop": -0.25,
+    "broken": 6,
+    "rescued": 7,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "deepseek|en|s2|strict": {
+  "n": 400,
+  "s0": 76.25,
+  "variants": {
+   "v1": {
+    "acc": 72.25,
+    "drop": 4.0,
+    "broken": 23,
+    "rescued": 7,
+    "p": 0.005222879350185394,
+    "calls": 3.92,
+    "no_decomposition": [
+     19.0,
+     400
+    ]
+   },
+   "v2": {
+    "acc": 73.0,
+    "drop": 3.25,
+    "broken": 19,
+    "rescued": 6,
+    "p": 0.01463329792022705,
+    "calls": 3.69,
+    "no_decomposition": [
+     25.2,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 73.75,
+    "drop": 2.5,
+    "broken": 16,
+    "rescued": 6,
+    "p": 0.052478790283203125,
+    "calls": 4.08,
+    "no_decomposition": [
+     16.8,
+     400
+    ]
+   }
+  }
+ },
+ "deepseek|en|s2|official": {
+  "n": 400,
+  "s0": 83.75,
+  "variants": {
+   "v1": {
+    "acc": 80.5,
+    "drop": 3.25,
+    "broken": 17,
+    "rescued": 4,
+    "p": 0.007197380065917969,
+    "calls": 3.92,
+    "no_decomposition": [
+     19.0,
+     400
+    ]
+   },
+   "v2": {
+    "acc": 81.5,
+    "drop": 2.25,
+    "broken": 14,
+    "rescued": 5,
+    "p": 0.063568115234375,
+    "calls": 3.69,
+    "no_decomposition": [
+     25.2,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 81.75,
+    "drop": 2.0,
+    "broken": 14,
+    "rescued": 6,
+    "p": 0.11531829833984375,
+    "calls": 4.08,
+    "no_decomposition": [
+     16.8,
+     400
+    ]
+   }
+  }
+ },
+ "deepseek|ja|s1|strict": {
+  "n": 400,
+  "s0": 65.75,
+  "variants": {
+   "v1": {
+    "acc": 65.5,
+    "drop": 0.25,
+    "broken": 10,
+    "rescued": 9,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 65.75,
+    "drop": 0.0,
+    "broken": 14,
+    "rescued": 14,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 67.5,
+    "drop": -1.75,
+    "broken": 9,
+    "rescued": 16,
+    "p": 0.2295229434967041,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "deepseek|ja|s1|official": {
+  "n": 400,
+  "s0": 73.5,
+  "variants": {
+   "v1": {
+    "acc": 73.75,
+    "drop": -0.25,
+    "broken": 10,
+    "rescued": 11,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 74.0,
+    "drop": -0.5,
+    "broken": 14,
+    "rescued": 16,
+    "p": 0.855535551905632,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 75.25,
+    "drop": -1.75,
+    "broken": 9,
+    "rescued": 16,
+    "p": 0.2295229434967041,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "deepseek|ja|s2|strict": {
+  "n": 400,
+  "s0": 65.75,
+  "variants": {
+   "v1": {
+    "acc": 62.5,
+    "drop": 3.25,
+    "broken": 27,
+    "rescued": 14,
+    "p": 0.05958388801809633,
+    "calls": 3.98,
+    "no_decomposition": [
+     14.8,
+     400
+    ]
+   },
+   "v2": {
+    "acc": 61.25,
+    "drop": 4.5,
+    "broken": 29,
+    "rescued": 11,
+    "p": 0.006426576095691416,
+    "calls": 3.87,
+    "no_decomposition": [
+     19.0,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 65.25,
+    "drop": 0.5,
+    "broken": 14,
+    "rescued": 12,
+    "p": 0.8450189828872681,
+    "calls": 4.12,
+    "no_decomposition": [
+     13.8,
+     400
+    ]
+   }
+  }
+ },
+ "deepseek|ja|s2|official": {
+  "n": 400,
+  "s0": 73.5,
+  "variants": {
+   "v1": {
+    "acc": 70.25,
+    "drop": 3.25,
+    "broken": 28,
+    "rescued": 15,
+    "p": 0.0659940344557981,
+    "calls": 3.98,
+    "no_decomposition": [
+     14.8,
+     400
+    ]
+   },
+   "v2": {
+    "acc": 69.0,
+    "drop": 4.5,
+    "broken": 30,
+    "rescued": 12,
+    "p": 0.007915897334896727,
+    "calls": 3.87,
+    "no_decomposition": [
+     19.0,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 73.75,
+    "drop": -0.25,
+    "broken": 14,
+    "rescued": 15,
+    "p": 1.0,
+    "calls": 4.12,
+    "no_decomposition": [
+     13.8,
+     400
+    ]
+   }
+  }
+ },
+ "deepseek|zh-tw|s1|strict": {
+  "n": 400,
+  "s0": 65.25,
+  "variants": {
+   "v1": {
+    "acc": 67.0,
+    "drop": -1.75,
+    "broken": 8,
+    "rescued": 15,
+    "p": 0.21003961563110352,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 65.0,
+    "drop": 0.25,
+    "broken": 15,
+    "rescued": 14,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 66.75,
+    "drop": -1.5,
+    "broken": 9,
+    "rescued": 15,
+    "p": 0.30745625495910645,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "deepseek|zh-tw|s1|official": {
+  "n": 400,
+  "s0": 72.5,
+  "variants": {
+   "v1": {
+    "acc": 73.5,
+    "drop": -1.0,
+    "broken": 11,
+    "rescued": 15,
+    "p": 0.557197093963623,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 71.5,
+    "drop": 1.0,
+    "broken": 16,
+    "rescued": 12,
+    "p": 0.5715881884098053,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 73.25,
+    "drop": -0.75,
+    "broken": 11,
+    "rescued": 14,
+    "p": 0.6900379657745361,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "deepseek|zh-tw|s2|strict": {
+  "n": 400,
+  "s0": 65.25,
+  "variants": {
+   "v1": {
+    "acc": 63.0,
+    "drop": 2.25,
+    "broken": 22,
+    "rescued": 13,
+    "p": 0.17546524899080396,
+    "calls": 3.9,
+    "no_decomposition": [
+     20.2,
+     400
+    ]
+   },
+   "v2": {
+    "acc": 63.0,
+    "drop": 2.25,
+    "broken": 21,
+    "rescued": 12,
+    "p": 0.16275565745308995,
+    "calls": 3.77,
+    "no_decomposition": [
+     22.8,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 64.5,
+    "drop": 0.75,
+    "broken": 18,
+    "rescued": 15,
+    "p": 0.7283324808813632,
+    "calls": 4.16,
+    "no_decomposition": [
+     13.8,
+     400
+    ]
+   }
+  }
+ },
+ "deepseek|zh-tw|s2|official": {
+  "n": 400,
+  "s0": 72.5,
+  "variants": {
+   "v1": {
+    "acc": 70.25,
+    "drop": 2.25,
+    "broken": 22,
+    "rescued": 13,
+    "p": 0.17546524899080396,
+    "calls": 3.9,
+    "no_decomposition": [
+     20.2,
+     400
+    ]
+   },
+   "v2": {
+    "acc": 69.5,
+    "drop": 3.0,
+    "broken": 21,
+    "rescued": 9,
+    "p": 0.04277394525706768,
+    "calls": 3.77,
+    "no_decomposition": [
+     22.8,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 71.75,
+    "drop": 0.75,
+    "broken": 17,
+    "rescued": 14,
+    "p": 0.720100131817162,
+    "calls": 4.16,
+    "no_decomposition": [
+     13.8,
+     400
+    ]
+   }
+  }
+ },
+ "gpt41|en|s1|strict": {
+  "n": 400,
+  "s0": 70.0,
+  "variants": {
+   "v1": {
+    "acc": 69.0,
+    "drop": 1.0,
+    "broken": 8,
+    "rescued": 4,
+    "p": 0.3876953125,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 72.5,
+    "drop": -2.5,
+    "broken": 6,
+    "rescued": 16,
+    "p": 0.052478790283203125,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 69.5,
+    "drop": 0.5,
+    "broken": 7,
+    "rescued": 5,
+    "p": 0.7744140625,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "gpt41|en|s1|official": {
+  "n": 400,
+  "s0": 76.5,
+  "variants": {
+   "v1": {
+    "acc": 76.0,
+    "drop": 0.5,
+    "broken": 8,
+    "rescued": 6,
+    "p": 0.79052734375,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 80.25,
+    "drop": -3.75,
+    "broken": 3,
+    "rescued": 18,
+    "p": 0.0014896392822265625,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 77.0,
+    "drop": -0.5,
+    "broken": 6,
+    "rescued": 8,
+    "p": 0.79052734375,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "gpt41|en|s2|strict": {
+  "n": 400,
+  "s0": 70.0,
+  "variants": {
+   "v1": {
+    "acc": 65.75,
+    "drop": 4.25,
+    "broken": 21,
+    "rescued": 4,
+    "p": 0.0009105205535888672,
+    "calls": 3.82,
+    "no_decomposition": [
+     1.1,
+     89
+    ]
+   },
+   "v2": {
+    "acc": 70.0,
+    "drop": 0.0,
+    "broken": 6,
+    "rescued": 6,
+    "p": 1.0,
+    "calls": 2.87,
+    "no_decomposition": [
+     58.5,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 70.5,
+    "drop": -0.5,
+    "broken": 8,
+    "rescued": 10,
+    "p": 0.8145294189453125,
+    "calls": 3.22,
+    "no_decomposition": [
+     48.2,
+     400
+    ]
+   }
+  }
+ },
+ "gpt41|en|s2|official": {
+  "n": 400,
+  "s0": 76.5,
+  "variants": {
+   "v1": {
+    "acc": 73.5,
+    "drop": 3.0,
+    "broken": 18,
+    "rescued": 6,
+    "p": 0.022655844688415527,
+    "calls": 3.82,
+    "no_decomposition": [
+     1.1,
+     89
+    ]
+   },
+   "v2": {
+    "acc": 76.5,
+    "drop": 0.0,
+    "broken": 7,
+    "rescued": 7,
+    "p": 1.0,
+    "calls": 2.87,
+    "no_decomposition": [
+     58.5,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 77.25,
+    "drop": -0.75,
+    "broken": 9,
+    "rescued": 12,
+    "p": 0.6636238098144531,
+    "calls": 3.22,
+    "no_decomposition": [
+     48.2,
+     400
+    ]
+   }
+  }
+ },
+ "qwen25c7b|en|s1|strict": {
+  "n": 400,
+  "s0": 72.75,
+  "variants": {
+   "v1": {
+    "acc": 75.75,
+    "drop": -3.0,
+    "broken": 5,
+    "rescued": 17,
+    "p": 0.01690053939819336,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 72.75,
+    "drop": 0.0,
+    "broken": 23,
+    "rescued": 23,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 75.0,
+    "drop": -2.25,
+    "broken": 14,
+    "rescued": 23,
+    "p": 0.18774155899882317,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "qwen25c7b|en|s1|official": {
+  "n": 400,
+  "s0": 77.25,
+  "variants": {
+   "v1": {
+    "acc": 80.0,
+    "drop": -2.75,
+    "broken": 7,
+    "rescued": 18,
+    "p": 0.043285250663757324,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 76.75,
+    "drop": 0.5,
+    "broken": 26,
+    "rescued": 24,
+    "p": 0.887724827340783,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 79.5,
+    "drop": -2.25,
+    "broken": 14,
+    "rescued": 23,
+    "p": 0.18774155899882317,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "qwen25c7b|en|s2|strict": {
+  "n": 400,
+  "s0": 72.75,
+  "variants": {
+   "v1": {
+    "acc": 70.25,
+    "drop": 2.5,
+    "broken": 24,
+    "rescued": 14,
+    "p": 0.14330665429588407,
+    "calls": 4.24,
+    "no_decomposition": [
+     0.0,
+     52
+    ]
+   },
+   "v2": {
+    "acc": 71.0,
+    "drop": 1.75,
+    "broken": 20,
+    "rescued": 13,
+    "p": 0.296206368599087,
+    "calls": 4.09,
+    "no_decomposition": [
+     20.2,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 69.75,
+    "drop": 3.0,
+    "broken": 24,
+    "rescued": 12,
+    "p": 0.06524533522315323,
+    "calls": 3.58,
+    "no_decomposition": [
+     32.0,
+     400
+    ]
+   }
+  }
+ },
+ "qwen25c7b|en|s2|official": {
+  "n": 400,
+  "s0": 77.25,
+  "variants": {
+   "v1": {
+    "acc": 74.0,
+    "drop": 3.25,
+    "broken": 26,
+    "rescued": 13,
+    "p": 0.05325191409792751,
+    "calls": 4.24,
+    "no_decomposition": [
+     0.0,
+     52
+    ]
+   },
+   "v2": {
+    "acc": 75.0,
+    "drop": 2.25,
+    "broken": 21,
+    "rescued": 12,
+    "p": 0.16275565745308995,
+    "calls": 4.09,
+    "no_decomposition": [
+     20.2,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 74.5,
+    "drop": 2.75,
+    "broken": 24,
+    "rescued": 13,
+    "p": 0.09887174959294498,
+    "calls": 3.58,
+    "no_decomposition": [
+     32.0,
+     400
+    ]
+   }
+  }
+ },
+ "qwen25c7b|ja|s1|strict": {
+  "n": 400,
+  "s0": 58.75,
+  "variants": {
+   "v1": {
+    "acc": 61.0,
+    "drop": -2.25,
+    "broken": 19,
+    "rescued": 28,
+    "p": 0.24296021728332562,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 60.5,
+    "drop": -1.75,
+    "broken": 28,
+    "rescued": 35,
+    "p": 0.4499625362902225,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 62.25,
+    "drop": -3.5,
+    "broken": 22,
+    "rescued": 36,
+    "p": 0.08694889972991099,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "qwen25c7b|ja|s1|official": {
+  "n": 400,
+  "s0": 62.75,
+  "variants": {
+   "v1": {
+    "acc": 66.5,
+    "drop": -3.75,
+    "broken": 16,
+    "rescued": 31,
+    "p": 0.03998605682605216,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 65.5,
+    "drop": -2.75,
+    "broken": 24,
+    "rescued": 35,
+    "p": 0.19252645776146274,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 68.0,
+    "drop": -5.25,
+    "broken": 19,
+    "rescued": 40,
+    "p": 0.008641499683281734,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "qwen25c7b|ja|s2|strict": {
+  "n": 400,
+  "s0": 58.75,
+  "variants": {
+   "v1": {
+    "acc": 54.25,
+    "drop": 4.5,
+    "broken": 40,
+    "rescued": 22,
+    "p": 0.030015864349067292,
+    "calls": 4.19,
+    "no_decomposition": [
+     1.8,
+     57
+    ]
+   },
+   "v2": {
+    "acc": 55.5,
+    "drop": 3.25,
+    "broken": 30,
+    "rescued": 17,
+    "p": 0.07894069368148848,
+    "calls": 4.04,
+    "no_decomposition": [
+     22.0,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 57.0,
+    "drop": 1.75,
+    "broken": 29,
+    "rescued": 22,
+    "p": 0.4010619910279374,
+    "calls": 3.28,
+    "no_decomposition": [
+     44.8,
+     400
+    ]
+   }
+  }
+ },
+ "qwen25c7b|ja|s2|official": {
+  "n": 400,
+  "s0": 62.75,
+  "variants": {
+   "v1": {
+    "acc": 59.0,
+    "drop": 3.75,
+    "broken": 38,
+    "rescued": 23,
+    "p": 0.07217743850092258,
+    "calls": 4.19,
+    "no_decomposition": [
+     1.8,
+     57
+    ]
+   },
+   "v2": {
+    "acc": 60.25,
+    "drop": 2.5,
+    "broken": 31,
+    "rescued": 21,
+    "p": 0.21160856876151612,
+    "calls": 4.04,
+    "no_decomposition": [
+     22.0,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 61.5,
+    "drop": 1.25,
+    "broken": 29,
+    "rescued": 24,
+    "p": 0.5831321542611763,
+    "calls": 3.28,
+    "no_decomposition": [
+     44.8,
+     400
+    ]
+   }
+  }
+ },
+ "qwen25c7b|zh-tw|s1|strict": {
+  "n": 400,
+  "s0": 68.0,
+  "variants": {
+   "v1": {
+    "acc": 67.0,
+    "drop": 1.0,
+    "broken": 19,
+    "rescued": 15,
+    "p": 0.6075913612730801,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 65.0,
+    "drop": 3.0,
+    "broken": 33,
+    "rescued": 21,
+    "p": 0.13367423536410528,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 65.0,
+    "drop": 3.0,
+    "broken": 30,
+    "rescued": 18,
+    "p": 0.11140289106101875,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "qwen25c7b|zh-tw|s1|official": {
+  "n": 400,
+  "s0": 71.25,
+  "variants": {
+   "v1": {
+    "acc": 71.25,
+    "drop": 0.0,
+    "broken": 18,
+    "rescued": 18,
+    "p": 1.0,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v2": {
+    "acc": 69.0,
+    "drop": 2.25,
+    "broken": 31,
+    "rescued": 22,
+    "p": 0.27167916606550335,
+    "calls": 2.0,
+    "no_decomposition": null
+   },
+   "v3": {
+    "acc": 69.0,
+    "drop": 2.25,
+    "broken": 29,
+    "rescued": 20,
+    "p": 0.2528697301676033,
+    "calls": 2.0,
+    "no_decomposition": null
+   }
+  }
+ },
+ "qwen25c7b|zh-tw|s2|strict": {
+  "n": 400,
+  "s0": 68.0,
+  "variants": {
+   "v1": {
+    "acc": 60.25,
+    "drop": 7.75,
+    "broken": 44,
+    "rescued": 13,
+    "p": 4.710437609395379e-05,
+    "calls": 4.19,
+    "no_decomposition": [
+     1.7,
+     60
+    ]
+   },
+   "v2": {
+    "acc": 60.5,
+    "drop": 7.5,
+    "broken": 43,
+    "rescued": 13,
+    "p": 7.333218396948782e-05,
+    "calls": 4.07,
+    "no_decomposition": [
+     21.0,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 63.75,
+    "drop": 4.25,
+    "broken": 27,
+    "rescued": 10,
+    "p": 0.007632078602910042,
+    "calls": 3.25,
+    "no_decomposition": [
+     46.0,
+     400
+    ]
+   }
+  }
+ },
+ "qwen25c7b|zh-tw|s2|official": {
+  "n": 400,
+  "s0": 71.25,
+  "variants": {
+   "v1": {
+    "acc": 63.0,
+    "drop": 8.25,
+    "broken": 45,
+    "rescued": 12,
+    "p": 1.3127443164284713e-05,
+    "calls": 4.19,
+    "no_decomposition": [
+     1.7,
+     60
+    ]
+   },
+   "v2": {
+    "acc": 64.0,
+    "drop": 7.25,
+    "broken": 43,
+    "rescued": 14,
+    "p": 0.00015388902244434233,
+    "calls": 4.07,
+    "no_decomposition": [
+     21.0,
+     400
+    ]
+   },
+   "v3": {
+    "acc": 66.75,
+    "drop": 4.5,
+    "broken": 27,
+    "rescued": 9,
+    "p": 0.00393317302223295,
+    "calls": 3.25,
+    "no_decomposition": [
+     46.0,
+     400
+    ]
+   }
+  }
+ }
+}

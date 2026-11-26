@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this reproducibility package, please cite the paper below."
-title: "Strategy Selection for LLM-based Text-to-SQL: reproducibility package"
+title: "Which Prompting Strategy Should a Text-to-SQL Deployment Use? Reproducibility package"
 authors:
   - family-names: Lin
     given-names: Chih-Yu
@@ -15,7 +15,7 @@ license: MIT
 year: 2026
 preferred-citation:
   type: article
-  title: "Strategy Selection for LLM-based Text-to-SQL: A Cross-Model Cross-Lingual Empirical Study with Reinforcement Learning Boundary"
+  title: "Which Prompting Strategy Should a Text-to-SQL Deployment Use? An Experimental Reproducible Survey Across Models, Languages, and Benchmarks"
   authors:
     - family-names: Lin
       given-names: Chih-Yu
