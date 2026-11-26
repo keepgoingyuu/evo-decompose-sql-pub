@@ -62,6 +62,8 @@ def main() -> None:
 
     tasks, meta = [], []
     for f in sorted(OUT.glob("*.jsonl")):
+        if f.stem.count("__") != 2:
+            continue
         bench, model, strat = f.stem.split("__")
         if bench not in BENCHES:
             continue

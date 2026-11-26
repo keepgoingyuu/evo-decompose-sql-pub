@@ -7,9 +7,12 @@ API models on BIRD stored the BIRD `question_id` instead; `legacy_records` maps 
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
 
 BENCHMARKS = {
     "bird": {"queries": "data/bird/dev_20240627/dev.json", "db_dir": "data/bird/dev_20240627/dev_databases",
@@ -75,3 +78,43 @@ def legacy_records(bench: str, model: str, strategy: str) -> dict[int, dict]:
         pos = {q["question_id"]: q["idx"] for q in load_queries("bird")}
         return {pos[int(r["query_id"])]: r for r in rows if int(r["query_id"]) in pos}
     return {int(r["query_idx"]): r for r in rows}
+
+
+# Queries whose reference (gold) query the harness could not evaluate when the records were
+# generated, so that the model was not called for them in part or all of the matrix:
+#   BIRD 205, 245        the gold query runs for about 30 s or more, at the execution limit;
+#                        whether it finished depended on the machine
+#   Spider-family 455, 456   the gold result contains text that is not valid UTF-8 (database wta_1)
+# They are scored as failures for every model and strategy, under both rules, so that all cells
+# are treated alike. Indices are positions in the benchmark file (BIRD: in the mod+chal subset).
+UNSCORABLE = {"bird": {205, 245}, "en": {455, 456}, "zh-tw": {455, 456}, "ja": {455, 456}}
+UNSCORABLE_ERROR = "reference query not evaluable; scored as failure for all systems"
+
+
+def score_sql(bench: str, q: dict, sql: str, gold_result):
+    """(error, strict, official) for one predicted SQL string against an executed gold result.
+    Spider-family databases are read with lenient text decoding, as the official evaluator does."""
+    from src.utils.sql_utils import compare_results, compare_results_bird, compare_results_spider, execute_sql
+    if not sql or "SELECT" not in sql.upper():
+        return "no SQL generated", False, False
+    spider = BENCHMARKS[bench]["family"] == "spider"
+    pred_result, err = execute_sql(q["db_path"], sql, lenient_text=spider)
+    if err:
+        return err[:300], False, False
+    if q["idx"] in UNSCORABLE[bench]:
+        return None, False, False
+    strict = compare_results(gold_result, pred_result)
+    official = (compare_results_spider(gold_result, pred_result, q["gold_sql"]) if spider
+                else compare_results_bird(gold_result, pred_result))
+    return None, bool(strict), bool(official)
+
+
+def gold_result(bench: str, q: dict):
+    """Executed gold result, or None for the queries listed in UNSCORABLE."""
+    from src.utils.sql_utils import execute_sql
+    if q["idx"] in UNSCORABLE[bench]:
+        return None
+    res, err = execute_sql(q["db_path"], q["gold_sql"], lenient_text=BENCHMARKS[bench]["family"] == "spider")
+    if err:
+        raise RuntimeError(f"gold query failed: {bench} idx {q['idx']}: {err}")
+    return res

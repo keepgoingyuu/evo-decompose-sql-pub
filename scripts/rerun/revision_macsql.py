@@ -16,7 +16,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import REPO, STRATEGIES, load_queries  # noqa: E402
+from common import REPO, STRATEGIES, load_queries, gold_result, score_sql  # noqa: E402
 
 sys.path.insert(0, str(REPO))
 from src.utils.sql_utils import compare_results, compare_results_bird, execute_sql  # noqa: E402
@@ -39,11 +39,8 @@ def main() -> None:
     mac = {}
     for o in outs:
         q = by_qid[qid_of[o["idx"]]]
-        gold, _ = execute_sql(q["db_path"], q["gold_sql"])
-        pred, err = execute_sql(q["db_path"], o.get("pred") or "")
-        ok = gold is not None and pred is not None
-        mac[q["idx"]] = {"strict": bool(ok and compare_results(gold, pred)),
-                         "official": bool(ok and compare_results_bird(gold, pred)), "exec_error": bool(err)}
+        err, strict, official = score_sql("bird", q, o.get("pred") or "", gold_result("bird", q))
+        mac[q["idx"]] = {"strict": strict, "official": official, "exec_error": bool(err)}
     M = defaultdict(dict)
     for line in open(AN / "matrix.jsonl", encoding="utf-8"):
         r = json.loads(line)

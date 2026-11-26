@@ -112,13 +112,18 @@ def clean_sql_legacy(raw: str) -> str:
     return sql
 
 
-def execute_sql(db_path: str, sql: str, timeout_ms: int = 5000, exec_timeout: int = 30):
+def execute_sql(db_path: str, sql: str, timeout_ms: int = 5000, exec_timeout: int = 30,
+                lenient_text: bool = False):
     """Execute SQL and return (results, error). Error is None on success.
 
     Uses sqlite3 progress_handler to interrupt long-running queries.
     exec_timeout: max seconds for query execution (prevents runaway queries).
+    lenient_text: decode TEXT values ignoring invalid UTF-8 bytes, as the official Spider
+        evaluator does (`conn.text_factory = lambda b: b.decode(errors="ignore")`).
     """
     conn = sqlite3.connect(db_path)
+    if lenient_text:
+        conn.text_factory = lambda b: b.decode(errors="ignore")
     conn.execute("PRAGMA busy_timeout = %d" % timeout_ms)
 
     # Use progress_handler to check elapsed time periodically

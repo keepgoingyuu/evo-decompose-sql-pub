@@ -29,11 +29,14 @@ from src.utils.sql_utils import compare_results_bird, compare_results_spider, ex
 OUT = REPO / "results/rerun_2026_11"
 CELLS = [(b, m) for m in PANEL for b in BENCHMARKS] + [("bird", "gpt54mini")]
 
+KEPT = [json.loads(line) for line in open(OUT / "kept_verdicts.jsonl", encoding="utf-8")] \
+    if (OUT / "kept_verdicts.jsonl").exists() else []
+
 
 def cell_rows(args: tuple[str, str]) -> list[dict]:
     bench, model = args
     qs = load_queries(bench)
-    gold_cache: dict[int, object] = {}
+    kept = {(r["strategy"], r["idx"]): r for r in KEPT if r["bench"] == bench and r["model"] == model}
     rows = []
     for strat in STRATEGIES:
         old = legacy_records(bench, model, strat)
@@ -58,22 +61,12 @@ def cell_rows(args: tuple[str, str]) -> list[dict]:
                              "n_sub": sum(str(s.get("step", "")).startswith("sub_sql") for s in steps)
                              if strat == "s2" else None})
                 continue
-            o = old.get(i)
-            if o is None:
-                raise RuntimeError(f"no record for {bench}/{model}/{strat}/{i}")
-            strict = bool(o["correct"])
-            official = strict
-            pred = o.get("pred_sql") or ""
-            if not o.get("error") and pred:
-                if i not in gold_cache:
-                    gold_cache[i] = execute_sql(q["db_path"], q["gold_sql"])[0]
-                g = gold_cache[i]
-                p, _ = execute_sql(q["db_path"], pred)
-                if g is not None and p is not None:
-                    official = (compare_results_bird(g, p) if BENCHMARKS[bench]["family"] == "bird"
-                                else compare_results_spider(g, p, q["gold_sql"]))
-            rows.append({**base, "strict": strict, "official": bool(official), "src": "kept",
-                         "exec_error": bool(o.get("error")), "call_count": o.get("call_count"),
+            v = kept.get((strat, i))
+            if v is None:
+                raise RuntimeError(f"no record for {bench}/{model}/{strat}/{i}; run rescore.py first")
+            o = old[i]
+            rows.append({**base, "strict": bool(v["strict"]), "official": bool(v["official"]), "src": "kept",
+                         "exec_error": bool(v["error"]), "call_count": o.get("call_count"),
                          "gen_time": o.get("gen_time"), "in_tok": None, "out_tok": None, "n_sub": None})
     return rows
 

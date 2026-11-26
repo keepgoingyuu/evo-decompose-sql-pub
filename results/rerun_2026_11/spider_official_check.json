@@ -1,80 +1,25 @@
 {
  "keep_distinct": {
-  "n": 35444,
-  "agree": 35440,
-  "official_correct": 23597,
-  "ours_correct": 23593,
-  "strict_correct": 21433,
-  "official_only": 4,
-  "agreement_pct": 99.989,
-  "net_pp_vs_ours": 0.011,
-  "cells_with_disagreement": {
-   "en|qwen25c7b|s4": {
-    "agree": 132,
-    "official_only": 2
-   },
-   "ja|qwen25c7b|s4": {
-    "agree": 99,
-    "official_only": 1
-   },
-   "zh-tw|qwen25c7b|s4": {
-    "agree": 110,
-    "official_only": 1
-   }
-  },
-  "disagreements": [
-   {
-    "bench": "en",
-    "model": "qwen25c7b",
-    "strategy": "s4",
-    "idx": 435,
-    "ours": false,
-    "official": true,
-    "gold_sql": "SELECT avg(loser_age) ,  avg(winner_age) FROM matches",
-    "pred_sql": "SELECT AVG(matches.loser_age) AS average_loser_age, AVG(matches.winner_age) AS average_winner_age FROM players JOIN matches ON players.player_id = matches.loser_id OR players.player_id = matches.winner_id"
-   },
-   {
-    "bench": "en",
-    "model": "qwen25c7b",
-    "strategy": "s4",
-    "idx": 436,
-    "ours": false,
-    "official": true,
-    "gold_sql": "SELECT avg(loser_age) ,  avg(winner_age) FROM matches",
-    "pred_sql": "SELECT AVG(matches.loser_age) AS average_loser_age, AVG(matches.winner_age) AS average_winner_age FROM players JOIN matches ON players.player_id = matches.loser_id OR players.player_id = matches.winner_id"
-   },
-   {
-    "bench": "ja",
-    "model": "qwen25c7b",
-    "strategy": "s4",
-    "idx": 435,
-    "ours": false,
-    "official": true,
-    "gold_sql": "SELECT avg(loser_age) ,  avg(winner_age) FROM matches",
-    "pred_sql": "SELECT AVG(matches.loser_age) AS average_loser_age, AVG(matches.winner_age) AS average_winner_age FROM players JOIN matches ON players.player_id = matches.loser_id OR players.player_id = matches.winner_id"
-   },
-   {
-    "bench": "zh-tw",
-    "model": "qwen25c7b",
-    "strategy": "s4",
-    "idx": 436,
-    "ours": false,
-    "official": true,
-    "gold_sql": "SELECT avg(loser_age) ,  avg(winner_age) FROM matches",
-    "pred_sql": "SELECT AVG(matches.loser_age) AS average_loser_age, AVG(matches.winner_age) AS average_winner_age FROM players JOIN matches ON players.player_id = matches.loser_id OR players.player_id = matches.winner_id"
-   }
-  ]
+  "n": 36230,
+  "agree": 36230,
+  "official_correct": 24059,
+  "ours_correct": 24059,
+  "strict_correct": 21872,
+  "agreement_pct": 100.0,
+  "net_pp_vs_ours": 0.0,
+  "cells_with_disagreement": {},
+  "disagreements": []
  },
  "remove_distinct": {
-  "n": 35444,
-  "agree": 34306,
-  "official_correct": 23797,
-  "ours_correct": 23593,
-  "strict_correct": 21433,
-  "official_only": 671,
-  "ours_only": 467,
-  "agreement_pct": 96.789,
-  "net_pp_vs_ours": 0.576,
+  "n": 36230,
+  "agree": 35051,
+  "official_correct": 24300,
+  "ours_correct": 24059,
+  "strict_correct": 21872,
+  "official_only": 710,
+  "ours_only": 469,
+  "agreement_pct": 96.746,
+  "net_pp_vs_ours": 0.665,
   "cells_with_disagreement": {
    "en|deepseek|s0": {
     "agree": 1006,
@@ -87,7 +32,7 @@
     "ours_only": 14
    },
    "en|deepseek|s2": {
-    "agree": 995,
+    "agree": 997,
     "ours_only": 23,
     "official_only": 12
    },
@@ -102,21 +47,25 @@
     "official_only": 8
    },
    "en|gemini|s0": {
-    "agree": 53,
+    "agree": 55,
     "ours_only": 1,
     "official_only": 8
    },
    "en|gemini|s1": {
-    "agree": 49,
-    "official_only": 5
+    "agree": 59,
+    "official_only": 9
+   },
+   "en|gemini|s2": {
+    "agree": 64,
+    "official_only": 7
    },
    "en|gemini|s3": {
-    "agree": 31,
-    "official_only": 1
+    "agree": 56,
+    "official_only": 4
    },
    "en|gemini|s4": {
-    "agree": 58,
-    "official_only": 1
+    "agree": 82,
+    "official_only": 5
    },
    "en|gemma4|s0": {
     "agree": 905,
@@ -164,7 +113,7 @@
     "official_only": 10
    },
    "en|gpt41|s4": {
-    "agree": 145,
+    "agree": 146,
     "ours_only": 4,
     "official_only": 8
    },
@@ -189,9 +138,9 @@
     "official_only": 4
    },
    "en|qwen25c7b|s4": {
-    "agree": 125,
+    "agree": 127,
     "ours_only": 2,
-    "official_only": 7
+    "official_only": 5
    },
    "ja|deepseek|s0": {
     "agree": 1004,
@@ -219,20 +168,21 @@
     "ours_only": 13
    },
    "ja|gemini|s0": {
-    "agree": 65,
+    "agree": 67,
     "official_only": 9
    },
    "ja|gemini|s1": {
-    "agree": 36,
-    "official_only": 1
+    "agree": 66,
+    "official_only": 10
    },
    "ja|gemini|s2": {
-    "agree": 37,
-    "official_only": 2
+    "agree": 174,
+    "official_only": 13,
+    "ours_only": 1
    },
    "ja|gemini|s3": {
-    "agree": 55,
-    "official_only": 7
+    "agree": 59,
+    "official_only": 10
    },
    "ja|gemini|s4": {
     "agree": 76,
@@ -249,7 +199,7 @@
     "ours_only": 15
    },
    "ja|gemma4|s2": {
-    "agree": 811,
+    "agree": 812,
     "official_only": 18,
     "ours_only": 20
    },
@@ -274,7 +224,7 @@
     "official_only": 7
    },
    "ja|gpt41|s2": {
-    "agree": 228,
+    "agree": 229,
     "official_only": 11,
     "ours_only": 4
    },
@@ -284,7 +234,7 @@
     "official_only": 10
    },
    "ja|gpt41|s4": {
-    "agree": 179,
+    "agree": 180,
     "official_only": 9,
     "ours_only": 4
    },
@@ -307,8 +257,8 @@
     "official_only": 2
    },
    "ja|qwen25c7b|s4": {
-    "agree": 90,
-    "official_only": 10
+    "agree": 91,
+    "official_only": 9
    },
    "zh-tw|deepseek|s0": {
     "agree": 1009,
@@ -321,7 +271,7 @@
     "ours_only": 7
    },
    "zh-tw|deepseek|s2": {
-    "agree": 1003,
+    "agree": 1005,
     "ours_only": 18,
     "official_only": 6
    },
@@ -336,9 +286,9 @@
     "official_only": 6
    },
    "zh-tw|gemini|s0": {
-    "agree": 576,
-    "ours_only": 5,
-    "official_only": 4
+    "agree": 1014,
+    "ours_only": 6,
+    "official_only": 6
    },
    "zh-tw|gemini|s1": {
     "agree": 70,
@@ -359,7 +309,7 @@
     "official_only": 3
    },
    "zh-tw|gemma4|s0": {
-    "agree": 887,
+    "agree": 888,
     "official_only": 14,
     "ours_only": 11
    },
@@ -379,21 +329,21 @@
     "ours_only": 9
    },
    "zh-tw|gemma4|s4": {
-    "agree": 911,
+    "agree": 912,
     "ours_only": 7,
     "official_only": 12
    },
    "zh-tw|gpt41|s0": {
-    "agree": 1006,
+    "agree": 1009,
     "official_only": 11,
     "ours_only": 9
    },
    "zh-tw|gpt41|s1": {
-    "agree": 130,
+    "agree": 131,
     "official_only": 2
    },
    "zh-tw|gpt41|s2": {
-    "agree": 228,
+    "agree": 229,
     "official_only": 5,
     "ours_only": 3
    },
@@ -403,7 +353,7 @@
     "ours_only": 1
    },
    "zh-tw|gpt41|s4": {
-    "agree": 183,
+    "agree": 184,
     "official_only": 4,
     "ours_only": 2
    },
@@ -417,10 +367,6 @@
    },
    "zh-tw|qwen25c7b|s3": {
     "agree": 94,
-    "official_only": 1
-   },
-   "zh-tw|qwen25c7b|s4": {
-    "agree": 110,
     "official_only": 1
    }
   }

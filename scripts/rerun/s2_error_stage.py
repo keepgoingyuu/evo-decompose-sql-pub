@@ -29,15 +29,17 @@ from src.utils.sql_utils import clean_sql, execute_sql  # noqa: E402
 OUT = REPO / "results/rerun_2026_11"
 
 
+_M: dict = {}
+
+
 def s0_verdicts(model, bench):
-    new = {}
-    f = OUT / f"{bench}__{model}__s0.jsonl"
-    if f.exists():
-        for line in open(f, encoding="utf-8"):
+    """S0 strict verdicts from the corrected matrix."""
+    if not _M:
+        for line in open(OUT / "analysis/matrix.jsonl", encoding="utf-8"):
             r = json.loads(line)
-            new[r["idx"]] = bool(r["correct"])
-    old = legacy_records(bench, model, "s0")
-    return {i: new.get(i, bool(old[i]["correct"]) if i in old else False) for i in range(len(load_queries(bench)))}
+            if r["strategy"] == "s0":
+                _M.setdefault((r["model"], r["bench"]), {})[r["idx"]] = bool(r["strict"])
+    return _M[model, bench]
 
 
 def main() -> None:
@@ -63,7 +65,8 @@ def main() -> None:
                     continue
                 db = qs[r["idx"]]["db_path"]
                 subs = [s for s in steps if str(s.get("step", "")).startswith("sub_sql")]
-                if any(execute_sql(db, clean_sql(s.get("raw", "")))[1] for s in subs):
+                if any(execute_sql(db, clean_sql(s.get("raw", "")), lenient_text=BENCHMARKS[bench]["family"] == "spider")[1]
+                       for s in subs):
                     c["sub_sql"] += 1
                 elif r.get("error"):
                     c["merge_invalid"] += 1

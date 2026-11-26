@@ -45,6 +45,8 @@ results/rerun_2026_11/
 ├── ablation/                            S1 and S2 template variants (V2, V3) on a 400-query subset
 ├── arctic/                              Arctic-Text2SQL-R1 on BIRD, uniform and native prompt
 ├── worklist.json                        which records were regenerated, and why
+├── kept_verdicts.jsonl                  verdicts of the records kept from the original runs, re-scored
+├── bird_official_check.json             agreement of our BIRD scoring with the official script
 ├── spider_official_check.json           agreement of our Spider scoring with the official script
 ├── summary_<model>.json                 per-model before/after summary of the regeneration
 └── analysis/
@@ -73,6 +75,8 @@ source file (for BIRD, in the moderate + challenging subset).
 | `pred_sql`, `error` | final SQL, complete, and its execution error if any |
 | `correct` | verdict under the strict rule (ordered equality of result rows) |
 | `correct_official` | verdict under the benchmark's official rule |
+| `at_generation` | the values of `error`, `correct`, `correct_official`, `legacy_error`, `legacy_correct` computed when the record was generated; superseded by the fields above (see below) |
+| `scored` | SQLite version and date of the re-scoring |
 | `legacy_pred_sql`, `legacy_error`, `legacy_correct` | what the original extraction routine would have produced from the same response |
 | `call_count`, `gen_time` | model calls and wall-clock seconds |
 | `steps` | every model call in order: step name, full raw response (`raw`), finish reason, token counts, reported model version, SHA-1 of the prompt |
@@ -86,8 +90,25 @@ the original runs (`src: "old"`), and carries both verdicts for every row.
 * **strict**: the predicted and gold result rows must be equal in the order SQLite returns them.
 * **official**: for BIRD, set equality of result rows, as in the official BIRD evaluator;
   for the Spider family, the test-suite execution rule (order matters only when the gold
-  query has `ORDER BY`), with `DISTINCT` kept. `spider_official_check.json` reports the
-  agreement of this implementation with the official script on 35,444 predictions (99.99%).
+  query has `ORDER BY`), with `DISTINCT` kept.
+
+Both official rules were checked against the benchmarks' own evaluation scripts:
+`bird_official_check.json` (all 19,488 BIRD predictions, 100% agreement) and
+`spider_official_check.json` (36,230 executable regenerated predictions, 100% agreement with
+`DISTINCT` kept; 96.7% in the script's default mode, which strips `DISTINCT`).
+
+**One scoring environment.** The verdicts stored at generation time had been computed on two
+machines with different SQLite versions, which changed the outcome for a few queries
+(floating-point aggregates, slow reference queries). `scripts/rerun/rescore.py` recomputes every
+verdict from the stored SQL in one environment (SQLite 3.45.3); the fields `error`, `correct`
+and `correct_official` hold the re-scored values and `at_generation` the earlier ones (they
+differ for 43 of the 95,820 rows of the matrix).
+
+**Four queries scored as failures for all systems.** The reference query of BIRD mod+chal
+positions 205 and 245 runs for about 30 s or longer, and that of Spider-family positions 455
+and 456 returns text that is not valid UTF-8; the original harness did not call the models for
+them in part or all of the matrix. They are counted as incorrect for every model and strategy
+under both rules (`UNSCORABLE` in `scripts/rerun/common.py`).
 
 Both are implemented in `src/utils/sql_utils.py`. The same file contains the repaired
 extraction routine (`clean_sql`) and the original one, kept so that the effect of the
@@ -97,12 +118,13 @@ defect can be measured.
 
 ## Reproducing the paper
 
-No model inference is needed. The benchmark databases are needed, because verdicts are
-recomputed by executing SQL (see [Benchmark data](#benchmark-data-not-included)).
+No model inference is needed. The benchmark databases are needed only for the steps that
+execute SQL (see below and [Benchmark data](#benchmark-data-not-included)).
 
 ```bash
 pip install -r requirements.txt
 
+python scripts/rerun/rescore.py                         # optional: recompute every verdict from the stored SQL
 python scripts/rerun/build_matrix.py                    # -> analysis/matrix.jsonl (both rules)
 python scripts/rerun/revision_stats.py --rule strict    # -> analysis/stats_strict.json
 python scripts/rerun/revision_stats.py --rule official  # -> analysis/stats_official.json
@@ -115,9 +137,10 @@ python scripts/rerun/make_figures.py                    # -> figures/Figure_1..5
 ```
 
 `revision_selector.py` needs `sentence-transformers` for the embedding-based selectors.
-The scripts after `build_matrix.py` read only `analysis/matrix.jsonl` and the files
-shipped here, so they can be run without the databases if the shipped matrix is used
-(`revision_macsql.py` executes SQL and does need the BIRD databases).
+`build_matrix.py` and the scripts after it need the benchmark question files but not the
+databases (`rescore.py`, `revision_macsql.py` and the two official-script checks
+execute SQL and do need them). Verdicts can depend on the SQLite version in rare cases; the
+shipped ones were computed with SQLite 3.45.3.
 
 ### Paper item, script, output
 
@@ -134,7 +157,8 @@ shipped here, so they can be run without the databases if the shipped matrix is 
 | Cost in calls and tokens | `revision_stats.py` | `stats_*.json` |
 | Arctic-Text2SQL-R1 on BIRD | `arctic_rerun.py` (generation), `build_matrix.py` | `arctic/*.jsonl` |
 | MAC-SQL against single strategies | `revision_macsql.py` | `macsql.json` |
-| Agreement with the official Spider script | `spider_official_check.py` | `spider_official_check.json` |
+| Agreement with the official Spider script | `spider_official_check.py` (needs `exec_eval.py` of test-suite-sql-eval under `baselines/MAC-SQL/evaluation/`) | `spider_official_check.json` |
+| Agreement with the official BIRD script | `bird_official_check.py --official <path to BIRD's evaluation.py>` | `bird_official_check.json` |
 | Figures 1 to 5 | `make_figures.py` | `figures/` |
 
 ### Regenerating records (optional, needs API keys or local models)

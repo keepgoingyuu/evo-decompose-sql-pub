@@ -1,0 +1,10 @@
+{
+ "official_script": "bird/llm/src/evaluation.py (AlibabaResearch/DAMO-ConvAI), execute_model, 30 s limit",
+ "n": 19488,
+ "agree": 19488,
+ "agreement_pct": 100.0,
+ "official_script_correct": 8324,
+ "ours_correct": 8324,
+ "disagreements_by_source": {},
+ "disagreements": []
+}

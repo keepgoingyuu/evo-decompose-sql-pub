@@ -13,19 +13,19 @@
     label style={font=\small}, tick label style={font=\scriptsize},
     axis line style={-, line width=0.4pt}, tick style={line width=0.4pt}, clip=false,
 ]
-\node[font=\scriptsize, gray!60!black] at (axis cs:Gemma,-9.6) {$C_M{=}21.8$};
-\node[font=\scriptsize, gray!60!black] at (axis cs:Qwen,-9.6) {$33.0$};
+\node[font=\scriptsize, gray!60!black] at (axis cs:Gemma,-9.6) {$C_M{=}21.7$};
+\node[font=\scriptsize, gray!60!black] at (axis cs:Qwen,-9.6) {$33.2$};
 \node[font=\scriptsize, gray!60!black] at (axis cs:GPT-4.1,-9.6) {$38.8$};
-\node[font=\scriptsize, gray!60!black] at (axis cs:DeepSeek,-9.6) {$46.8$};
+\node[font=\scriptsize, gray!60!black] at (axis cs:DeepSeek,-9.6) {$46.6$};
 \node[font=\scriptsize, gray!60!black] at (axis cs:Gemini,-9.6) {$53.4$};
 \addplot[gray!70, line width=0.6pt, forget plot, sharp plot] coordinates {(Gemma,0) (Gemini,0)};
-\addplot[only marks, mark=*, mark size=2.2pt, color=blue!70!black, mark options={fill=blue!55}] coordinates {(Gemma,-0.82) (Qwen,-0.82) (GPT-4.1,1.64) (DeepSeek,0.00) (Gemini,-1.15)};
+\addplot[only marks, mark=*, mark size=2.2pt, color=blue!70!black, mark options={fill=blue!55}] coordinates {(Gemma,-0.82) (Qwen,-0.82) (GPT-4.1,1.64) (DeepSeek,-0.16) (Gemini,-1.15)};
 \addlegendentry{$S_1$}
-\addplot[only marks, mark=square*, mark size=2.2pt, color=orange!80!black, mark options={fill=orange!70}] coordinates {(Gemma,-2.79) (Qwen,-2.29) (GPT-4.1,0.99) (DeepSeek,-4.11) (Gemini,-4.60)};
+\addplot[only marks, mark=square*, mark size=2.2pt, color=orange!80!black, mark options={fill=orange!70}] coordinates {(Gemma,-2.46) (Qwen,-2.30) (GPT-4.1,0.99) (DeepSeek,-4.10) (Gemini,-4.60)};
 \addlegendentry{$S_2$}
-\addplot[only marks, mark=triangle*, mark size=2.2pt, color=green!50!black, mark options={fill=green!45}] coordinates {(Gemma,0.66) (Qwen,-6.07) (GPT-4.1,0.82) (DeepSeek,-6.24) (Gemini,-7.72)};
+\addplot[only marks, mark=triangle*, mark size=2.2pt, color=green!50!black, mark options={fill=green!45}] coordinates {(Gemma,0.66) (Qwen,-6.08) (GPT-4.1,0.82) (DeepSeek,-6.07) (Gemini,-7.72)};
 \addlegendentry{$S_3$}
-\addplot[only marks, mark=diamond*, mark size=2.2pt, color=red!70!black, mark options={fill=red!45}] coordinates {(Gemma,0.82) (Qwen,-5.58) (GPT-4.1,1.15) (DeepSeek,-2.96) (Gemini,-3.45)};
+\addplot[only marks, mark=diamond*, mark size=2.2pt, color=red!70!black, mark options={fill=red!45}] coordinates {(Gemma,1.15) (Qwen,-5.58) (GPT-4.1,1.15) (DeepSeek,-2.62) (Gemini,-3.45)};
 \addlegendentry{$S_4$}
 \end{axis}
 \end{tikzpicture}
