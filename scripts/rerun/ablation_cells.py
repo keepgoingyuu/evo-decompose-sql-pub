@@ -16,6 +16,15 @@ extraction and scoring are identical to the matrix (same classes, same `clean_sq
 Output: results/rerun_2026_11/ablation/<bench>__<model>__<strategy>-<variant>.jsonl
 
 Usage: python3 scripts/rerun/ablation_cells.py qwen25c7b en s1 v2 [--window 18:00-07:30]
+
+When an ablation is run on a different machine from the matrix (Gemma-3n-E4B, 2026-11-26, on
+an Apple-silicon host because the DGX was unavailable), the two arms taken from the matrix
+must be re-run on that machine as well, so that every arm of the paired comparison shares one
+serving environment: `s0 v1` runs direct generation and `s1 v1` / `s2 v1` the canonical
+pipeline, with the matrix's own classes, on the same 400-query subset. Use --out-dir to keep
+such runs apart from the DGX/API ablation records.
+
+  python3 scripts/rerun/ablation_cells.py gemma4 en s0 v1 --out-dir results/rerun_2026_11/ablation_mac
 """
 from __future__ import annotations
 
@@ -125,14 +134,18 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("model", choices=sorted(MODEL_CONFIG))
     ap.add_argument("bench", choices=["en", "zh-tw", "ja"])
-    ap.add_argument("strategy", choices=["s1", "s2"])
-    ap.add_argument("variant", choices=["v2", "v3"])
+    ap.add_argument("strategy", choices=["s0", "s1", "s2"])
+    ap.add_argument("variant", choices=["v1", "v2", "v3"])
     ap.add_argument("--window", default=None)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--out-dir", default=str(OUT_DIR))
     args = ap.parse_args()
+    if args.strategy == "s0" and args.variant != "v1":
+        ap.error("s0 has the canonical template only (v1)")
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out = OUT_DIR / f"{args.bench}__{args.model}__{args.strategy}-{args.variant}.jsonl"
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"{args.bench}__{args.model}__{args.strategy}-{args.variant}.jsonl"
     tag = f"[abl {args.model}/{args.bench}/{args.strategy}-{args.variant}]"
     queries = load_queries(args.bench)
     todo = subset_indices(len(queries))
@@ -144,7 +157,9 @@ def main() -> None:
     if not pending:
         return
 
-    if args.strategy == "s1":
+    if args.variant == "v1":   # canonical template: the matrix's own pipeline classes
+        pipeline = rc.S0Direct(args.model) if args.strategy == "s0" else rc.PIPELINES[args.strategy](args.model)
+    elif args.strategy == "s1":
         pipeline = S1Variant(args.model, S1_VARIANTS[args.variant], args.variant)
     else:
         pipeline = S2Variant(args.model, S2_VARIANTS[args.variant], args.variant)

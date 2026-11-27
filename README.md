@@ -43,6 +43,7 @@ Model keys used in file names: `gpt41`, `deepseek`, `gemini`, `qwen25c7b`,
 results/rerun_2026_11/
 ├── <bench>__<model>__<strategy>.jsonl   regenerated per-query records (105 files)
 ├── ablation/                            S1 and S2 template variants (V2, V3) on a 400-query subset
+├── ablation_mac/                        Gemma-3n-E4B: S0 and S1 V1/V2/V3 on the same subset, run on a second machine
 ├── arctic/                              Arctic-Text2SQL-R1 on BIRD, uniform and native prompt
 ├── worklist.json                        which records were regenerated, and why
 ├── kept_verdicts.jsonl                  verdicts of the records kept from the original runs, re-scored
@@ -56,6 +57,7 @@ results/rerun_2026_11/
     ├── selector_strict.json             selector study, including cross-lingual transfer
     ├── selector_official.json
     ├── ablation.json                    template ablation
+    ├── ablation_mac.json                Gemma-3n-E4B S1 ablation, with its agreement with the matrix
     ├── macsql.json                      MAC-SQL against single strategies, with call and token counts
     └── tables/                          LaTeX table bodies used in the paper
 baselines/MAC-SQL/outputs/modchal609/    MAC-SQL outputs and API trace for the 609 BIRD queries
@@ -130,6 +132,7 @@ python scripts/rerun/build_matrix.py                    # -> analysis/matrix.jso
 python scripts/rerun/revision_stats.py --rule strict    # -> analysis/stats_strict.json
 python scripts/rerun/revision_stats.py --rule official  # -> analysis/stats_official.json
 python scripts/rerun/revision_ablation.py               # -> analysis/ablation.json
+python scripts/rerun/revision_ablation_mac.py           # -> analysis/ablation_mac.json (needs the databases)
 python scripts/rerun/revision_macsql.py                 # -> analysis/macsql.json
 python scripts/rerun/revision_selector.py --rule strict     # -> analysis/selector_strict.json
 python scripts/rerun/revision_selector.py --rule official   # -> analysis/selector_official.json
@@ -152,6 +155,7 @@ shipped ones were computed with SQLite 3.45.3.
 | Stage at which S2 fails | `s2_error_stage.py` | printed to standard output |
 | Accuracy by number of sub-questions | `revision_stats.py` | `stats_*.json` (`depth`) |
 | Template ablation for S1 and S2 | `revision_ablation.py` | `ablation.json`, `tables/ablation_s*.tex` |
+| Template ablation for S1, Gemma-3n-E4B rows of Table 8 (second machine; agreement with the matrix) | `revision_ablation_mac.py` | `ablation_mac.json` |
 | Ranking concordance across languages (Kendall's W, exact permutation) | `revision_stats.py` | `stats_*.json` |
 | Capability fit | `revision_stats.py` | `stats_*.json` |
 | Selector study: fixed rules, execution gate, learned selectors, oracle, cross-lingual transfer | `revision_selector.py` | `selector_*.json` |
